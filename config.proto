@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package release;
+
+service Release {
+    // Get information about a release from its id
+    rpc GetRelease(string) returns (Release) {};
+    // List all releases matching the request
+    rpc ListReleases (ListReleasesRequest) returns (ListReleasesReponse) {};
+}
+
+message ListReleasesRequest {
+    // List only releases created after, if != 0
+    int64 created_after = 1;
+    // 
+}
+
+enum Status {
+    // Default.
+    UNUSED_STATUS = 0;
+    // The Release is in progress.
+    PENDING = 1;
+    // The Release is succesfull.
+    COMPLETE = 2;
+    // The Release could not complete and needs manual intervension.
+    SUSPENDED = 3;
+    // The Release has been abandoned.
+    ABANDONED = 4;
+}
+
+enum Type {
+    // Default
+    UNSET_TYPE = 0;
+    // Daily release
+    DAILY_RELEASE = 1;
+    // Weekly release
+    WEEKLY_RELEASE = 2;
+    // Public Release
+    OFFICIAL_RELEASE = 3;
+}
+
+message Release {
+    // Unique identifier for the release
+    string id = 1;
+    // URL of the repo
+    string repo_url = 2;
+    // Base branch to release from
+    string branch = 3;
+    // Tag used to release
+    string tag = 3;
+    // Type of release
+    string type = 4;
+    // Reference used to create this release
+    string ref = 5;
+    // Estimated progress for the release based on history
+    float progress = 6;
+    // Time this release was created
+    int64 created = 7;
+    // Last time this release was modified
+    int64 modified = 8;
+    // State of the release
+    Status state = 9;
+    // When release is complete, a link to artifacts.
+    string artifacts_link = 10;
+    // When release is complete, a link to the release page
+    string release_url = 11;
+}
+
+message ListReleasesReponse {
+    repeated Release releases = 1;
+}
+
+
+
+
