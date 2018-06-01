@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Details
+{% endblock %}
+
+{% block main %}
+<div id="title" class="row" style="width:50%;">
+  <div class="col-">
+    {% if release["status"] %}
+    <img class="img-responsive" src="/static/images/check.png" style="padding-top: 8px;">
+    {% else %}
+    <img class="img-responsive" src="/static/images/error.png" style="padding-top: 8px;">
+    {% endif %}
+  </div>
+  <div class="col-sm-2">
+    <button type="button" class="btn btn-secondary btn-sm" style="margin-top: 7px; padding: .15rem .5rem;">
+      {% if release["tag"] == 1%}
+        auto
+      {% elif release["tag"] == 2%}
+        daily
+      {% elif release["tag"] == 3%}
+        weekly
+      {% elif release["tag"] == 4 %}
+        monthly
+      {% endif %}
+    </button>
+  </div>
+  <div class="col-xl-">
+    <h1 id="detail_release_title"> {{ release["version"] }} </h1>
+  </div>
+</div>
+
+<div style="float:right;">
+  <a href={{release["github"]}}><button type="button" class="btn btn-primary btn-lg">View on Github</button></a>
+</div>
+
+<div id="dates">
+  <div class="row">
+    <div class="col">
+      <h6>Created on: {{ release["creation"] }}</h6>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h6>Last Modified: {{ release["last_mod"] }}</h6>
+    </div>
+  </div>
+</div>
+
+
+  <div id="detail-table" style="width:75%; margin-top: 20px;">
+    <table class="table table-bordered">
+      <thead>
+        <th>Status</th>
+        <th>Task</th>
+        <th>Start Time</th>
+        <th>Duration</th>
+        <th>View Logs</th>
+      </thead>
+      <tbody>
+          {% for task in tasks %}
+          <tr>
+            <td>
+              {% if task["status"] %}
+              <img class="img-responsive" src="/static/images/check.png">
+              {% else %}
+              <img class="img-responsive" src="/static/images/error.png">
+              {% endif %}
+            </td>
+            <td>
+              {{ task["name"] }}
+            </td>
+            <td>
+              {{ task["start"] }}
+            </td>
+            <td>
+              {{ task["duration"] }}
+            </td>
+            <td>
+              <a href={{ task["log"] }}> logs </a>
+            </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,74 @@
+nav .navbar-brand
+{
+    /* size for brand */
+    padding-left: 50px;
+    font-size: xx-large;
+}
+
+div #title
+{
+    display: inline-block;
+    white-space: nowrap;
+    margin-left: -50px;
+}
+
+div #dates
+{
+  padding-left: 70px;
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+
+#detail_release_title
+{
+    font-size: xx-large;
+    white-space: nowrap;
+}
+
+h1
+{
+  padding-left: 10px;
+}
+
+h6
+{
+    color: #858585;
+    float : left;
+    padding: 3px;
+}
+
+span
+{
+    color: white;
+    font-size: xx-large;
+    padding-left: 20px;
+}
+
+main .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+
+main
+{
+    /* scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* constrain images on small screens */
+    max-width: 100%;
+}
+
+main #detail_release_title {
+  text-align: left;
+}
