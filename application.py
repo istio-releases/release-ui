@@ -1,6 +1,13 @@
 #import releases_pb2
 from flask import Flask, render_template, request
 from google.appengine.ext import ndb
+# from google.cloud import datastore
+
+class Test_Post(ndb.Model):
+    name = ndb.StringProperty()
+    email = ndb.StringProperty()
+    site = ndb.StringProperty()
+    comments = ndb.StringProperty()
 
 
 app = Flask(__name__)
@@ -26,3 +33,36 @@ def details():
     fakeTasks = [task]
 
     return render_template('details.html', release=fake, tasks=fakeTasks)
+
+@app.route('/form')
+def form():
+    return render_template('test_form.html')
+
+@app.route('/submitted', methods=['POST'])
+def submitted_form():
+    name = request.form['name']
+    email = request.form['email']
+    site = request.form['site_url']
+    comments = request.form['comments']
+
+    post = Test_Post(
+        name=name,
+        email=email,
+        site=site,
+        comments=comments
+    )
+    post.put()
+    # entity = datastore.Entity(key=ds.key('visit'))
+    # entity.update({
+    #     'user_name': name,
+    #     'email': email
+    # })
+    # ds.put(entity)
+
+    return render_template(
+    'test_form_submitted.html',
+    name=name,
+    email=email,
+    site=site,
+    comments=comments,
+    )
