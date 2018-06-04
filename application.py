@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 from google.appengine.ext import ndb
 # from google.cloud import datastore
 
+import json
+
 class Test_Post(ndb.Model):
     name = ndb.StringProperty()
     email = ndb.StringProperty()
@@ -11,20 +13,16 @@ class Test_Post(ndb.Model):
 
 app = Flask(__name__)
 
-@app.route('/', methods =["GET", "POST"])
+@app.route('/', methods=["GET", "POST"])
 def index():
     """Opening page will be dashboard"""
 
     fake ={"version" : "xxx-xxx-xxx", "status" : True, "creation" : "mm/dd/yy at hh:mm:ss", "last_mod" : "mm/dd/yy at hh:mm:ss", "last_active" : "task123", "tag" : 1}
-    # test_key = str(ndb.Key(urlsafe=(request.args.get('key'))))
-
     fakeData = [fake]
 
-    task = {"status": False, "name": "test123", "start" : "mm/dd/yy at hh:mm:ss", "duration" : "xxx units", "log" : "https://github.com/cabreraem/mock_release_UI"}
-    fakeTasks = [task]
-
     if request.method == "POST":
-        return render_template('details.html', release=fake, tasks=fakeTasks)
+        search = request.get_json()
+        print search
 
     return render_template('index.html', releases=fakeData)
 
@@ -39,9 +37,11 @@ def details():
 
     return render_template('details.html', release=fake, tasks=fakeTasks)
 
+
 @app.route('/form')
 def form():
     return render_template('test_form.html')
+
 
 @app.route('/submitted', methods=['POST'])
 def submitted_form():

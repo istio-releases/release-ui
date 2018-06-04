@@ -6,7 +6,7 @@
 
 {% block main %}
     <div class="active-cyan-3 active-cyan-4 mb-4">
-        <input class="form-control" type="text" placeholder="Search to filter" aria-label="Search">
+        <input id="search-box" class="form-control" onkeypress="handle(event)" type="text" placeholder="Search to filter" aria-label="Search">
     </div>
     <table class="table table-striped">
         <thead>
@@ -16,11 +16,11 @@
             <th>Last Modified</th>
             <th>Last Active Task</th>
             <th>
-              <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <div class="btn-group dropup">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true">
                   Tags
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-menu">
                   <a class="dropdown-item" href="#">Auto</a>
                   <a class="dropdown-item" href="#">Daily</a>
                   <a class="dropdown-item" href="#">Weekly</a>
@@ -31,7 +31,7 @@
         </thead>
         <tbody>
             {% for release in releases %}
-            <tr>
+            <tr class='clickable-row' href='/details.html'>
               <td>
                 {% if release["status"] %}
                 <img class="img-responsive" src="/static/images/check.png">
