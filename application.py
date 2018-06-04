@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request
 from google.appengine.ext import ndb
-# from google.cloud import datastore
+app = Flask(__name__)
 
+# adds the "Test_Post" entity kind to the datastore, with the following properties:
 class Test_Post(ndb.Model):
     name = ndb.StringProperty()
     email = ndb.StringProperty()
@@ -9,14 +10,11 @@ class Test_Post(ndb.Model):
     comments = ndb.StringProperty()
 
 
-app = Flask(__name__)
-
 @app.route('/', methods =["GET", "POST"])
 def index():
     """Opening page will be dashboard"""
 
     fake ={"version" : "xxx-xxx-xxx", "status" : True, "creation" : "mm/dd/yy at hh:mm:ss", "last_mod" : "mm/dd/yy at hh:mm:ss", "last_active" : "task123", "tag" : 1}
-    # test_key = str(ndb.Key(urlsafe=(request.args.get('key'))))
 
     fakeData = [fake]
 
@@ -45,17 +43,20 @@ def form():
 
 @app.route('/submitted', methods=['POST'])
 def submitted_form():
+    # gets the neccessary info from the form
     name = request.form['name']
     email = request.form['email']
     site = request.form['site_url']
     comments = request.form['comments']
 
+    #puts the form info into a variable called "post", which uses the Test_Post ndb model(aka "a kind") defined above
     post = Test_Post(
         name=name,
         email=email,
         site=site,
         comments=comments
     )
+    # put this entry into the datastore
     post.put()
     # entity = datastore.Entity(key=ds.key('visit'))
     # entity.update({
