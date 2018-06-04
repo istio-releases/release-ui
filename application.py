@@ -1,5 +1,6 @@
 #import releases_pb2
 from flask import Flask, render_template, request
+from google.appengine.ext import ndb
 
 
 app = Flask(__name__)
@@ -9,6 +10,7 @@ def index():
     """Opening page will be dashboard"""
 
     fake ={"version" : "xxx-xxx-xxx", "status" : True, "creation" : "mm/dd/yy at hh:mm:ss", "last_mod" : "mm/dd/yy at hh:mm:ss", "last_active" : "task123", "tag" : 1}
+    # test_key = str(ndb.Key(urlsafe=(request.args.get('key'))))
 
     fakeData = [fake]
 
