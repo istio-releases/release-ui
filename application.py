@@ -58,12 +58,6 @@ def submitted_form():
     )
     # put this entry into the datastore
     post.put()
-    # entity = datastore.Entity(key=ds.key('visit'))
-    # entity.update({
-    #     'user_name': name,
-    #     'email': email
-    # })
-    # ds.put(entity)
 
     return render_template(
     'test_form_submitted.html',
