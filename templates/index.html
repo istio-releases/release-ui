@@ -40,24 +40,24 @@
                 {% endif %}
               </td>
               <td>
-                {{release["version"]}}
+                <a href="/details?key={{release.key.urlsafe()}}">{{release["version"]}}</a>
               </td>
               <td>
                 {{release["creation"]}}
               </td>
               <td>
-                {{release["last_mod"]}}
+                {{release["last_change"]}}
               </td>
               <td>
                 {{release["last_active"]}}
               </td>
               <td>
                 <button type="button" class="btn btn-secondary btn-sm">
-                  {% if release["tag"] == 1%}
+                  {% if release["tag"] == 1 %}
                     auto
-                  {% elif release["tag"] == 2%}
+                  {% elif release["tag"] == 2 %}
                     daily
-                  {% elif release["tag"] == 3%}
+                  {% elif release["tag"] == 3 %}
                     weekly
                   {% elif release["tag"] == 4 %}
                     monthly
