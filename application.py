@@ -6,17 +6,13 @@ app = Flask(__name__)
 
 @app.route('/', methods=["GET", "POST"])
 def index():
-    """Opening page will be dashboard"""
+    """Main index is the dashboard with a table of recent releases"""
 
-    fake ={"version" : "xxx-xxx-xxx", "status" : True, "creation" : "mm/dd/yy at hh:mm:ss", "last_mod" : "mm/dd/yy at hh:mm:ss", "last_active" : "task123", "tag" : 1}
+    fake1 = {"version":"xxx-xxx-123","status":True,"creation":"mm/dd/yy at hh:mm:ss","last_mod":"mm/dd/yy at hh:mm:ss","last_active":"task123","tags":[1,3]}
+    fake2 = {"version":"xxx-xxx-456","status":False,"creation":"mm/dd/yy at hh:mm:ss","last_mod":"mm/dd/yy at hh:mm:ss","last_active":"task456","tags":[2]}
+    fakeData = [fake1, fake2]
 
-    fakeData = [fake]
-
-    if request.method == "POST":
-        return render_template('details.html', release=fake, tasks=fakeTasks)
-    # releases = Release.query().order(-Release.creation).fetch()
-
-    return render_template('index.html')
+    return render_template('index.html', releases= fakeData)
 
 
 @app.route('/details')
@@ -27,7 +23,7 @@ def details():
     task = {"status": False, "name": "test123", "start" : "mm/dd/yy at hh:mm:ss", "duration" : "xxx units", "log" : "https://github.com/cabreraem/mock_release_UI"}
     fakeTasks = [task]
 
-    return jsonify()
+    return render_template('details.html', release=fake, tasks=fakeTasks)
 
 # @app.route('/form')
 # def form():
