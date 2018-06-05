@@ -27,7 +27,7 @@ def details():
     task = {"status": False, "name": "test123", "start" : "mm/dd/yy at hh:mm:ss", "duration" : "xxx units", "log" : "https://github.com/cabreraem/mock_release_UI"}
     fakeTasks = [task]
 
-    return render_template('details.html', release=fake, tasks=fakeTasks)
+    return jsonify()
 
 # @app.route('/form')
 # def form():

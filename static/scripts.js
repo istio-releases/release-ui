@@ -18,17 +18,19 @@ $(document).ready(function() {
 	var template = document.getElementById("template-dashboard-list");
 	// Get the contents of the template
 	var templateHtml = template.innerHTML;
+
+	var button = document.getElementById("")
 	// Final HTML variable as empty string
 	var listHtml = "";
 
 	// Loop through dataObject, replace placeholder tags
 	// with actual data, and generate final HTML
 	for (var key in dataObject) {
-	  listHtml += templateHtml.replace(/{{version}}/g, dataObject[key]["version"])
+	  listHtml += templateHtml.replace(/version/g, dataObject[key]["version"])
 	                          .replace(/creation/g, dataObject[key]["creation"])
-	                          .replace(/{{last_change}}/g, dataObject[key]["last_mod"])
-	                          .replace(/{{last_active}}/g, dataObject[key]["last_active"])
-	                          .replace(/{{tag}}/g, dataObject[key]["tag"]);
+	                          .replace(/last_change/g, dataObject[key]["last_mod"])
+	                          .replace(/last_active/g, dataObject[key]["last_active"])
+	                          .replace(/tag/g, dataObject[key]["tag"]);
 	}
 
 	document.getElementById("dashboard-list").innerHTML = listHtml;
