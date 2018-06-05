@@ -1,6 +1,5 @@
 // Filter function for the search bar
 function searchBar() {
-
   // Declare variables
   var input, filter, table, tr, td, i;
   input = document.getElementById("search-box");
@@ -47,8 +46,3 @@ function tagFilter(label) {
 			}
 	}
 }
-
-$('.datepicker').datepicker({
-    format: 'mm/dd/yyyy',
-    startDate: '-3d'
-});
