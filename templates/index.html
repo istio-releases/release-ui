@@ -6,7 +6,7 @@
 
 {% block main %}
     <div class="active-cyan-3 active-cyan-4 mb-4">
-        <input id="search-box" class="form-control" onkeypress="handle(event)" type="text" placeholder="Search to filter" aria-label="Search">
+        <input id="search-box" class="form-control" onkeyup="searchBar()" type="text" placeholder="Search to filter">
     </div>
     <table class="table table-striped">
         <thead>
@@ -16,84 +16,62 @@
             <th>Last Modified</th>
             <th>Last Active Task</th>
             <th>
-              <div class="btn-group dropup">
+              <div class="btn-group dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true">
                   Tags
                 </button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" href="#">Auto</a>
-                  <a class="dropdown-item" href="#">Daily</a>
-                  <a class="dropdown-item" href="#">Weekly</a>
-                  <a class="dropdown-item" href="#">Monthly</a>
+                  <li class="dropdown-item" onclick="tagFilter(0)">Show All</li>
+                  <a class="dropdown-item" onclick="tagFilter(1)">Auto</a>
+                  <a class="dropdown-item" onclick="tagFilter(2)">Daily</a>
+                  <a class="dropdown-item" onclick="tagFilter(3)">Weekly</a>
+                  <a class="dropdown-item" onclick="tagFilter(4)">Monthly</a>
                 </div>
               </div>
             </th>
         </thead>
         <tbody id="dashboard-list">
+            {% for release in releases %}
+            <tr class='clickable-row' href='/details.html'>
+              <td>
+                {% if release["status"] %}
+                <img class="img-responsive" src="/static/images/check.png">
+                {% else %}
+                <img class="img-responsive" src="/static/images/error.png">
+                {% endif %}
+              </td>
+              <td>
+                {{release["version"]}}
+              </td>
+              <td>
+                {{release["creation"]}}
+              </td>
+              <td>
+                {{release["last_mod"]}}
+              </td>
+              <td>
+                {{release["last_active"]}}
+              </td>
+              <td>
+                {% for tag in release["tags"]%}
+                <button type="button" class="btn btn-secondary btn-sm {{tag}}">
+                  {% if tag == 1%}
+                    auto
+                  {% elif tag == 2%}
+                    daily
+                  {% elif tag == 3%}
+                    weekly
+                  {% elif tag == 4 %}
+                    monthly
+                  {% endif %}
+                </button>
+                {% endfor %}
+              </td>
+            </tr>
+            {% endfor %}
         </tbody>
-        <script id="template-dashboard-list" type="text/template">
-          <tr class="clickable-row" href="{{details_url}}">
-            <td>
-              <img class="img-responsive" src="/static/images/check.png">
-            </td>
-            <td>
-              <a href="/details">version</a>
-            </td>
-            <td>
-              creation
-            </td>
-            <td>
-              last_change
-            </td>
-            <td>
-              last_active
-            </td>
-            <td>
-              <button type="button" class="btn btn-secondary btn-sm">
-                tag
-              </button>
-            </td>
-          </tr>
-        </script>
+
     </table>
 
 
 {% endblock %}
-
-<!--
-{% for release in releases %}
-<tr class='clickable-row' href='/details.html'>
-  <td>
-    {% if release["status"] %}
-    <img class="img-responsive" src="/static/images/check.png">
-    {% else %}
-    <img class="img-responsive" src="/static/images/error.png">
-    {% endif %}
-  </td>
-  <td>
-    <a href="/details">{{release["version"]}}</a>
-  </td>
-  <td>
-    {{release["creation"]}}
-  </td>
-  <td>
-    {{release["last_change"]}}
-  </td>
-  <td>
-    {{release["last_active"]}}
-  </td>
-  <td>
-    <button type="button" class="btn btn-secondary btn-sm">
-      {% if release["tag"] == 1 %}
-        auto
-      {% elif release["tag"] == 2 %}
-        daily
-      {% elif release["tag"] == 3 %}
-        weekly
-      {% elif release["tag"] == 4 %}
-        monthly
-      {% endif %}
-    </button>
-  </td>
-</tr>
-{% endfor %}-->

@@ -1,37 +1,48 @@
-function handle(e){
-	search=document.getElementById("search-box").value;
-    if(e.keyCode === 13){
-      $.post("receiver", search, function(){
-      });
-    }
-	return false;
+// Filter function for the search bar
+function searchBar() {
+  // Declare variables
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("search-box");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("dashboard-list");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+	for (i = 0; i < tr.length; i++) {
+		var exists = false
+		for (j = 0; j < tr[i].getElementsByTagName("td").length; j++){
+			td = tr[i].getElementsByTagName("td")[j];
+			if (td) {
+				if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+					exists = true;
+					break;
+				}
+			}
+		}
+		if (!exists){
+			tr[i].style.display = "none";
+		}
+		else {
+			tr[i].style.display = "";
+		}
+	}
 }
 
-// Execute when DOM is fully loaded
-$(document).ready(function() {
-	var dataObject = {
-		0: {"version":"xxx-xxx-123","status":true,"creation":"mm/dd/yy at hh:mm:ss","last_mod":"mm/dd/yy at hh:mm:ss","last_active":"task123","tag":1},
-		1: {"version":"xxx-xxx-456","status":true,"creation":"mm/dd/yy at hh:mm:ss","last_mod":"mm/dd/yy at hh:mm:ss","last_active":"task456","tag":2}
-	};
+// Filter function for the tag drop down
+function tagFilter(label) {
 
-	// Cache of the template
-	var template = document.getElementById("template-dashboard-list");
-	// Get the contents of the template
-	var templateHtml = template.innerHTML;
+	// Declare variables
+  table = document.getElementById("dashboard-list");
+  tr = table.getElementsByTagName("tr");
 
-	var button = document.getElementById("")
-	// Final HTML variable as empty string
-	var listHtml = "";
-
-	// Loop through dataObject, replace placeholder tags
-	// with actual data, and generate final HTML
-	for (var key in dataObject) {
-	  listHtml += templateHtml.replace(/version/g, dataObject[key]["version"])
-	                          .replace(/creation/g, dataObject[key]["creation"])
-	                          .replace(/last_change/g, dataObject[key]["last_mod"])
-	                          .replace(/last_active/g, dataObject[key]["last_active"])
-	                          .replace(/tag/g, dataObject[key]["tag"]);
+	for (i = 0; i < tr.length; i++) {
+			td = tr[i].getElementsByTagName("td")[5];
+			if (td) {
+				if (td.innerHTML.toUpperCase().indexOf(label) > -1 || label == 0) {
+					tr[i].style.display = "";
+				} else {
+					tr[i].style.display = "none";
+				}
+			}
 	}
-
-	document.getElementById("dashboard-list").innerHTML = listHtml;
-});
+}
