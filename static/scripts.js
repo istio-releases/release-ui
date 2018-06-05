@@ -33,21 +33,22 @@ function searchBar() {
 function tagFilter(label) {
 
 	// Declare variables
-	input = document.getElementById("search-box");
-  filter = input.value.toUpperCase();
   table = document.getElementById("dashboard-list");
   tr = table.getElementsByTagName("tr");
 
 	for (i = 0; i < tr.length; i++) {
-		for (j = 0; j < tr[i].length; j++){
-			td = tr[i].getElementsByTagName("td")[j];
+			td = tr[i].getElementsByTagName("td")[5];
 			if (td) {
-				if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+				if (td.innerHTML.toUpperCase().indexOf(label) > -1 || label == 0) {
 					tr[i].style.display = "";
 				} else {
 					tr[i].style.display = "none";
 				}
 			}
-		}
 	}
 }
+
+$('.datepicker').datepicker({
+    format: 'mm/dd/yyyy',
+    startDate: '-3d'
+});
