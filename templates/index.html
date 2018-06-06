@@ -5,8 +5,20 @@
 {% endblock %}
 
 {% block main %}
-    <div class="active-cyan-3 active-cyan-4 mb-4">
+    <div class="active-cyan-3 active-cyan-4 mb-4 row">
+      <div class="col-sm">
         <input id="search-box" class="form-control" onkeyup="searchBar()" type="text" placeholder="Search to filter">
+      </div>
+      <div class="col-sm">
+        <label for="from-date">From: </label>
+        <input id="from-date" class="form-control date" type="date">
+      </div>
+      <div class="col-sm">
+        <label for="to-date">To: </label>
+        <input id="to-date" class="form-control date" type="date">
+      </div>
+
+        <button type="button" class="btn btn-danger" onClick="window.location.reload()">Reset</button>
     </div>
     <table class="table">
         <thead>
@@ -25,22 +37,22 @@
               </div>
             </th>
             <th>
-              <button class="btn table-header" type="button">
+              <button class="btn table-header" type="button" onclick="sortTable(1)">
                 Version
               </button>
             </th>
             <th>
-              <button class="btn table-header" type="button">
+              <button class="btn table-header" type="button" onclick="sortTable(2)">
                 Creation
               </button>
             </th>
             <th>
-              <button class="btn table-header" type="button">
+              <button class="btn table-header" type="button" onclick="sortTable(3)">
                 Last Modified
               </button>
             </th>
             <th>
-              <button class="btn table-header" type="button">
+              <button class="btn table-header" type="button" onclick="sortTable(4)">
                 Last Active Task
               </button>
             </th>

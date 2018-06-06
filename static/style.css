@@ -40,16 +40,30 @@ main img
 /* index.html styling */
 .table-header
 {
-  background-color: #2C6AC4;
-  color: white;
+    background-color: #2C6AC4;
+    color: white;
 }
 
 .btn-sm
 {
-  margin: 2px;
+    margin: 2px;
 }
 
+.btn-danger
+{
+    margin-left: 5px;
+    height: 75%;
+}
 
+.date
+{
+    width: 75%
+}
+
+label
+{
+    color: #858585;
+}
 /* -------------------------- */
 /* details.html styling */
 #title
@@ -97,7 +111,4 @@ main .form-control
 {
     /* center form controls */
     display: inline-block;
-
-    /* override Bootstrap's 100% width for form controls */
-    width: auto;
 }
