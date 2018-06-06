@@ -1,58 +1,24 @@
-nav .navbar-brand
+/* -------------------------- */
+/* layout.html styling */
+#top-bar
 {
-    /* size for brand */
+    padding: 30px;
+    background-color: #2C6AC4;
+}
+
+#top-bar-content
+{
+    margin-left:0%;
+    padding:.5%;
     padding-left: 50px;
     font-size: xx-large;
-}
-
-div #title
-{
-    display: inline-block;
-    white-space: nowrap;
-    margin-left: -50px;
-}
-
-div #dates
-{
-  padding-left: 70px;
-  margin-top: 15px;
-  margin-bottom: 25px;
-}
-
-#detail_release_title
-{
-    font-size: xx-large;
-    white-space: nowrap;
-}
-
-h1
-{
-  padding-left: 10px;
-}
-
-h6
-{
-    color: #858585;
-    float : left;
-    padding: 3px;
+    color: white;
 }
 
 span
 {
-    color: white;
-    font-size: xx-large;
-    padding-left: 20px;
+    padding-left: 15px;
 }
-
-main .form-control
-{
-    /* center form controls */
-    display: inline-block;
-
-    /* override Bootstrap's 100% width for form controls */
-    width: auto;
-}
-
 
 main
 {
@@ -69,6 +35,69 @@ main img
     max-width: 100%;
 }
 
-main #detail_release_title {
-  text-align: left;
+
+/* -------------------------- */
+/* index.html styling */
+.table-header
+{
+  background-color: #2C6AC4;
+  color: white;
+}
+
+.btn-sm
+{
+  margin: 2px;
+}
+
+
+/* -------------------------- */
+/* details.html styling */
+#title
+{
+    width:50%;
+}
+
+.label
+{
+    margin-top: 7px;
+    padding: .15rem .5rem;
+}
+
+#dates
+{
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+
+#detail_release_title
+{
+    font-size: xx-large;
+    white-space: nowrap;
+}
+
+#detail-table
+{
+    width:75%;
+    margin-top: 20px;
+}
+
+h1
+{
+  padding-left: 10px;
+}
+
+h6
+{
+    color: #858585;
+    float : left;
+    padding: 3px;
+}
+
+main .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
 }

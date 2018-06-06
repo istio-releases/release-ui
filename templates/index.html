@@ -8,20 +8,49 @@
     <div class="active-cyan-3 active-cyan-4 mb-4">
         <input id="search-box" class="form-control" onkeyup="searchBar()" type="text" placeholder="Search to filter">
     </div>
-    <table class="table table-striped">
+    <table class="table">
         <thead>
-            <th>Status</th>
-            <th>Version</th>
-            <th>Creation</th>
-            <th>Last Modified</th>
-            <th>Last Active Task</th>
+            <th>
+              <div class="btn-group dropdown">
+                <button class="btn table-header dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true">
+                  Status
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" onclick="statusFilter(0)">Show All</a>
+                  <a class="dropdown-item" onclick="statusFilter(1)">Success</a>
+                  <a class="dropdown-item" onclick="statusFilter(2)">Failure</a>
+                  <a class="dropdown-item" onclick="statusFilter(3)">Pending</a>
+                  <a class="dropdown-item" onclick="statusFilter(4)">Suspended</a>
+                </div>
+              </div>
+            </th>
+            <th>
+              <button class="btn table-header" type="button">
+                Version
+              </button>
+            </th>
+            <th>
+              <button class="btn table-header" type="button">
+                Creation
+              </button>
+            </th>
+            <th>
+              <button class="btn table-header" type="button">
+                Last Modified
+              </button>
+            </th>
+            <th>
+              <button class="btn table-header" type="button">
+                Last Active Task
+              </button>
+            </th>
             <th>
               <div class="btn-group dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true">
                   Tags
                 </button>
                 <div class="dropdown-menu">
-                  <li class="dropdown-item" onclick="tagFilter(0)">Show All</li>
+                  <a class="dropdown-item" onclick="tagFilter(0)">Show All</a>
                   <a class="dropdown-item" onclick="tagFilter(1)">Auto</a>
                   <a class="dropdown-item" onclick="tagFilter(2)">Daily</a>
                   <a class="dropdown-item" onclick="tagFilter(3)">Weekly</a>
@@ -30,14 +59,18 @@
               </div>
             </th>
         </thead>
-        <tbody id="dashboard-list">
+        <tbody id="dashboard">
             {% for release in releases %}
             <tr class='clickable-row' href='/details.html'>
               <td>
-                {% if release["status"] %}
-                <img class="img-responsive" src="/static/images/check.png">
-                {% else %}
-                <img class="img-responsive" src="/static/images/error.png">
+                {% if release["status"] == 1%}
+                <img class="img-responsive {{release["status"]}}" src="/static/images/check.png">
+                {% elif release["status"] == 2 %}
+                <img class="img-responsive {{release["status"]}}" src="/static/images/error.png">
+                {% elif release["status"] == 3 %}
+                <img class="img-responsive {{release["status"]}}" src="/static/images/pending.png">
+                {% elif release["status"] == 4 %}
+                <img class="img-responsive {{release["status"]}}" src="/static/images/suspended.png">
                 {% endif %}
               </td>
               <td>

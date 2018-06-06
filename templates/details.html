@@ -5,16 +5,16 @@
 {% endblock %}
 
 {% block main %}
-<div id="title" class="row" style="width:50%;">
+<div id="title" class="row">
   <div class="col-">
     {% if release["status"] %}
-    <img class="img-responsive" src="/static/images/check.png" style="padding-top: 8px;">
+    <img class="img-responsive status" src="/static/images/check.png">
     {% else %}
-    <img class="img-responsive" src="/static/images/error.png" style="padding-top: 8px;">
+    <img class="img-responsive status" src="/static/images/error.png">
     {% endif %}
   </div>
   <div class="col-sm-2">
-    <button type="button" class="btn btn-secondary btn-sm" style="margin-top: 7px; padding: .15rem .5rem;">
+    <button type="button" class="btn btn-secondary btn-sm label">
       {% if release["tag"] == 1%}
         auto
       {% elif release["tag"] == 2%}
@@ -49,8 +49,8 @@
 </div>
 
 
-  <div id="detail-table" style="width:75%; margin-top: 20px;">
-    <table class="table table-bordered">
+  <div id="detail-table">
+    <table class="table table-striped">
       <thead>
         <th>Status</th>
         <th>Task</th>

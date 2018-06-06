@@ -8,9 +8,11 @@ app = Flask(__name__)
 def index():
     """Main index is the dashboard with a table of recent releases"""
 
-    fake1 = {"version":"xxx-xxx-123","status":True,"creation":"mm/dd/yy at hh:mm:ss","last_mod":"mm/dd/yy at hh:mm:ss","last_active":"task123","tags":[1,3]}
-    fake2 = {"version":"xxx-xxx-456","status":False,"creation":"mm/dd/yy at hh:mm:ss","last_mod":"mm/dd/yy at hh:mm:ss","last_active":"task456","tags":[2]}
-    fakeData = [fake1, fake2]
+    fake1 = {"version":"xxx-xxx-123","status":1,"creation":"mm/dd/yy at hh:mm:ss","last_mod":"mm/dd/yy at hh:mm:ss","last_active":"task123","tags":[1,3]}
+    fake2 = {"version":"xxx-xxx-456","status":2,"creation":"mm/dd/yy at hh:mm:ss","last_mod":"mm/dd/yy at hh:mm:ss","last_active":"task456","tags":[2]}
+    fake3 = {"version":"xxx-xxx-789","status":3,"creation":"mm/dd/yy at hh:mm:ss","last_mod":"mm/dd/yy at hh:mm:ss","last_active":"task789","tags":[4]}
+    fake4 = {"version":"xxx-xxx-000","status":4,"creation":"mm/dd/yy at hh:mm:ss","last_mod":"mm/dd/yy at hh:mm:ss","last_active":"task000","tags":[1,2]}
+    fakeData = [fake1, fake2, fake3, fake4]
 
     return render_template('index.html', releases= fakeData)
 

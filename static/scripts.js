@@ -5,12 +5,12 @@ function searchBar() {
   input = document.getElementById("search-box");
   filter = input.value.toUpperCase();
   table = document.getElementById("dashboard-list");
-  tr = table.getElementsByTagName("tr");
+  rows = table.getElementsByTagName("tr");
 
   // Loop through all table rows, and hide those who don't match the search query
-	for (i = 0; i < tr.length; i++) {
+	for (i = 0; i < rows.length; i++) {
 		var exists = false
-		for (j = 0; j < tr[i].getElementsByTagName("td").length; j++){
+		for (j = 0; j < rows[i].getElementsByTagName("td").length; j++){
 			td = tr[i].getElementsByTagName("td")[j];
 			if (td) {
 				if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
@@ -20,29 +20,76 @@ function searchBar() {
 			}
 		}
 		if (!exists){
-			tr[i].style.display = "none";
+			rows[i].style.display = "none";
 		}
 		else {
-			tr[i].style.display = "";
+			rows[i].style.display = "";
 		}
 	}
 }
 
-// Filter function for the tag drop down
-function tagFilter(label) {
+// Filter function for the tag and status dropdowns
+// column 0 == status, column 5 == tags
+function filter(label, column) {
 
 	// Declare variables
-  table = document.getElementById("dashboard-list");
-  tr = table.getElementsByTagName("tr");
+  table = document.getElementById("dashboard");
+  rows = table.getElementsByTagName("tr");
 
-	for (i = 0; i < tr.length; i++) {
-			td = tr[i].getElementsByTagName("td")[5];
+	for (i = 0; i < rows.length; i++) {
+			td = rows[i].getElementsByTagName("td")[column];
 			if (td) {
 				if (td.innerHTML.toUpperCase().indexOf(label) > -1 || label == 0) {
-					tr[i].style.display = "";
+					rows[i].style.display = "";
 				} else {
-					tr[i].style.display = "none";
+					rows[i].style.display = "none";
 				}
 			}
 	}
+}
+
+function statusFilter(label) {
+	filter(label, 0)
+}
+
+function tagFilter(label) {
+	filter(label, 5)
+}
+
+// function source: https://www.w3schools.com/howto/howto_js_sort_table.asp
+function sortTable() {
+  var table, rows, switching, i, x, y, shouldSwitch;
+  table = document.getElementById("dashboard");
+  switching = true;
+
+  /* Make a loop that will continue until
+  no switching has been done: */
+  while (switching) {
+
+    // Start by saying: no switching is done:
+    switching = false;
+    rows = table.getElementsByTagName("tr");
+    /* Loop through all table rows (except the
+    first, which contains table headers): */
+    for (i = 1; i < (rows.length - 1); i++) {
+      // Start by saying there should be no switching:
+      shouldSwitch = false;
+      /* Get the two elements you want to compare,
+      one from current row and one from the next: */
+      x = rows[i].getElementsByTagName("TD")[0];
+      y = rows[i + 1].getElementsByTagName("TD")[0];
+      // Check if the two rows should switch place:
+      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+        // If so, mark as a switch and break the loop:
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      /* If a switch has been marked, make the switch
+      and mark that a switch has been done: */
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+    }
+  }
 }
