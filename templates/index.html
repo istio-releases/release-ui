@@ -11,14 +11,14 @@
       </div>
       <div class="col-sm">
         <label for="from-date">From: </label>
-        <input id="from-date" class="form-control date" type="date">
+        <input id="from-date" class="form-control date" type="date" onkeydown="filterFromDate()">
       </div>
       <div class="col-sm">
         <label for="to-date">To: </label>
-        <input id="to-date" class="form-control date" type="date">
+        <input id="to-date" class="form-control date" type="date" onkeydown="filterToDate()">
       </div>
 
-        <button type="button" class="btn btn-danger" onClick="window.location.reload()">Reset</button>
+        <button type="button" class="btn btn-danger" onClick="reset()">Reset</button>
     </div>
     <table class="table">
         <thead>

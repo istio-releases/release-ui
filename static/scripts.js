@@ -1,3 +1,20 @@
+// When DOM is fully loaded: sort by Last Modified
+$(document).ready(function() {
+  sortTable(3)
+});
+
+// When called, every row is displayed and the table is sorted by Last Modified
+function reset() {
+  table = document.getElementById("dashboard");
+  rows = table.getElementsByTagName("tr");
+
+  for (i = 0; i < rows.length; i++) {
+    rows[i].style.display = "";
+  }
+  sortTable(3);
+}
+
+
 // Filter function for the search bar
 function searchBar() {
   // Declare variables
@@ -49,11 +66,36 @@ function filter(label, column) {
 }
 
 function statusFilter(label) {
-	filter(label, 0)
+
+  table = document.getElementById("dashboard");
+  rows = table.getElementsByTagName("tr");
+
+  for (i = 0; i < rows.length; i++) {
+      td = rows[i].getElementsByTagName("td")[0];
+      if (td) {
+        if (td.innerHTML.toUpperCase().indexOf(label) > -1 || label == 0) {
+          rows[i].style.display = "";
+        } else {
+          rows[i].style.display = "none";
+        }
+      }
+  }
 }
 
 function tagFilter(label) {
-	filter(label, 5)
+  table = document.getElementById("dashboard");
+  rows = table.getElementsByTagName("tr");
+
+  for (i = 0; i < rows.length; i++) {
+      td = rows[i].getElementsByTagName("td")[5];
+      if (td) {
+        if (td.innerHTML.toUpperCase().indexOf(label) > -1 || label == 0) {
+          rows[i].style.display = "";
+        } else {
+          rows[i].style.display = "none";
+        }
+      }
+  }
 }
 
 // Sort table alphabetically or reverse chronologically depending on column clicked
@@ -99,7 +141,47 @@ function sortTable(column) {
   }
 }
 
-// Sort by Last Modified date when DOM is fully loaded
-$(document).ready(function() {
-    sortTable(3)
-});
+// Only shows releases with create dates after the filter
+function filterFromDate() {
+  if(event.keyCode == 13) {
+    input = document.getElementById("from-date");
+    filter = Date.parse(input.value)
+    table = document.getElementById("dashboard");
+    rows = table.getElementsByTagName("tr");
+
+    for (i = 0; i < rows.length; i++) {
+        td = rows[i].getElementsByTagName("td")[2];
+        date = Date.parse(td.innerHTML);
+        if (td) {
+          if (date > filter) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+    }
+  }
+}
+
+// Only shows releases with create dates before the filter
+function filterToDate() {
+  if(event.keyCode == 13) {
+    input = document.getElementById("to-date");
+    filter = Date.parse(input.value)
+    table = document.getElementById("dashboard");
+    rows = table.getElementsByTagName("tr");
+
+    for (i = 0; i < rows.length; i++) {
+        td = rows[i].getElementsByTagName("td")[2];
+        date = Date.parse(td.innerHTML);
+        if (td) {
+          if (date < filter) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+    }
+  }
+
+}
