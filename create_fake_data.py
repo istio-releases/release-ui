@@ -35,11 +35,11 @@ for i in range(number_of_releases):
         new_data[release_id]['tasks']['task'+str(task_num)+'_ID']['status'] = random.randint(1,4)
         new_data[release_id]['tasks']['task'+str(task_num)+'_ID']['error'] = 'error number ' + str(random.randint(0,1023))
         new_data[release_id]['tasks']['task'+str(task_num)+'_ID']['log_url'] = 'https://youtu.be/dQw4w9WgXcQ'
-        for prev_tasks in range(task_num):
-            new_data[release_id]['tasks']['task'+str(task_num)+'_ID']['dependent_on'] = []
-            new_data[release_id]['tasks']['task'+str(task_num)+'_ID']['dependent_on'].append('task' + str(prev_tasks) + '_ID')
+        new_data[release_id]['tasks']['task'+str(task_num)+'_ID']['dependent_on'] = []
+        for prev_task in range(0,task_num):
+            new_data[release_id]['tasks']['task'+str(task_num)+'_ID']['dependent_on'].append('task' + str(prev_task) + '_ID')
     print  release_id + ' created'
-    
+
 #---Puts the JSON into a file called fake_data.json---#
 fake_data = open("fake_data.json", "w+")
 json.dump(new_data, fake_data, indent=2 )
