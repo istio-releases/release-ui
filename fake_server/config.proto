@@ -4,20 +4,24 @@ package release;
 
 service Release {
     // Get information about a release from its id
-    rpc GetRelease(GetReleaseRequest) returns (SingleRelease) {};
+    rpc GetRelease (GetReleaseRequest) returns (GetReleaseResponse) {};
     // List all releases matching the request
     rpc ListReleases (ListReleasesRequest) returns (ListReleasesReponse) {};
 }
 
 message GetReleaseRequest {
     // Release id
-    ReleaseIdentifier release_id = 1;
+    // ReleaseIdentifier release_id = 1;
+    string id = 1;
+}
+
+message GetReleaseResponse {
+  SingleRelease release = 1;
 }
 
 
 message ListReleasesRequest {
     // URL of the repo
-    string repo_url = 1;
     // State of the release
     Status state = 2;
     // Release labels
@@ -32,7 +36,6 @@ message ListReleasesRequest {
 
 message ReleaseIdentifier {
     // URL of the repo
-    string repo_url = 1;
     // Unique identifier for the release
     string id = 2;
 }
@@ -82,22 +85,15 @@ message SingleRelease {
     // Last stage of the release in progress
     Stage stage = 5;
     // Time this release was created
-    int64 started = 6;
+    double started = 6;
     // Last time this release was modified
-    int64 last_modified = 7;
+    double last_modified = 7;
     // When release is complete, a link to artifacts.
     string artifacts_link = 8;
     // When release is complete, a link to the release page
     string release_url = 9;
     // Adding all of the release tasks to the release
-    message ReleaseTask {
-        string task_name = 1;
-        int64 start_time = 2;
-        int64 end_time = 3;
-        Status status = 4;
-        string error_message = 5;
-        string log_link = 6;
-    }
+  
 }
 
 message ListReleasesReponse {
