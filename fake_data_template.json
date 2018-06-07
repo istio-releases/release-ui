@@ -1,10 +1,6 @@
 {
-  "releases":[
-  {
-    "release_identifier": {
-      "repo_url": "https://youtu.be/dQw4w9WgXcQ",
-      "release_id": "xxx-xxx-xxx"
-    },
+  "release1_id":{
+    "repo_url": "https://youtu.be/dQw4w9WgXcQ",
     "labels": [
       "label1",
       "label2",
@@ -24,7 +20,8 @@
         "last_modified": 1528406517,
         "status": 0,
         "error": "Error? Never heard of her",
-        "log_url": "https://youtu.be/dQw4w9WgXcQ"
+        "log_url": "https://youtu.be/dQw4w9WgXcQ",
+        "dependent_on":[]
       },
       "task2_ID":{
         "task_name": "task2",
@@ -32,7 +29,10 @@
         "last_modified": 1528406517,
         "status": 0,
         "error": "Error? Never heard of her",
-        "log_url": "https://youtu.be/dQw4w9WgXcQ"
+        "log_url": "https://youtu.be/dQw4w9WgXcQ",
+        "dependent_on": [
+          "task1_ID"
+        ]
       },
       "task3_ID":{
         "task_name": "task3",
@@ -40,10 +40,85 @@
         "last_modified": 1528406517,
         "status": 0,
         "error": "Error? Never heard of her",
-        "log_url": "https://youtu.be/dQw4w9WgXcQ"
+        "log_url": "https://youtu.be/dQw4w9WgXcQ",
+        "dependent_on":[
+          "task1_ID",
+          "task2_ID"
+        ]
+      },
+      "task4_ID":{
+        "task_name": "task4",
+        "started": 1528406517,
+        "last_modified": 1528406517,
+        "status": 0,
+        "error": "Error? Never heard of her",
+        "log_url": "https://youtu.be/dQw4w9WgXcQ",
+        "dependent_on":[
+          "task1_ID",
+          "task2_ID"
+        ]
       }
     }
   },
-
-]
+  "release2_id":{
+    "repo_url": "https://youtu.be/dQw4w9WgXcQ",
+    "labels": [
+      "label1",
+      "label2",
+      "label3"
+    ],
+    "ref": "reference",
+    "state": 0,
+    "stage": 0,
+    "started": 1528376400,
+    "last_modified":1528406517,
+    "artifacts_link": "https://youtu.be/dQw4w9WgXcQ",
+    "release_url": "https://youtu.be/dQw4w9WgXcQ",
+    "tasks": {
+      "task1_ID":{
+        "task_name": "task1",
+        "started": 1528406517,
+        "last_modified": 1528406517,
+        "status": 0,
+        "error": "Error? Never heard of her",
+        "log_url": "https://youtu.be/dQw4w9WgXcQ",
+        "dependent_on":[]
+      },
+      "task2_ID":{
+        "task_name": "task2",
+        "started": 1528406517,
+        "last_modified": 1528406517,
+        "status": 0,
+        "error": "Error? Never heard of her",
+        "log_url": "https://youtu.be/dQw4w9WgXcQ",
+        "dependent_on": [
+          "task1_ID"
+        ]
+      },
+      "task3_ID":{
+        "task_name": "task3",
+        "started": 1528406517,
+        "last_modified": 1528406517,
+        "status": 0,
+        "error": "Error? Never heard of her",
+        "log_url": "https://youtu.be/dQw4w9WgXcQ",
+        "dependent_on":[
+          "task1_ID",
+          "task2_ID"
+        ]
+      },
+      "task4_ID":{
+        "task_name": "task4",
+        "started": 1528406517,
+        "last_modified": 1528406517,
+        "status": 0,
+        "error": "Error? Never heard of her",
+        "log_url": "https://youtu.be/dQw4w9WgXcQ",
+        "dependent_on":[
+          "task1_ID",
+          "task2_ID"
+        ]
+      }
+    }
+  },
 }
