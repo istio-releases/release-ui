@@ -1,5 +1,38 @@
 from flask import Flask, render_template, request
 import datetime
+from google.appengine.ext import ndb
+
+class Modification(ndb.Model):
+    change_url = ndb.StringProperty()
+    timestamp = ndb.DateTimeProperty()
+
+
+class ReleaseTask(ndb.Model):
+    task_name = ndb.StringProperty()
+    start = ndb.DateTimeProperty()
+    end = ndb.DateTimeProperty()
+    status = ndb.IntegerProperty()
+    error_message = ndb.StringProperty()
+    log_link = ndb.StringProperty()
+    release_key = ndb.KeyProperty()
+
+class Release(ndb.Model):
+    version = ndb.StringProperty()
+    creation = ndb.DateTimeProperty(auto_now_add=True)
+    last_change = ndb.DateTimeProperty(auto_now=True)
+    changes = ndb.StringProperty(repeated=True)
+    last_task = ndb.KeyProperty()
+    status = ndb.IntegerProperty()
+    tags = ndb.IntegerProperty(repeated=True)
+    build_artifacts = ndb.StringProperty()
+    branch = ndb.StringProperty()
+    tasks = ndb.KeyProperty(repeated=True)
+
+class Test_Post(ndb.Model):
+    name = ndb.StringProperty()
+    email = ndb.StringProperty()
+    site = ndb.StringProperty()
+    comments = ndb.StringProperty()
 
 
 app = Flask(__name__)
@@ -27,32 +60,32 @@ def details():
 
     return render_template('details.html', release=fake, tasks=fakeTasks)
 
-# @app.route('/form')
-# def form():
-#     return render_template('test_form.html')
-#
-# @app.route('/submitted', methods=['POST'])
-# def submitted_form():
-#     # gets the neccessary info from the form
-#     name = request.form['name']
-#     email = request.form['email']
-#     site = request.form['site_url']
-#     comments = request.form['comments']
-#
-#     #puts the form info into a variable called "post", which uses the Test_Post ndb model(aka "a kind") defined above
-#     post = Test_Post(
-#         name=name,
-#         email=email,
-#         site=site,
-#         comments=comments
-#     )
-#     # put this entry into the datastore
-#     post.put()
-#
-#     return render_template(
-#     'test_form_submitted.html',
-#     name=name,
-#     email=email,
-#     site=site,
-#     comments=comments,
-#     )
+@app.route('/form')
+def form():
+    return render_template('test_form.html')
+
+@app.route('/submitted', methods=['POST'])
+def submitted_form():
+    # gets the neccessary info from the form
+    name = request.form['name']
+    email = request.form['email']
+    site = request.form['site_url']
+    comments = request.form['comments']
+
+    #puts the form info into a variable called "post", which uses the Test_Post ndb model(aka "a kind") defined above
+    post = Test_Post(
+        name=name,
+        email=email,
+        site=site,
+        comments=comments
+    )
+    # put this entry into the datastore
+    post.put()
+
+    return render_template(
+    'test_form_submitted.html',
+    name=name,
+    email=email,
+    site=site,
+    comments=comments,
+    )
