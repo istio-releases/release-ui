@@ -18,6 +18,7 @@ for i in range(number_of_releases):
     number_of_labels = random.randint(1,5)
     number_of_tasks = random.randint(1,5)
     new_data[release_id] = blank_template
+    new_data[release_id]['name'] = release_id
     new_data[release_id]['repo_url'] = 'https://youtu.be/dQw4w9WgXcQ'
     new_data[release_id]['labels'] = []
     for label_num in range(number_of_labels):
@@ -42,7 +43,6 @@ for i in range(number_of_releases):
             new_data[release_id]['tasks']['task'+str(task_num)+'_ID']['dependent_on'].append('task' + str(prev_task) + '_ID')
     new_data[release_id]['last_active_task'] = 'task' + str(random.randint(1,5)) + '_ID'
     print  release_id + ' created'
-    time.sleep(1)
 
 #---Puts the JSON into a file called fake_data.json---#
 fake_data = open("fake_data.json", "w+")

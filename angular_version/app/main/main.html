@@ -6,8 +6,8 @@
 <table class="table">
     <thead>
       <th>
-        <div ng-controller="StatusController">
-          <select class="form-control dropdown" ng-model:"statusValue" ng-change:"statusChange">
+        <div>
+          <select class="form-control dropdown">
             <option value="0">All</option>
             <option value="1">Finished</option>
             <option value="2">Failed</option>
@@ -17,30 +17,33 @@
         </div>
       </th>
       <th>
-        <button class="btn table-header" type="button" onclick="sortTable(1)">
+        <button class="btn table-header" type="button">
           Version
         </button>
       </th>
       <th>
-        <button class="btn table-header" type="button" onclick="sortTable(2)">
+        <button class="btn table-header" type="button">
           Creation
         </button>
       </th>
       <th>
-        <button class="btn table-header" type="button" onclick="sortTable(3)">
+        <button class="btn table-header" type="button">
           Last Modified
         </button>
       </th>
       <th>
-        <button class="btn table-header" type="button" onclick="sortTable(4)">
+        <button class="btn table-header" type="button">
           Last Active Task
         </button>
       </th>
       <th>
         <div>
           <select class="form-control dropdown">
-            <option ng-repeat="(version, release) in releases" value="{{}}">
-
+            <option value="All">
+                All Labels
+            </option>
+            <option ng-repeat="label in labels" ng-click="">
+              {{label}}
             </option>
           </select>
         </div>
@@ -48,7 +51,7 @@
     </thead>
 
     <tbody id="dashboard">
-        <tr ng-repeat="(version, release) in releases">
+        <tr ng-repeat="(version, release) in releases | orderObjectBy:'last_modified':true">
           <td>
             <img ng-if="release.state == 2" src="/style/images/check.png">
             <img ng-if="release.state == 3" src="/style/images/error.png">
@@ -56,7 +59,7 @@
             <img ng-if="release.state == 4" src="/style/images/suspended.png">
           </td>
           <td>
-            {{version}}
+            {{release.name}}
           </td>
           <td>
             {{release.started | date:'medium'}}

@@ -1,5 +1,6 @@
 'use strict';
 var releases;
+var labels;
 
 angular.module('releaseUI.main', ['ngRoute', 'ngMaterial'])
 .config(['$routeProvider', function($routeProvider) {
@@ -10,16 +11,24 @@ angular.module('releaseUI.main', ['ngRoute', 'ngMaterial'])
 }]);
 
 App.controller('MainController', function($scope, $cacheFactory, $http) {
+    labels = new Set();
     $http({
       method: 'GET',
       url: '/fake_data.json',
       cache: true
     }).then(function successCallback(response) {
-      $scope.releases = angular.fromJson(response.data);
       releases = angular.fromJson(response.data);
+      angular.forEach(releases, function(value, key) {
+        for (var i = 0; i < value.labels.length; i++) {
+          labels.add(value.labels[i]);
+        }
+      })
+      $scope.releases = releases;
+      $scope.labels = Array.from(labels);
     }, function errorCallback(response) {
       $log.log(response);
     });
+
 });
 
 App.controller('StatusController', function($scope) {
@@ -30,33 +39,42 @@ App.controller('StatusController', function($scope) {
     {"id":3, "status": "Pending"},
     {"id":4, "status": "Suspended"},
   ];
-
-  $scope.statusChange = function () {
-    filterStatus = $scope.statusValue;
-    $scope.$emit('filtered');
-  };
-
 });
 
 App.controller('LabelController', function($scope) {
-  
+
 });
 
-App.filter('statusFilter', function() {
-  return function(input, status) {
+// Filter depending on selected state (state == 0 shows all)
+App.filter('stateFilter', function() {
+  return function(input, state) {
+    var filtered = [];
 
-    var output = [];
-
-    if (status == 0) {
+    if (state == 0) {
       output = input;
     }
     else {
       angular.forEach(input, function (item) {
-        if (item.status == status){
+        if (item.state == state){
           output.push(item);
         }
       })
     }
     return output;
   }
+});
+
+// OrderBy function for dictionary instead of array
+App.filter('orderObjectBy', function() {
+  return function(items, field, reverse) {
+    var filtered = [];
+    angular.forEach(items, function(item) {
+      filtered.push(item);
+    });
+    filtered.sort(function (a, b) {
+      return (a[field] > b[field] ? 1 : -1);
+    });
+    if(reverse) filtered.reverse();
+    return filtered;
+  };
 });
