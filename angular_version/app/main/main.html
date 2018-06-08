@@ -1,18 +1,19 @@
-
+<div class="active-cyan-3 active-cyan-4 mb-4 row">
+  <div class="col-sm">
+    <input id="search-box" class="form-control" type="text" ng-model="searchTable" placeholder="Search to filter">
+  </div>
+</div>
 <table class="table">
     <thead>
       <th>
-        <div class="btn-group dropdown">
-          <button class="btn table-header dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true">
-            Status
-          </button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item">Show All</a>
-            <a class="dropdown-item">Success</a>
-            <a class="dropdown-item">Failure</a>
-            <a class="dropdown-item">Pending</a>
-            <a class="dropdown-item">Suspended</a>
-          </div>
+        <div ng-controller="StatusController">
+          <select class="form-control dropdown" ng-model:"statusValue" ng-change:"statusChange">
+            <option value="0">Status</option>
+            <option value="1">Finished</option>
+            <option value="2">Failed</option>
+            <option value="3">Pending</option>
+            <option value="4">Suspended</option>
+          </select>
         </div>
       </th>
       <th>
@@ -36,28 +37,25 @@
         </button>
       </th>
       <th>
-        <div class="btn-group dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true">
-            Tags
-          </button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" onclick="tagFilter(0)">Show All</a>
-            <a class="dropdown-item" onclick="tagFilter(1)">Auto</a>
-            <a class="dropdown-item" onclick="tagFilter(2)">Daily</a>
-            <a class="dropdown-item" onclick="tagFilter(3)">Weekly</a>
-            <a class="dropdown-item" onclick="tagFilter(4)">Monthly</a>
-          </div>
+        <div>
+          <select class="form-control dropdown" name="section_type_list">
+            <option value="">Labels</option>
+            <option value="">Auto</option>
+            <option value="">Daily</option>
+            <option value="">Weekly</option>
+            <option value="">Monthly</option>
+          </select>
         </div>
       </th>
     </thead>
 
     <tbody id="dashboard">
-        <tr ng-repeat="release in releases">
+        <tr ng-repeat="release in releases | filter: searchTable | statusFilter:statusValue">
           <td>
-            <img ng-if="release.status == 1" src="/images/check.png">
-            <img ng-if="release.status == 2" src="/images/error.png">
-            <img ng-if="release.status == 3" src="/images/pending.png">
-            <img ng-if="release.status == 4" src="/images/suspended.png">
+            <img ng-if="release.status == 1" src="/style/images/check.png">
+            <img ng-if="release.status == 2" src="/style/images/error.png">
+            <img ng-if="release.status == 3" src="/style/images/pending.png">
+            <img ng-if="release.status == 4" src="/style/images/suspended.png">
           </td>
           <td>
             {{release.version}}

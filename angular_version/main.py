@@ -1,8 +1,9 @@
 from flask import Flask, jsonify, request
-
+from flask_restful import Resource, Api
 
 # creating the Flask application
 app = Flask(__name__)
+api = Api(app)
 
 
 @app.route('/')
@@ -14,3 +15,9 @@ def index():
     fakeData = [fake1, fake2, fake3, fake4]
 
     return jsonify(fakeData)
+
+@app.route('/api/list.json', methods=["GET"])
+def release_list():
+    # Get list of releases from memcache or adapter interface
+    result = ""
+    return Response(json.dumps(result), mimetype="application/json")
