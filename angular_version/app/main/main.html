@@ -50,39 +50,28 @@
     </thead>
 
     <tbody id="dashboard">
-        <tr ng-repeat="release in releases | filter: searchTable | statusFilter:statusValue">
+        <tr ng-repeat="(version, release) in releases">
           <td>
-            <img ng-if="release.status == 1" src="/style/images/check.png">
-            <img ng-if="release.status == 2" src="/style/images/error.png">
-            <img ng-if="release.status == 3" src="/style/images/pending.png">
-            <img ng-if="release.status == 4" src="/style/images/suspended.png">
+            <img ng-if="release.state == 2" src="/style/images/check.png">
+            <img ng-if="release.state == 3" src="/style/images/error.png">
+            <img ng-if="release.state == 1" src="/style/images/pending.png">
+            <img ng-if="release.state == 4" src="/style/images/suspended.png">
           </td>
           <td>
-            {{release.version}}
+            {{version}}
           </td>
           <td>
-            {{release.creation}}
+            {{release.started | date:'medium'}}
           </td>
           <td>
-            {{release.last_mod}}
+            {{release.last_modified | date:'medium'}}
           </td>
           <td>
-            {{release.last_active}}
+            {{release.last_active_task}}
           </td>
           <td>
-            <button ng-repeat="tag in release.tags "type="button" class="btn btn-secondary btn-sm {{tag}}">
-              <p ng-if="tag == 1">
-                auto
-              </p>
-              <p ng-if="tag == 2">
-                daily
-              </p>
-              <p ng-if="tag == 3">
-                weekly
-              </p>
-              <p ng-if="tag == 4">
-                monthly
-              </p>
+            <button ng-repeat="tag in release.labels "type="button" class="btn btn-secondary btn-sm {{tag}}">
+              {{tag}}
             </button>
           </td>
         </tr>

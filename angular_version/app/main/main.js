@@ -16,14 +16,17 @@ var fakeData = [fake1, fake2, fake3, fake4];
 var filterStatus = 0;
 
 App.controller('MainController', function($scope, $http, $log) {
-  $scope.showList = function () {
-    $scope.releases= fakeData;
-  };
 
-  $scope.showList();
-  $scope.$on('filtered', function () {
-    $scope.showList();
+  $http({
+    method: 'GET',
+    url: '/data.json',
+    cache: true
+  }).then(function successCallback(response) {
+    $scope.releases= angular.fromJson(response.data);
+  }, function errorCallback(response) {
+    $log.log(response);
   });
+
 });
 
 App.controller('StatusController', function($scope) {

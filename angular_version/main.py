@@ -16,7 +16,7 @@ def index():
 
     return jsonify(fakeData)
 
-@app.route('/api/list.json', methods=["GET"])
+@app.route('/list', methods=["GET"])
 def release_list():
     # Get list of releases from memcache or adapter interface
     result = ""
