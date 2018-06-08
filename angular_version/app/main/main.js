@@ -10,7 +10,7 @@ angular.module('releaseUI.main', ['ngRoute', 'ngMaterial'])
   });
 }]);
 
-App.controller('MainController', function($scope, $cacheFactory, $http) {
+App.controller('MainController', function($scope, $cacheFactory, $http, $log) {
     labels = new Set();
     $http({
       method: 'GET',
@@ -29,6 +29,11 @@ App.controller('MainController', function($scope, $cacheFactory, $http) {
       $log.log(response);
     });
 
+    $scope.stateValue = 0;
+    $scope.setStateFilter = function(state) {
+      $log.log(state);
+      $scope.stateValue = state;
+    };
 });
 
 App.controller('StatusController', function($scope) {
@@ -46,16 +51,19 @@ App.controller('LabelController', function($scope) {
 });
 
 // Filter depending on selected state (state == 0 shows all)
-App.filter('stateFilter', function() {
+App.filter('stateFilter', function($log) {
   return function(input, state) {
-    var filtered = [];
+    $log.log(input);
+    $log.log(state);
+
+    var output = [];
 
     if (state == 0) {
       output = input;
     }
     else {
       angular.forEach(input, function (item) {
-        if (item.state == state){
+        if (item == state){
           output.push(item);
         }
       })

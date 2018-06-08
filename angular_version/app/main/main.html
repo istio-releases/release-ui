@@ -8,11 +8,11 @@
       <th>
         <div>
           <select class="form-control dropdown">
-            <option value="0">All</option>
-            <option value="1">Finished</option>
-            <option value="2">Failed</option>
-            <option value="3">Pending</option>
-            <option value="4">Suspended</option>
+            <option ng-click="setStateFilter(0)" value="0">All</option>
+            <option ng-click="setStateFilter(1)" value="1">Finished</option>
+            <option ng-click="setStateFilter(2)" value="2">Failed</option>
+            <option ng-click="setStateFilter(3)" value="3">Pending</option>
+            <option ng-click="setStateFilter(4)" value="4">Suspended</option>
           </select>
         </div>
       </th>
@@ -51,7 +51,7 @@
     </thead>
 
     <tbody id="dashboard">
-        <tr ng-repeat="(version, release) in releases | orderObjectBy:'last_modified':true">
+        <tr ng-repeat="(version, release) in releases | orderObjectBy:'last_modified':true | stateFilter:stateValue">
           <td>
             <img ng-if="release.state == 2" src="/style/images/check.png">
             <img ng-if="release.state == 3" src="/style/images/error.png">
@@ -62,10 +62,10 @@
             {{release.name}}
           </td>
           <td>
-            {{release.started | date:'medium'}}
+            {{release.started * 1000 | date:'medium'}}
           </td>
           <td>
-            {{release.last_modified | date:'medium'}}
+            {{release.last_modified * 1000 | date:'medium'}}
           </td>
           <td>
             {{release.last_active_task}}
