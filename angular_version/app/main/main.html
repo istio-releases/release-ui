@@ -8,7 +8,7 @@
       <th>
         <div ng-controller="StatusController">
           <select class="form-control dropdown" ng-model:"statusValue" ng-change:"statusChange">
-            <option value="0">Status</option>
+            <option value="0">All</option>
             <option value="1">Finished</option>
             <option value="2">Failed</option>
             <option value="3">Pending</option>
@@ -38,12 +38,10 @@
       </th>
       <th>
         <div>
-          <select class="form-control dropdown" name="section_type_list">
-            <option value="">Labels</option>
-            <option value="">Auto</option>
-            <option value="">Daily</option>
-            <option value="">Weekly</option>
-            <option value="">Monthly</option>
+          <select class="form-control dropdown">
+            <option ng-repeat="(version, release) in releases" value="{{}}">
+
+            </option>
           </select>
         </div>
       </th>

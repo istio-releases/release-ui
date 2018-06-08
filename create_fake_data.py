@@ -1,5 +1,6 @@
 import json
 import random
+import time
 
 blank_release = json.loads(open("fake_data_template.json").read())
 blank_template = blank_release['release2_id']
@@ -10,6 +11,7 @@ number_of_releases = 10
 
 #-----Creates the data to put into the JSON-----#
 for i in range(number_of_releases):
+    random.seed()
     release_id = "release-" + str(random.randint(0,1023))
     while release_id in new_data:
         release_id = "release-" + str(random.randint(0,1023))
@@ -40,6 +42,7 @@ for i in range(number_of_releases):
             new_data[release_id]['tasks']['task'+str(task_num)+'_ID']['dependent_on'].append('task' + str(prev_task) + '_ID')
     new_data[release_id]['last_active_task'] = 'task' + str(random.randint(1,5)) + '_ID'
     print  release_id + ' created'
+    time.sleep(1)
 
 #---Puts the JSON into a file called fake_data.json---#
 fake_data = open("fake_data.json", "w+")
