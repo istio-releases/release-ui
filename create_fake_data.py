@@ -38,7 +38,7 @@ for i in range(number_of_releases):
         new_data[release_id]['tasks']['task'+str(task_num)+'_ID']['dependent_on'] = []
         for prev_task in range(0,task_num):
             new_data[release_id]['tasks']['task'+str(task_num)+'_ID']['dependent_on'].append('task' + str(prev_task) + '_ID')
-    new_data[release_id]['last_active_task'] = 'task' + str(randint(1,5)) + '_ID'
+    new_data[release_id]['last_active_task'] = 'task' + str(random.randint(1,5)) + '_ID'
     print  release_id + ' created'
 
 #---Puts the JSON into a file called fake_data.json---#
