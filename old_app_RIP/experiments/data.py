@@ -21,7 +21,7 @@ class Release(ndb.Model):
     changes = ndb.StringProperty(repeated=True)
     last_task = ndb.KeyProperty()
     status = ndb.BooleanProperty()
-    tag = ndb.IntegerProperty()
+    tags = ndb.IntegerProperty(repeated=True)
     build_artifacts = ndb.StringProperty()
     branch = ndb.StringProperty()
     tasks = ndb.KeyProperty(repeated=True)

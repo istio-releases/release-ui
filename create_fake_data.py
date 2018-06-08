@@ -1,5 +1,6 @@
 import json
 import random
+import time
 
 blank_release = json.loads(open("fake_data_template.json").read())
 blank_template = blank_release['release2_id']
@@ -10,12 +11,14 @@ number_of_releases = 10
 
 #-----Creates the data to put into the JSON-----#
 for i in range(number_of_releases):
+    random.seed()
     release_id = "release-" + str(random.randint(0,1023))
     while release_id in new_data:
         release_id = "release-" + str(random.randint(0,1023))
     number_of_labels = random.randint(1,5)
     number_of_tasks = random.randint(1,5)
     new_data[release_id] = blank_template
+    new_data[release_id]['name'] = release_id
     new_data[release_id]['repo_url'] = 'https://youtu.be/dQw4w9WgXcQ'
     new_data[release_id]['labels'] = []
     for label_num in range(number_of_labels):

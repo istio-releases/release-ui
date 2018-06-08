@@ -1,0 +1,81 @@
+<div class="active-cyan-3 active-cyan-4 mb-4 row">
+  <div class="col-sm">
+    <input id="search-box" class="form-control" type="text" ng-model="searchTable" placeholder="Search to filter">
+  </div>
+</div>
+<table class="table">
+    <thead>
+      <th>
+        <div>
+          <select class="form-control dropdown">
+            <option ng-click="setStateFilter(0)" value="0">All</option>
+            <option ng-click="setStateFilter(1)" value="1">Finished</option>
+            <option ng-click="setStateFilter(2)" value="2">Failed</option>
+            <option ng-click="setStateFilter(3)" value="3">Pending</option>
+            <option ng-click="setStateFilter(4)" value="4">Suspended</option>
+          </select>
+        </div>
+      </th>
+      <th>
+        <button class="btn table-header" type="button">
+          Version
+        </button>
+      </th>
+      <th>
+        <button class="btn table-header" type="button">
+          Creation
+        </button>
+      </th>
+      <th>
+        <button class="btn table-header" type="button">
+          Last Modified
+        </button>
+      </th>
+      <th>
+        <button class="btn table-header" type="button">
+          Last Active Task
+        </button>
+      </th>
+      <th>
+        <div>
+          <select class="form-control dropdown">
+            <option value="All">
+                All Labels
+            </option>
+            <option ng-repeat="label in labels" ng-click="">
+              {{label}}
+            </option>
+          </select>
+        </div>
+      </th>
+    </thead>
+
+    <tbody id="dashboard">
+        <tr ng-repeat="(version, release) in releases | orderObjectBy:'last_modified':true | stateFilter:stateValue">
+          <td>
+            <img ng-if="release.state == 2" src="/style/images/check.png">
+            <img ng-if="release.state == 3" src="/style/images/error.png">
+            <img ng-if="release.state == 1" src="/style/images/pending.png">
+            <img ng-if="release.state == 4" src="/style/images/suspended.png">
+          </td>
+          <td>
+            {{release.name}}
+          </td>
+          <td>
+            {{release.started * 1000 | date:'medium'}}
+          </td>
+          <td>
+            {{release.last_modified * 1000 | date:'medium'}}
+          </td>
+          <td>
+            {{release.last_active_task}}
+          </td>
+          <td>
+            <button ng-repeat="tag in release.labels "type="button" class="btn btn-secondary btn-sm {{tag}}">
+              {{tag}}
+            </button>
+          </td>
+        </tr>
+    </tbody>
+
+</table>
