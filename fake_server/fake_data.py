@@ -1,0 +1,35 @@
+releases = [
+  {
+      'id':'5649681819846168',
+      'labels': ["tags:0.3.2,daily", "base: master"],
+      'ref': 'unknown',
+      'state': 2,
+      'stage': 7,
+      'started': 1095379199.25,
+      'last_modified': 1095379199.25,
+      'artifacts_link': 'https://youtu.be/dQw4w9WgXcQ',
+      'release_url': 'https://youtu.be/dQw4w9WgXcQ',
+  },
+  {
+      'id':'6894581815615681',
+      'labels': ["tags:0.3.2,daily", "base: master"],
+      'ref': 'unknown',
+      'state': 1,
+      'stage': 3,
+      'started': 1095379199.25,
+      'last_modified': 1095379199.25,
+      'artifacts_link': 'https://youtu.be/dQw4w9WgXcQ',
+      'release_url': 'https://youtu.be/dQw4w9WgXcQ',
+    },
+  {
+      'id':'5688156156121',
+      'labels': ["tags:0.3.2,daily", "base: master"],
+      'ref': 'unknown',
+      'state': 4,
+      'stage': 0,
+      'started': 1095379199.25,
+      'last_modified': 1095379199.25,
+      'artifacts_link': 'https://youtu.be/dQw4w9WgXcQ',
+      'release_url': 'https://youtu.be/dQw4w9WgXcQ',
+    }
+]
