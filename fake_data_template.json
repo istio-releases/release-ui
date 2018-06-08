@@ -58,7 +58,8 @@
           "task2_ID"
         ]
       }
-    }
+    },
+    "last_active_task": "task4_ID"
   },
   "release2_id":{
     "repo_url": "https://youtu.be/dQw4w9WgXcQ",
@@ -73,5 +74,6 @@
     "release_url": "https://youtu.be/dQw4w9WgXcQ",
     "tasks": {
     }
-  }
+  },
+  "last_active_task": "taskN_ID"
 }
