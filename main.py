@@ -1,12 +1,17 @@
 from flask import Flask, jsonify, request
+<<<<<<< HEAD
 from flask_restful import Api, Resource, reqparse
 import read_fake_data
 
 
+=======
+from flask_restful import Resource, Api
+>>>>>>> 1ffcb6be6fc470ab3dfd397b1cccae91d14dd2bf
 
 # creating the Flask application
 app = Flask(__name__)
 api = Api(app)
+<<<<<<< HEAD
 read_fake_data # read and load the data from fake_data.py into memcache
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -18,3 +23,17 @@ def index():
     fakeData = memcache.get('releases')
     if request.method = 'GET':
         return jsonify(fakeData), 200
+=======
+
+
+@app.route('/')
+def index():
+
+    return jsonify(fakeData)
+
+@app.route('/list', methods=["GET"])
+def release_list():
+    # Get list of releases from memcache or adapter interface
+    result = ""
+    return Response(json.dumps(result), mimetype="application/json")
+>>>>>>> 1ffcb6be6fc470ab3dfd397b1cccae91d14dd2bf
