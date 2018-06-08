@@ -1,0 +1,122 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block main %}
+    <div class="active-cyan-3 active-cyan-4 mb-4 row">
+      <div class="col-sm">
+        <input id="search-box" class="form-control" onkeyup="searchBar()" type="text" placeholder="Search to filter">
+      </div>
+      <div class="col-sm">
+        <label for="from-date">From: </label>
+        <input id="from-date" class="form-control date" type="date" onkeydown="filterFromDate()">
+      </div>
+      <div class="col-sm">
+        <label for="to-date">To: </label>
+        <input id="to-date" class="form-control date" type="date" onkeydown="filterToDate()">
+      </div>
+
+        <button type="button" class="btn btn-danger" onClick="reset()">Reset</button>
+    </div>
+    <table class="table">
+        <thead>
+            <th>
+              <div class="btn-group dropdown">
+                <button class="btn table-header dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true">
+                  Status
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" onclick="statusFilter(0)">Show All</a>
+                  <a class="dropdown-item" onclick="statusFilter(1)">Success</a>
+                  <a class="dropdown-item" onclick="statusFilter(2)">Failure</a>
+                  <a class="dropdown-item" onclick="statusFilter(3)">Pending</a>
+                  <a class="dropdown-item" onclick="statusFilter(4)">Suspended</a>
+                </div>
+              </div>
+            </th>
+            <th>
+              <button class="btn table-header" type="button" onclick="sortTable(1)">
+                Version
+              </button>
+            </th>
+            <th>
+              <button class="btn table-header" type="button" onclick="sortTable(2)">
+                Creation
+              </button>
+            </th>
+            <th>
+              <button class="btn table-header" type="button" onclick="sortTable(3)">
+                Last Modified
+              </button>
+            </th>
+            <th>
+              <button class="btn table-header" type="button" onclick="sortTable(4)">
+                Last Active Task
+              </button>
+            </th>
+            <th>
+              <div class="btn-group dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true">
+                  Tags
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" onclick="tagFilter(0)">Show All</a>
+                  <a class="dropdown-item" onclick="tagFilter(1)">Auto</a>
+                  <a class="dropdown-item" onclick="tagFilter(2)">Daily</a>
+                  <a class="dropdown-item" onclick="tagFilter(3)">Weekly</a>
+                  <a class="dropdown-item" onclick="tagFilter(4)">Monthly</a>
+                </div>
+              </div>
+            </th>
+        </thead>
+        <tbody id="dashboard">
+            {% for release in releases %}
+            <tr class='clickable-row' href='/details.html'>
+              <td>
+                {% if release["status"] == 1%}
+                <img class="img-responsive {{release["status"]}}" src="/static/images/check.png">
+                {% elif release["status"] == 2 %}
+                <img class="img-responsive {{release["status"]}}" src="/static/images/error.png">
+                {% elif release["status"] == 3 %}
+                <img class="img-responsive {{release["status"]}}" src="/static/images/pending.png">
+                {% elif release["status"] == 4 %}
+                <img class="img-responsive {{release["status"]}}" src="/static/images/suspended.png">
+                {% endif %}
+              </td>
+              <td>
+                {{release["version"]}}
+              </td>
+              <td>
+                {{release["creation"]}}
+              </td>
+              <td>
+                {{release["last_mod"]}}
+              </td>
+              <td>
+                {{release["last_active"]}}
+              </td>
+              <td>
+                {% for tag in release["tags"]%}
+                <button type="button" class="btn btn-secondary btn-sm {{tag}}">
+                  {% if tag == 1%}
+                    auto
+                  {% elif tag == 2%}
+                    daily
+                  {% elif tag == 3%}
+                    weekly
+                  {% elif tag == 4 %}
+                    monthly
+                  {% endif %}
+                </button>
+                {% endfor %}
+              </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+
+{% endblock %}
