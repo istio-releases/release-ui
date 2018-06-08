@@ -45,3 +45,16 @@ $(document).ready(function() {
 
 	document.getElementById("dashboard-list").innerHTML = listHtml;
 });
+
+
+$scope.showList = function () {
+	$http({
+		method: 'GET',
+		url: '/',
+	}).then(function(response) {
+		$scope.releases = response.data;
+		console.log(JSON.stringify(response));
+	}, function(error) {
+		console.log(error);
+	});
+};
