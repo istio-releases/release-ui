@@ -14,9 +14,10 @@ App.controller('MainController', function($scope, $cacheFactory, $http, $log) {
     labels = new Set();
     $http({
       method: 'GET',
-      url: '/fake_data.json',
+      url: '/list',
       cache: true
     }).then(function successCallback(response) {
+      console.log(response.data);
       releases = angular.fromJson(response.data);
       angular.forEach(releases, function(value, key) {
         for (var i = 0; i < value.labels.length; i++) {
