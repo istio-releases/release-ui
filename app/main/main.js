@@ -14,7 +14,7 @@ App.controller('MainController', function($scope, $cacheFactory, $http, $log) {
     labels = new Set();
     $http({
       method: 'GET',
-      url: '/list',
+      url: 'fake_data.json',
       cache: true
     }).then(function successCallback(response) {
       console.log(response.data);
@@ -30,10 +30,19 @@ App.controller('MainController', function($scope, $cacheFactory, $http, $log) {
       $log.log(response);
     });
 
+    $scope.stateValues = [
+      {"id":0, "status": "Status"},
+      {"id":1, "status": "Finished"},
+      {"id":2, "status": "Failed"},
+      {"id":3, "status": "Pending"},
+      {"id":4, "status": "Suspended"},
+    ];
+
+    $scope.selected = $scope.stateValues[0];
     $scope.stateValue = 0;
-    $scope.setStateFilter = function(state) {
-      $log.log(state);
-      $scope.stateValue = state;
+    $scope.hasChanged = function(state) {
+      $log.log($scope.selected.id);
+      $scope.stateValue = $scope.selected.id;
     };
 });
 
@@ -52,11 +61,8 @@ App.controller('LabelController', function($scope) {
 });
 
 // Filter depending on selected state (state == 0 shows all)
-App.filter('stateFilter', function($log) {
+App.filter('stateFilter', function() {
   return function(input, state) {
-    $log.log(input);
-    $log.log(state);
-
     var output = [];
 
     if (state == 0) {
