@@ -12,6 +12,7 @@
       <md-datepicker md-current-view="year" ng-model="endDate" ng-change="toDate = endDate; maxFromDate = endDate"
         md-placeholder="To" md-min-date="minToDate" md-max-date="maxDate"> </md-datepicker>
     </div>
+    <button type="button" class="btn btn-danger" ng-click="resetFilter()">Reset Filters</button>
   </div>
   <table class="table">
       <thead>

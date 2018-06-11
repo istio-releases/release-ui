@@ -36,10 +36,10 @@ app.controller('MainController', function($scope, $http, $log) {
 
     // Starting settings for datepicker
     $scope.maxDate = new Date();
-    $scope.maxFromDate = new Date();
+    $scope.maxFromDate = $scope.maxDate;
     $scope.minToDate = new Date(0);
-    $scope.fromDate = new Date(0);
-    $scope.toDate = new Date();
+    $scope.fromDate = $scope.minToDate;
+    $scope.toDate = $scope.maxDate;
 
     // Starting settings for label filtered
     $scope.labelValue = 'all';
@@ -61,6 +61,23 @@ app.controller('MainController', function($scope, $http, $log) {
     // Starting Settings for OrderBy filter
     $scope.sortType = 'last_modified';
     $scope.sortReverse = true;
+
+    // Reset Filters and OrderBy
+    $scope.resetFilter = function () {
+      $scope.fromDate = new Date(0);
+      $scope.toDate = new Date();
+      $scope.startDate = '';
+      $scope.endDate = '';
+
+      $scope.labelValue = 'all';
+      $scope.selectedLabel = 'all';
+
+      $scope.stateValue = 0;
+      $scope.selectedValue = 0;
+
+      $scope.sortType = 'last_modified';
+      $scope.sortReverse = true;
+    };
 });
 
 // Filter on all properties
