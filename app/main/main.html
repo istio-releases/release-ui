@@ -2,15 +2,23 @@
 
   <div class="active-cyan-3 active-cyan-4 mb-4 row">
     <div class="col-sm">
-      <input id="search-box" class="form-control" type="text" ng-model="searchTable" placeholder="Search to filter">
-    </div>
-    <div class="col-sm">
       <md-datepicker md-current-view="year" ng-model="startDate" ng-change="fromDate = startDate; minToDate = startDate"
         md-placeholder="From" md-max-date="maxFromDate"></md-datepicker>
     </div>
     <div class="col-sm">
       <md-datepicker md-current-view="year" ng-model="endDate" ng-change="toDate = endDate; maxFromDate = endDate"
         md-placeholder="To" md-min-date="minToDate" md-max-date="maxDate"> </md-datepicker>
+    </div>
+    <div class="col-sm">
+      <label>
+        <input type="radio" ng-model="filterDate" value="started" ng-click="whichDate = 'started'">
+        Filter by Creation Date
+      </label>
+      <br/>
+      <label>
+        <input type="radio" ng-model="filterDate" value="modified" ng-click="whichDate = 'last_modified'">
+        Filter by Last Modified
+      </label>
     </div>
     <button type="button" class="btn btn-danger" ng-click="resetFilter()">Reset Filters</button>
   </div>
@@ -67,7 +75,7 @@
       </thead>
 
       <tbody id="dashboard">
-          <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse | filter:searchTale | propFilter:stateValue:labelValue:fromDate:toDate">
+          <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse | filter:searchTale | propFilter:stateValue:labelValue:fromDate:toDate:whichDate">
             <td>
               <img ng-if="release.state == 2" src="/style/images/check.png">
               <img ng-if="release.state == 3" src="/style/images/error.png">

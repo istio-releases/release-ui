@@ -40,6 +40,8 @@ app.controller('MainController', function($scope, $http, $log) {
     $scope.minToDate = new Date(0);
     $scope.fromDate = $scope.minToDate;
     $scope.toDate = $scope.maxDate;
+    $scope.whichDate = 'started';
+    $scope.filterDate = 'started';
 
     // Starting settings for label filtered
     $scope.labelValue = null;
@@ -67,6 +69,8 @@ app.controller('MainController', function($scope, $http, $log) {
       $scope.toDate = new Date();
       $scope.startDate = null;
       $scope.endDate = null;
+      $scope.whichDate = 'started';
+      $scope.filterDate = 'started';
 
       $scope.labelValue = null;
       $scope.selectedLabel = null;
@@ -81,12 +85,18 @@ app.controller('MainController', function($scope, $http, $log) {
 
 // Filter on all properties
 app.filter('propFilter', function($log) {
-  return function(items, state, label, from, to) {
+  return function(items, state, label, from, to, which) {
 
     //filter based on created dates
     var filteredDate = [];
     angular.forEach(items, function (item) {
-      var time = item.started * 1000;
+      var time;
+      if(which == 'started'){
+        time = item.started * 1000;
+      }
+      else{
+        time = item.last_modified * 1000;
+      }
       if (time >= from && time <= to){
         filteredDate.push(item);
       }
