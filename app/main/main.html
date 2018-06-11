@@ -1,84 +1,106 @@
-<div class="active-cyan-3 active-cyan-4 mb-4 row">
-  <div class="col-sm">
-    <input id="search-box" class="form-control" type="text" ng-model="searchTable" placeholder="Search to filter">
+<div ng-controller="MainController">
+
+  <div class="active-cyan-3 active-cyan-4 mb-4 row">
+    <div class="col-sm">
+      <md-datepicker md-current-view="year" ng-model="startDate" ng-change="fromDate = startDate; minToDate = startDate"
+        md-placeholder="From" md-max-date="maxFromDate"></md-datepicker>
+    </div>
+    <div class="col-sm">
+      <md-datepicker md-current-view="year" ng-model="endDate" ng-change="toDate = endDate; maxFromDate = endDate"
+        md-placeholder="To" md-min-date="minToDate" md-max-date="maxDate"> </md-datepicker>
+    </div>
+    <div class="col-sm">
+      <label>
+        <input type="radio" ng-model="filterDate" value="started" ng-click="whichDate = 'started'">
+        Filter by Creation Date
+      </label>
+      <br/>
+      <label>
+        <input type="radio" ng-model="filterDate" value="modified" ng-click="whichDate = 'last_modified'">
+        Filter by Last Modified
+      </label>
+    </div>
+    <button type="button" class="btn btn-danger" ng-click="resetFilter()">Reset Filters</button>
   </div>
+  <table class="table">
+      <thead>
+        <th>
+          <div>
+            <select class="form-control dropdown"
+              ng-model="selectedValue"
+              ng-options="state.id as state.status for state in stateValues track by state.id"
+              ng-change="stateValue = selectedValue">
+              <option value="">Status</option>
+            </select>
+          </div>
+        </th>
+        <th>
+          <button class="btn table-header" type="button" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+            Version
+            <span ng-show="sortType == 'name' && sortReverse == false" class="caret">&#9660;</span>
+            <span ng-show="sortType == 'name' && sortReverse == true" class="caret">&#9650;</span>
+          </button>
+        </th>
+        <th>
+          <button class="btn table-header" type="button" ng-click="sortType = 'started'; sortReverse = !sortReverse">
+            Creation
+            <span ng-show="sortType == 'started' && sortReverse == false" class="caret">&#9660;</span>
+            <span ng-show="sortType == 'started' && sortReverse == true" class="caret">&#9650;</span>
+          </button>
+        </th>
+        <th>
+          <button class="btn table-header" type="button" ng-click="sortType = 'last_modified'; sortReverse = !sortReverse">
+            Last Modified
+            <span ng-show="sortType == 'last_modified' && sortReverse == false" class="caret">&#9660;</span>
+            <span ng-show="sortType == 'last_modified' && sortReverse == true" class="caret">&#9650;</span>
+          </button>
+        </th>
+        <th>
+          <button class="btn table-header" type="button" ng-click="sortType = 'last_active_task'; sortReverse = !sortReverse">
+            Last Active Task
+            <span ng-show="sortType == 'last_active_task' && sortReverse == false" class="caret">&#9660;</span>
+            <span ng-show="sortType == 'last_active_task' && sortReverse == true" class="caret">&#9650;</span>
+          </button>
+        </th>
+        <th>
+          <div>
+            <select class="form-control dropdown"
+              ng-model="selectedLabel"
+              ng-options="label as label for label in labels"
+              ng-change="labelValue = selectedLabel">
+              <option value="">All Labels</option>
+            </select>
+          </div>
+        </th>
+      </thead>
+
+      <tbody id="dashboard">
+          <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse | filter:searchTale | propFilter:stateValue:labelValue:fromDate:toDate:whichDate">
+            <td>
+              <img ng-if="release.state == 2" src="/style/images/check.png">
+              <img ng-if="release.state == 3" src="/style/images/error.png">
+              <img ng-if="release.state == 1" src="/style/images/pending.png">
+              <img ng-if="release.state == 4" src="/style/images/suspended.png">
+            </td>
+            <td>
+              {{release.name}}
+            </td>
+            <td>
+              {{release.started * 1000 | date:'medium'}}
+            </td>
+            <td>
+              {{release.last_modified * 1000 | date:'medium'}}
+            </td>
+            <td>
+              {{release.last_active_task}}
+            </td>
+            <td>
+              <button ng-repeat="tag in release.labels "type="button" class="btn btn-secondary btn-sm {{tag}}">
+                {{tag}}
+              </button>
+            </td>
+          </tr>
+      </tbody>
+  </table>
+
 </div>
-<table class="table" ng-controller="MainController">
-    <thead>
-      <th>
-        <div>
-          <select class="form-control dropdown" ng-options="item.status for item in stateValues" ng-model="selected" ng-change="hasChanged(stateValue)">
-          </select>
-        </div>
-      </th>
-      <th>
-        <button class="btn table-header" type="button" ng-click="sortType = 'name'; sortReverse = !sortReverse">
-          Version
-          <span ng-show="sortType == 'name' && sortReverse == false" class="caret">&#9660;</span>
-          <span ng-show="sortType == 'name' && sortReverse == true" class="caret">&#9650;</span>
-        </button>
-      </th>
-      <th>
-        <button class="btn table-header" type="button" ng-click="sortType = 'started'; sortReverse = !sortReverse">
-          Creation
-          <span ng-show="sortType == 'started' && sortReverse == false" class="caret">&#9660;</span>
-          <span ng-show="sortType == 'started' && sortReverse == true" class="caret">&#9650;</span>
-        </button>
-      </th>
-      <th>
-        <button class="btn table-header" type="button" ng-click="sortType = 'last_modified'; sortReverse = !sortReverse">
-          Last Modified
-          <span ng-show="sortType == 'last_modified' && sortReverse == false" class="caret">&#9660;</span>
-          <span ng-show="sortType == 'last_modified' && sortReverse == true" class="caret">&#9650;</span>
-        </button>
-      </th>
-      <th>
-        <button class="btn table-header" type="button" ng-click="sortType = 'last_active_task'; sortReverse = !sortReverse">
-          Last Active Task
-          <span ng-show="sortType == 'last_active_task' && sortReverse == false" class="caret">&#9660;</span>
-          <span ng-show="sortType == 'last_active_task' && sortReverse == true" class="caret">&#9650;</span>        
-        </button>
-      </th>
-      <th>
-        <div>
-          <select class="form-control dropdown">
-            <option value="All">
-                All Labels
-            </option>
-            <option ng-repeat="label in labels" ng-click="">
-              {{label}}
-            </option>
-          </select>
-        </div>
-      </th>
-    </thead>
-
-    <tbody id="dashboard">
-        <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse">
-          <td>
-            <img ng-if="release.state == 2" src="/style/images/check.png">
-            <img ng-if="release.state == 3" src="/style/images/error.png">
-            <img ng-if="release.state == 1" src="/style/images/pending.png">
-            <img ng-if="release.state == 4" src="/style/images/suspended.png">
-          </td>
-          <td>
-            {{release.name}}
-          </td>
-          <td>
-            {{release.started * 1000 | date:'medium'}}
-          </td>
-          <td>
-            {{release.last_modified * 1000 | date:'medium'}}
-          </td>
-          <td>
-            {{release.last_active_task}}
-          </td>
-          <td>
-            <button ng-repeat="tag in release.labels "type="button" class="btn btn-secondary btn-sm {{tag}}">
-              {{tag}}
-            </button>
-          </td>
-        </tr>
-    </tbody>
-
-</table>
