@@ -10,55 +10,6 @@ angular.module('releaseUI.main', ['ngRoute', 'ngMaterial'])
   });
 }]);
 
-App.controller('MainController', function($scope, $cacheFactory, $http, $log) {
-    labels = new Set();
-    $http({
-      method: 'GET',
-      url: 'fake_data.json',
-      cache: true
-    }).then(function successCallback(response) {
-      releases = angular.fromJson(response.data);
-      angular.forEach(releases, function(value, key) {
-        for (var i = 0; i < value.labels.length; i++) {
-          labels.add(value.labels[i]);
-        }
-      })
-      $scope.releases = releases;
-      $scope.labels = Array.from(labels);
-    }, function errorCallback(response) {
-      $log.log(response);
-    });
-
-    $scope.stateValues = [
-      {"id":0, "status": "Status"},
-      {"id":1, "status": "Finished"},
-      {"id":2, "status": "Failed"},
-      {"id":3, "status": "Pending"},
-      {"id":4, "status": "Suspended"},
-    ];
-
-    $scope.selected = $scope.stateValues[0];
-    $scope.stateValue = 0;
-    $scope.hasChanged = function(state) {
-      $log.log($scope.selected.id);
-      $scope.stateValue = $scope.selected.id;
-    };
-});
-
-App.controller('StatusController', function($scope) {
-  $scope.statusList = [
-    {"id":0, "status": "Status"},
-    {"id":1, "status": "Finished"},
-    {"id":2, "status": "Failed"},
-    {"id":3, "status": "Pending"},
-    {"id":4, "status": "Suspended"},
-  ];
-});
-
-App.controller('LabelController', function($scope) {
-
-});
-
 // Filter depending on selected state (state == 0 shows all)
 App.filter('stateFilter', function() {
   return function(input, state) {
@@ -77,6 +28,55 @@ App.filter('stateFilter', function() {
     return output;
   }
 });
+
+App.controller('MainController', function($scope, $http, $log) {
+    labels = new Set();
+    $http({
+      method: 'GET',
+      url: 'fake_data.json',
+      cache: true
+    }).then(function successCallback(response) {
+      releases = angular.fromJson(response.data);
+      angular.forEach(releases, function(value, key) {
+        for (var i = 0; i < value.labels.length; i++) {
+          labels.add(value.labels[i]);
+        }
+      });
+      $scope.releases = releases;
+      $scope.labels = Array.from(labels);
+    }, function errorCallback(response) {
+      $log.log(response);
+    });
+
+    $scope.searchTable = undefined;
+    $scope.stateValues = [
+      {"id":0, "status": "Status"},
+      {"id":1, "status": "Finished"},
+      {"id":2, "status": "Failed"},
+      {"id":3, "status": "Pending"},
+      {"id":4, "status": "Suspended"},
+    ];
+
+    $scope.sortType = 'last_modified';
+    $scope.sortReverse = true;
+
+    $scope.selected = $scope.stateValues[0];
+    $scope.stateValue = 1;
+    $scope.hasChanged = function(state) {
+      $log.log($scope.selected.id);
+      $scope.stateValue = $scope.selected.id;
+
+    };
+});
+
+App.controller('StatusController', function($scope) {
+
+});
+
+App.controller('LabelController', function($scope) {
+
+});
+
 
 // OrderBy function for dictionary instead of array
 App.filter('orderObjectBy', function() {

@@ -70,6 +70,11 @@ p
     margin: 2px;
 }
 
+.caret
+{
+    color: white;
+}
+
 /* -------------------------- */
 /* details.html styling */
 #title

@@ -12,23 +12,31 @@
         </div>
       </th>
       <th>
-        <button class="btn table-header" type="button">
+        <button class="btn table-header" type="button" ng-click="sortType = 'name'; sortReverse = !sortReverse">
           Version
+          <span ng-show="sortType == 'name' && sortReverse == false" class="caret">&#9660;</span>
+          <span ng-show="sortType == 'name' && sortReverse == true" class="caret">&#9650;</span>
         </button>
       </th>
       <th>
-        <button class="btn table-header" type="button">
+        <button class="btn table-header" type="button" ng-click="sortType = 'started'; sortReverse = !sortReverse">
           Creation
+          <span ng-show="sortType == 'started' && sortReverse == false" class="caret">&#9660;</span>
+          <span ng-show="sortType == 'started' && sortReverse == true" class="caret">&#9650;</span>
         </button>
       </th>
       <th>
-        <button class="btn table-header" type="button">
+        <button class="btn table-header" type="button" ng-click="sortType = 'last_modified'; sortReverse = !sortReverse">
           Last Modified
+          <span ng-show="sortType == 'last_modified' && sortReverse == false" class="caret">&#9660;</span>
+          <span ng-show="sortType == 'last_modified' && sortReverse == true" class="caret">&#9650;</span>
         </button>
       </th>
       <th>
-        <button class="btn table-header" type="button">
+        <button class="btn table-header" type="button" ng-click="sortType = 'last_active_task'; sortReverse = !sortReverse">
           Last Active Task
+          <span ng-show="sortType == 'last_active_task' && sortReverse == false" class="caret">&#9660;</span>
+          <span ng-show="sortType == 'last_active_task' && sortReverse == true" class="caret">&#9650;</span>        
         </button>
       </th>
       <th>
@@ -46,7 +54,7 @@
     </thead>
 
     <tbody id="dashboard">
-        <tr ng-repeat="(version, release) in releases | orderObjectBy:'last_modified':true | stateFilter:stateValue">
+        <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse">
           <td>
             <img ng-if="release.state == 2" src="/style/images/check.png">
             <img ng-if="release.state == 3" src="/style/images/error.png">
