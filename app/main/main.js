@@ -12,6 +12,8 @@ app.config(['$routeProvider', function($routeProvider) {
 }]);
 
 app.controller('MainController', function($scope, $http, $log) {
+
+    // Get information from http request
     var labelSet = new Set();
     var labels;
     $http({
@@ -31,6 +33,13 @@ app.controller('MainController', function($scope, $http, $log) {
     }, function errorCallback(response) {
       $log.log(response);
     });
+
+    // Starting settings for datepicker
+    $scope.maxDate = new Date();
+    $scope.maxFromDate = new Date();
+    $scope.minToDate = new Date(0);
+    $scope.fromDate = new Date(0);
+    $scope.toDate = new Date();
 
     // Starting settings for label filtered
     $scope.labelValue = 'all';
@@ -54,31 +63,18 @@ app.controller('MainController', function($scope, $http, $log) {
     $scope.sortReverse = true;
 });
 
-app.controller('LabelController', function($scope) {
-
-});
-
-// Filter depending on selected state (state == 0 shows all)
-app.filter('stateFilter', function() {
-  return function(items, state) {
-    var filtered = [];
-    if (state == 0) {
-      filtered = items;
-    }
-    else {
-      angular.forEach(items, function (item) {
-        if (item.state == state){
-          filtered.push(item);
-        }
-      })
-    }
-    return filtered;
-  }
-});
-
-// Filter depending on selected label
+// Filter on all properties
 app.filter('propFilter', function($log) {
-  return function(items, state, label) {
+  return function(items, state, label, from, to) {
+
+    //filter based on created dates
+    var filteredDate = [];
+    angular.forEach(items, function (item) {
+      var time = item.started * 1000;
+      if (time >= from && time <= to){
+        filteredDate.push(item);
+      }
+    })
 
     //filter based on state
     var filteredState = [];
@@ -93,7 +89,7 @@ app.filter('propFilter', function($log) {
       })
     }
 
-    // filter based on label
+    //filter based on label
     var filteredLabel = [];
     if (label == 'all') {
       filteredLabel = items;
@@ -109,7 +105,7 @@ app.filter('propFilter', function($log) {
     }
 
     // return intersection of arrays
-    return filteredState.filter(value => -1 !== filteredLabel.indexOf(value));
+    return intersection(filteredDate, filteredLabel, filteredState);
   }
 });
 
@@ -127,3 +123,35 @@ app.filter('orderObjectBy', function() {
     return filtered;
   };
 });
+
+// intersection of arrays
+function intersection() {
+  var result = [];
+  var lists;
+
+  if(arguments.length === 1) {
+    lists = arguments[0];
+  } else {
+    lists = arguments;
+  }
+
+  for(var i = 0; i < lists.length; i++) {
+    var currentList = lists[i];
+    for(var y = 0; y < currentList.length; y++) {
+        var currentValue = currentList[y];
+      if(result.indexOf(currentValue) === -1) {
+        var existsInAll = true;
+        for(var x = 0; x < lists.length; x++) {
+          if(lists[x].indexOf(currentValue) === -1) {
+            existsInAll = false;
+            break;
+          }
+        }
+        if(existsInAll) {
+          result.push(currentValue);
+        }
+      }
+    }
+  }
+  return result;
+}
