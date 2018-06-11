@@ -10,25 +10,28 @@ angular.module('releaseUI.main', ['ngRoute', 'ngMaterial'])
   });
 }]);
 
+function Releases($scope, $http){
+  $http.get('http://localhost:8080/getReleases').then(function successCallback(response){
+    $scope.releases = angular.fromJson(response.data);
+    console.log(scope.releases)
+  });
+};
+
 App.controller('MainController', function($scope, $cacheFactory, $http, $log) {
     labels = new Set();
-    $http({
-      method: 'GET',
-      url: 'fake_data.json',
-      cache: true
-    }).then(function successCallback(response) {
-      console.log(response.data);
-      releases = angular.fromJson(response.data);
-      angular.forEach(releases, function(value, key) {
+    // $http.get('http://localhost:8080/getReleases').then(function successCallback(response) {
+    //   console.log(response.data);
+    //   releases = angular.fromJson(response.data);
+      angular.forEach($scope.releases, function(value, key) {
         for (var i = 0; i < value.labels.length; i++) {
           labels.add(value.labels[i]);
         }
       })
       $scope.releases = releases;
       $scope.labels = Array.from(labels);
-    }, function errorCallback(response) {
+    function errorCallback(response) {
       $log.log(response);
-    });
+    };
 
     $scope.stateValues = [
       {"id":0, "status": "Status"},
