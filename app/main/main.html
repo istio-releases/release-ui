@@ -57,7 +57,7 @@
     </thead>
 
     <tbody id="dashboard">
-        <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse | stateFilter:stateValue | labelFilter:labelValue">
+        <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse | propFilter:stateValue:labelValue">
           <td>
             <img ng-if="release.state == 2" src="/style/images/check.png">
             <img ng-if="release.state == 3" src="/style/images/error.png">

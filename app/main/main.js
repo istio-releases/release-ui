@@ -77,22 +77,39 @@ app.filter('stateFilter', function() {
 });
 
 // Filter depending on selected label
-app.filter('labelFilter', function() {
-  return function(items, label) {
-    var filtered = [];
+app.filter('propFilter', function($log) {
+  return function(items, state, label) {
+
+    //filter based on state
+    var filteredState = [];
+    if (state == 0) {
+      filteredState = items;
+    }
+    else {
+      angular.forEach(items, function (item) {
+        if (item.state == state){
+          filteredState.push(item);
+        }
+      })
+    }
+
+    // filter based on label
+    var filteredLabel = [];
     if (label == 'all') {
-      filtered = items;
+      filteredLabel = items;
     }
     else {
       angular.forEach(items, function (item) {
         for(var i = 0; i < item.labels.length; i++){
           if (item.labels[i] == label){
-            filtered.push(item);
+            filteredLabel.push(item);
           }
         }
       })
     }
-    return filtered;
+
+    // return intersection of arrays
+    return filteredState.filter(value => -1 !== filteredLabel.indexOf(value));
   }
 });
 
