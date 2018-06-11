@@ -10,6 +10,7 @@ angular.module('releaseUI.main', ['ngRoute', 'ngMaterial'])
   });
 }]);
 
+
 // Filter depending on selected state (state == 0 shows all)
 App.filter('stateFilter', function() {
   return function(input, state) {
@@ -34,13 +35,20 @@ App.controller('MainController', function($scope, $http, $log) {
     // $http.get('http://localhost:8080/getReleases').then(function successCallback(response) {
     //   console.log(response.data);
     //   releases = angular.fromJson(response.data);
-      angular.forEach($scope.releases, function(value, key) {
-        for (var i = 0; i < value.labels.length; i++) {
-          labels.add(value.labels[i]);
-        }
-      });
-      $scope.releases = releases;
-      $scope.labels = Array.from(labels);
+
+    $http.get("http://localhost:8080/details").then(function successCallback(response){
+      $scope.releases = angular.fromJson(response.data);
+      console.log($scope.releases);
+    });
+
+
+      // angular.forEach($scope.releases, function(value, key) {
+      //   for (var i = 0; i < value.labels.length; i++) {
+      //     labels.add(value.labels[i]);
+      //   }
+      // });
+      // $scope.releases = releases;
+      // $scope.labels = Array.from(labels);
     function errorCallback(response) {
       $log.log(response);
     };
