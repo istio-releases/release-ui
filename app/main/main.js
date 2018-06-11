@@ -42,13 +42,12 @@ app.controller('MainController', function($scope, $http, $log) {
     $scope.toDate = $scope.maxDate;
 
     // Starting settings for label filtered
-    $scope.labelValue = 'all';
+    $scope.labelValue = null;
 
     // Starting settings for search filter
     $scope.searchTable = undefined;
 
     // Starting settings for state filter
-    $scope.selectedValue = 0;
     $scope.stateValues = [
       {"id":0, "status": "Status"},
       {"id":2, "status": "Finished"},
@@ -56,7 +55,7 @@ app.controller('MainController', function($scope, $http, $log) {
       {"id":1, "status": "Pending"},
       {"id":4, "status": "Suspended"},
     ];
-    $scope.stateValue = 0;
+    $scope.stateValue = null;
 
     // Starting Settings for OrderBy filter
     $scope.sortType = 'last_modified';
@@ -66,14 +65,14 @@ app.controller('MainController', function($scope, $http, $log) {
     $scope.resetFilter = function () {
       $scope.fromDate = new Date(0);
       $scope.toDate = new Date();
-      $scope.startDate = '';
-      $scope.endDate = '';
+      $scope.startDate = null;
+      $scope.endDate = null;
 
-      $scope.labelValue = 'all';
-      $scope.selectedLabel = 'all';
+      $scope.labelValue = null;
+      $scope.selectedLabel = null;
 
-      $scope.stateValue = 0;
-      $scope.selectedValue = 0;
+      $scope.stateValue = null;
+      $scope.selectedValue = null;
 
       $scope.sortType = 'last_modified';
       $scope.sortReverse = true;
@@ -95,7 +94,7 @@ app.filter('propFilter', function($log) {
 
     //filter based on state
     var filteredState = [];
-    if (state == 0) {
+    if (state == null) {
       filteredState = items;
     }
     else {
@@ -108,7 +107,7 @@ app.filter('propFilter', function($log) {
 
     //filter based on label
     var filteredLabel = [];
-    if (label == 'all') {
+    if (label == null) {
       filteredLabel = items;
     }
     else {
