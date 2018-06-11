@@ -1,8 +1,8 @@
-from flask import Flask, jsonify, request
-from flask_restful import Api, Resource, reqparse
-from flask_cors import CORS
+from flask import Flask, jsonify, request, render_template
+from flask.views import MethodView
+import json
 import read_fake_data
-from google.appenginge.api import memcache
+from google.appengine.api import memcache
 
 
 # creating the Flask application
