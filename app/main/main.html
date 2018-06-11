@@ -7,7 +7,10 @@
     <thead>
       <th>
         <div>
-          <select class="form-control dropdown" ng-options="item.status for item in stateValues" ng-model="selected" ng-change="hasChanged(stateValue)">
+          <select class="form-control dropdown"
+            ng-model="selectedValue"
+            ng-options="state.id as state.status for state in stateValues track by state.id"
+            ng-change="stateValue = selectedValue">
           </select>
         </div>
       </th>
@@ -36,17 +39,17 @@
         <button class="btn table-header" type="button" ng-click="sortType = 'last_active_task'; sortReverse = !sortReverse">
           Last Active Task
           <span ng-show="sortType == 'last_active_task' && sortReverse == false" class="caret">&#9660;</span>
-          <span ng-show="sortType == 'last_active_task' && sortReverse == true" class="caret">&#9650;</span>        
+          <span ng-show="sortType == 'last_active_task' && sortReverse == true" class="caret">&#9650;</span>
         </button>
       </th>
       <th>
         <div>
-          <select class="form-control dropdown">
+          <select class="form-control dropdown"
+            ng-model="selectedLabel"
+            ng-options="label as label for label in labels"
+            ng-change="labelValue = selectedLabel">
             <option value="All">
                 All Labels
-            </option>
-            <option ng-repeat="label in labels" ng-click="">
-              {{label}}
             </option>
           </select>
         </div>
@@ -54,7 +57,7 @@
     </thead>
 
     <tbody id="dashboard">
-        <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse">
+        <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse | stateFilter:stateValue | labelFilter:labelValue">
           <td>
             <img ng-if="release.state == 2" src="/style/images/check.png">
             <img ng-if="release.state == 3" src="/style/images/error.png">
