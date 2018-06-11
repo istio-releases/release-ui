@@ -11,12 +11,7 @@ handlers:
 - url: /(.+)
   static_files: app/\1
   upload: app/.*
-  http_headers: Access-Control-Allow-Origin: *
-  http_headers: Access-Control-Allow-Headers: *
-  http_headers: Access-Control-Allow-Methods: *
+
 
 - url: .*
   script: main.app
-  http_headers: Access-Control-Allow-Origin: *
-  http_headers: Access-Control-Allow-Headers: *
-  http_headers: Access-Control-Allow-Methods: *
