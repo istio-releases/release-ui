@@ -18,16 +18,16 @@ memcache.add(key="releases", value=parsed_json)
 
 
 
-# class Releases(Resource):
-#     def get(self):
-#         result = memcache.get('releases')
-#         result = json.dumps(result)
-#         return result, 200
-#
-# api.add_resource(Releases, '/releases')
-#
-# if __name__ == '__main__':
-#      app.run(port='8080')
+class Releases(Resource):
+    def get(self):
+        result = memcache.get('releases')
+        result = json.dumps(result)
+        return result, 200
+
+api.add_resource(Releases, '/releases')
+
+if __name__ == '__main__':
+     app.run(port='8080')
 
 @app.route('/')
 @app.route('/details')
