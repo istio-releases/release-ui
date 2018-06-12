@@ -5,12 +5,10 @@ version: 0
 
 
 handlers:
-- url: /rest/.*
-  script: main.APP
 
-- url: /fake_data.json
-  static_files: fake_data.json
-  upload: fake_data.json
+# - url: /fake_data.json
+#   static_files: fake_data.json
+#   upload: fake_data.json
 
 - url: /(.+)
   static_files: app/\1
