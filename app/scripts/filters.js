@@ -1,87 +1,8 @@
 'use strict';
-var releases;
-var labels;
 
-var app = angular.module('releaseUI.main', ['ngRoute', 'ngMaterial']);
+/* Filters */
 
-app.config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/', {
-    templateUrl: 'main/main.html',
-    controller: 'MainController'
-  });
-}]);
-
-app.controller('MainController', function($scope, $http, $log) {
-
-    // Get information from http request
-    var labelSet = new Set();
-    var labels;
-    $http({
-      method: 'GET',
-      url: 'fake_data.json',
-      cache: true
-    }).then(function successCallback(response) {
-      releases = angular.fromJson(response.data);
-      angular.forEach(releases, function(value, key) {
-        for (var i = 0; i < value.labels.length; i++) {
-          labelSet.add(value.labels[i]);
-        }
-      });
-      $scope.releases = releases;
-      $scope.labels = Array.from(labelSet);
-      labels = $scope.labels;
-    }, function errorCallback(response) {
-      $log.log(response);
-    });
-
-    // Starting settings for datepicker
-    $scope.maxDate = new Date();
-    $scope.maxFromDate = $scope.maxDate;
-    $scope.minToDate = new Date(0);
-    $scope.fromDate = $scope.minToDate;
-    $scope.toDate = $scope.maxDate;
-    $scope.whichDate = 'started';
-    $scope.filterDate = 'started';
-
-    // Starting settings for label filtered
-    $scope.labelValue = null;
-
-    // Starting settings for search filter
-    $scope.searchTable = undefined;
-
-    // Starting settings for state filter
-    $scope.stateValues = [
-      {"id":0, "status": "Status"},
-      {"id":2, "status": "Finished"},
-      {"id":3, "status": "Failed"},
-      {"id":1, "status": "Pending"},
-      {"id":4, "status": "Suspended"},
-    ];
-    $scope.stateValue = null;
-
-    // Starting Settings for OrderBy filter
-    $scope.sortType = 'last_modified';
-    $scope.sortReverse = true;
-
-    // Reset Filters and OrderBy
-    $scope.resetFilter = function () {
-      $scope.fromDate = new Date(0);
-      $scope.toDate = new Date();
-      $scope.startDate = null;
-      $scope.endDate = null;
-      $scope.whichDate = 'started';
-      $scope.filterDate = 'started';
-
-      $scope.labelValue = null;
-      $scope.selectedLabel = null;
-
-      $scope.stateValue = null;
-      $scope.selectedValue = null;
-
-      $scope.sortType = 'last_modified';
-      $scope.sortReverse = true;
-    };
-});
+var app = angular.module('ReleaseUI.filters', []);
 
 // Filter on all properties
 app.filter('propFilter', function($log) {

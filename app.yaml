@@ -5,13 +5,8 @@ version: 0
 
 
 handlers:
-- url: /rest/.*
-  script: main.APP
+- url: /app
+  static_dir: app
 
-- url: /(.+)
-  static_files: app/\1
-  upload: app/.*
-
-
-- url: .*
+- url: /.*
   script: main.app

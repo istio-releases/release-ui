@@ -1,9 +1,9 @@
-from flask import Flask, jsonify, request, json, render_template
-# from flask_restful import Api, Resource, reqparse
-# from flask_cors import CORS
+from flask import Flask, jsonify, request, render_template
+from flask import send_file, make_response, abort
 from flask.views import MethodView
-from google.appengine.api import memcache
 import json
+import read_fake_data
+from google.appengine.api import memcache
 
 
 # creating the Flask application
@@ -15,17 +15,15 @@ memcache.add(key="releases", value=parsed_json)
 result = memcache.get('releases')
 result = json.dumps(result)
 @app.route('/')
-def index():
-    # result = memcache.get('releases')
-    # result = jsonify(result)
-    print "HI!"
-    return render_template('index.html')
-
-
 @app.route('/details')
+def basic_pages():
+    return make_response(open('templates/index.html').read())
+
+
 def getReleases():
     # return render_template('details.html')
     return result, 200
+
 
 class ListResults(MethodView):
     def get(self):
@@ -33,10 +31,11 @@ class ListResults(MethodView):
             result = jsonify(result)
             return result
 
-app.add_url_rule(
-    '/list',
-    view_func=ListResults.as_view('list')
-)
+
+#app.add_url_rule(
+#    '/list',
+#    view_func=ListResults.as_view('list')
+#)
 # @app.route('/list)
 # def list():
 #     # Get list of releases from memcache or adapter interface

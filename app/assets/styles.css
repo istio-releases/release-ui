@@ -90,7 +90,7 @@ p
 
 #dates
 {
-  margin-top: 15px;
+  margin-top: 10px;
   margin-bottom: 25px;
 }
 
@@ -108,14 +108,26 @@ p
 
 h1
 {
-  padding-left: 10px;
+    padding-left: 20px;
+}
+
+#release-image
+{
+    margin-top: 7px;
+    margin-right: 10px;
+}
+
+#labels
+{
+    margin-left: 5px;
+    margin-top: 20px;
 }
 
 h6
 {
     color: #858585;
     float : left;
-    padding: 3px;
+    padding: 5px;
 }
 
 main .form-control

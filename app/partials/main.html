@@ -75,12 +75,13 @@
       </thead>
 
       <tbody id="dashboard">
-          <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse | filter:searchTale | propFilter:stateValue:labelValue:fromDate:toDate:whichDate">
+          <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse | filter:searchTale | propFilter:stateValue:labelValue:fromDate:toDate:whichDate"
+               ng-click="redirectToDetails(release)">
             <td>
-              <img ng-if="release.state == 2" src="/style/images/check.png">
-              <img ng-if="release.state == 3" src="/style/images/error.png">
-              <img ng-if="release.state == 1" src="/style/images/pending.png">
-              <img ng-if="release.state == 4" src="/style/images/suspended.png">
+              <img ng-if="release.state == 2" src="/app/assets/images/check.png">
+              <img ng-if="release.state == 3" src="/app/assets/images/error.png">
+              <img ng-if="release.state == 1" src="/app/assets/images/pending.png">
+              <img ng-if="release.state == 4" src="/app/assets/images/suspended.png">
             </td>
             <td>
               {{release.name}}
