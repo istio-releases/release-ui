@@ -5,14 +5,8 @@ version: 0
 
 
 handlers:
+- url: /app
+  static_dir: app
 
-# - url: /fake_data.json
-#   static_files: fake_data.json
-#   upload: fake_data.json
-
-- url: /(.+)
-  static_files: app/\1
-  upload: app/.*
-
-- url: .*
+- url: /.*
   script: main.app
