@@ -44,7 +44,6 @@ app.controller('MainController', function($scope, $http, $location, $log) {
 
     // Starting settings for state filter
     $scope.stateValues = [
-      {"id":0, "status": "Status"},
       {"id":2, "status": "Finished"},
       {"id":3, "status": "Failed"},
       {"id":1, "status": "Pending"},

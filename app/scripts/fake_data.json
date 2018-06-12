@@ -67,7 +67,6 @@
     "started": 1003393974,
     "labels": [
       "label0",
-      "label1",
       "label2"
     ],
     "state":3,
@@ -144,9 +143,7 @@
     "release_url": "https://youtu.be/dQw4w9WgXcQ",
     "started": 1528490634,
     "labels": [
-      "label0",
-      "label1",
-      "label2"
+      "label0"
     ],
     "state": 1,
     "last_modified": 258910376,
@@ -222,7 +219,6 @@
     "release_url": "https://youtu.be/dQw4w9WgXcQ",
     "started": 1003393974,
     "labels": [
-      "label0",
       "label1",
       "label2"
     ],
