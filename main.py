@@ -8,12 +8,7 @@ import json
 
 # creating the Flask application
 app = Flask(__name__)
-json_data = open("fake_data.json").read()
-parsed_json = json.loads(json_data)
-memcache.add(key="releases", value=parsed_json)
 
-result = memcache.get('releases')
-result = json.dumps(result)
 @app.route('/')
 def index():
     # result = memcache.get('releases')
@@ -22,10 +17,17 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/details')
+@app.route('/getReleases')
 def getReleases():
     # return render_template('details.html')
+    result = memcache.get('releases')
+    result = json.dumps(result)
     return result, 200
+
+# @app.route('/fake_data.json')
+# def fake_data():
+#     return send_from_directory('fake_data.json')
+
 
 class ListResults(MethodView):
     def get(self):
