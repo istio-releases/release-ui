@@ -4,7 +4,6 @@ from flask_restful import Api, Resource, reqparse
 from flask import send_file, make_response, abort
 from flask.views import MethodView
 import json
-import read_fake_data
 from google.appengine.api import memcache
 
 
