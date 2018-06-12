@@ -75,6 +75,11 @@ p
     color: white;
 }
 
+.greyed
+{
+    background-color: #F2F2F2;
+}
+
 /* -------------------------- */
 /* details.html styling */
 #title

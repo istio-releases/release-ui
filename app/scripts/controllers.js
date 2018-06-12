@@ -4,7 +4,8 @@
 
 var app = angular.module('ReleaseUI.controllers', []);
 
-app.controller('MainController', function($scope, $http, $location, $log) {
+app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease',
+  function($scope, $http, $location, $log, serviceRelease) {
 
     // Get information from http request
     var labelSet = new Set();
@@ -77,9 +78,10 @@ app.controller('MainController', function($scope, $http, $location, $log) {
     // Redirect to Details function
     $scope.redirectToDetails = function (input) {
       $log.log(input);
-      $location.path('/details').search('release', input);
+      serviceRelease.set(input);
+      $location.path('/details');
     }
-});
+}]);
 
 var data = {
   "artifacts_link": "https://youtu.be/dQw4w9WgXcQ",
@@ -159,6 +161,6 @@ var data = {
   "ref": "reference number 780",
   "stage": 4};
 
-app.controller('DetailsController', function ($scope) {
-  $scope.release = data;
-});
+app.controller('DetailsController', ['$scope','serviceRelease', function ($scope, serviceRelease) {
+  $scope.release = serviceRelease.get();
+}]);
