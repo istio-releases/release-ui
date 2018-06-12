@@ -76,7 +76,7 @@
 
       <tbody id="dashboard">
           <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse | filter:searchTale | propFilter:stateValue:labelValue:fromDate:toDate:whichDate"
-               ng-click="redirectToDetails(release)">
+               ng-click="redirectToDetails(release)" ng-class="{greyed: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
             <td>
               <img ng-if="release.state == 2" src="/app/assets/images/check.png">
               <img ng-if="release.state == 3" src="/app/assets/images/error.png">
