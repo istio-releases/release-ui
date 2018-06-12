@@ -17,7 +17,7 @@ for i in range(number_of_releases):
         release_id = "release-" + str(random.randint(0,1023))
     number_of_labels = random.randint(1,5)
     number_of_tasks = random.randint(1,5)
-    new_data[release_id] = blank_template
+    new_data[release_id] = {}
     new_data[release_id]['name'] = release_id
     new_data[release_id]['repo_url'] = 'https://youtu.be/dQw4w9WgXcQ'
     new_data[release_id]['labels'] = []
@@ -30,6 +30,7 @@ for i in range(number_of_releases):
     new_data[release_id]['last_modified'] = random.randint(0, 2147483647)
     new_data[release_id]['artifacts_link'] = 'https://youtu.be/dQw4w9WgXcQ'
     new_data[release_id]['release_url'] = 'https://youtu.be/dQw4w9WgXcQ'
+    new_data[release_id]['tasks'] = {}
     for task_num in range(number_of_tasks):
         new_data[release_id]['tasks']['task'+str(task_num)+'_ID'] = {}
         new_data[release_id]['tasks']['task'+str(task_num)+'_ID']['task_name'] = 'task-' + str(task_num)

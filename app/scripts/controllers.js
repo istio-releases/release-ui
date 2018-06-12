@@ -11,7 +11,7 @@ app.controller('MainController', function($scope, $http, $location, $log) {
     var labels;
     $http({
       method: 'GET',
-      url: '/app/scripts/fake_data.json',
+      url: 'http://localhost:8080/releases',
       cache: true
     }).then(function successCallback(response) {
       var releases = angular.fromJson(response.data);
