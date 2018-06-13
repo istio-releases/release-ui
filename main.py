@@ -121,9 +121,14 @@ class Pagination(Resource):
         parser.add_argument('offset')
         args = parser.parse_args()
 
-        if !args['limit']:
+        if args['limit']:
+            print ''
+        else:
             args['limit'] = 100
-        if !args['offset']:
+
+        if args['offset']:
+            print ''
+        else:
             args['offset'] = 0
 
         memcache_exists, memcache_results = in_memcache(args)
