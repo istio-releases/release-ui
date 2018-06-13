@@ -108,27 +108,6 @@ class Releases(Resource):
         return result, 200
 
 
-class Sort(Resource):
-    def get(self):
-        releases = getData()
-        return releases
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('start_date')
-        parser.add_argument('end_date')
-        parser.add_argument('datetype')
-        parser.add_argument('state')
-        parser.add_argument('label')
-        parser.add_argument('sort_method')
-        parser.add_argument('limit')
-        parser.add_argument('offset')
-        args = parser.parse_args()
-
-        response = filter(args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
-        response = sort(response, args['sort_method'])
-        return json.dumps(response), 200
-
-
 class Pagination(Resource):
     def post(self):
         parser = reqparse.RequestParser()
@@ -154,7 +133,6 @@ class Pagination(Resource):
 
 
 api.add_resource(Releases, '/releases')
-api.add_resource(Sort, '/sort')
 api.add_resource(Pagination, '/page')
 
 if __name__ == '__main__':
