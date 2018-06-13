@@ -172,12 +172,13 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
                    '&end_date=' + end + '&datetype=' + datetype +
                    '&sort_method='+ sort_method + '&limit=' + 100 + '&offset=' + 0;
 
+        $log.log(url_string);
     var getData = function () {
       return $http({
             method: 'POST',
             url: url_string
           }).then(function successCallback(response) {
-            $log.log(angular.fromJson(response.data))
+            $log.log(response);
           }, function errorCallback(response) {
             $log.log(response);
       });

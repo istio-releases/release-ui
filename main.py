@@ -131,6 +131,7 @@ class Pagination(Resource):
         else:
             args['offset'] = 0
 
+        print args
 
         memcache_exists, memcache_results = in_memcache(args)
         if memcache_exists:
@@ -140,6 +141,7 @@ class Pagination(Resource):
             response = sort(response, args['sort_method'])
             memcache.add(key=memcache_results, value=response, time=3600)
             # time adds an expiration time of one hour, in order to keep the memcache somewhat up to date
+            print response
             return json.dumps(response[int(args['offset']):int(args['limit'])])
 
 
