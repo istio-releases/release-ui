@@ -31,7 +31,7 @@ def filter(state, label, start_date, end_date, datetype):
                     if item[1]['state'] == state:
                         if label != 'None':
                             for l in item[1]['labels']:
-                                if l == label:
+                                if l == label or l == 'null':
                                     filtered.append(item[1])
                         else:
                             filtered.append(item[1])
@@ -40,7 +40,7 @@ def filter(state, label, start_date, end_date, datetype):
                     if item[1]['state'] == state:
                         if label != 'None':
                             for l in item[1]['labels']:
-                                if l == label:
+                                if l == label or l == 'null':
                                     filtered.append(item[1])
                         else:
                             filtered.append(item[1])
@@ -50,7 +50,7 @@ def filter(state, label, start_date, end_date, datetype):
                     if item[1]['state'] == state:
                         if label != 'None':
                             for l in item[1]['labels']:
-                                if l == label:
+                                if l == label or l == 'null':
                                     filtered.append(item[1])
                         else:
                             filtered.append(item[1])
@@ -59,7 +59,7 @@ def filter(state, label, start_date, end_date, datetype):
                     if item[1]['state'] == state:
                         if label != 'None':
                             for l in item[1]['labels']:
-                                if l == label:
+                                if l == label or l == 'null':
                                     filtered.append(item[1])
                         else:
                             filtered.append(item[1])
@@ -122,20 +122,15 @@ class Pagination(Resource):
         args = parser.parse_args()
 
         if args['limit']:
-<<<<<<< HEAD
             print ''
         else:
             args['limit'] = 100
 
         if args['offset']:
             print ''
-=======
-        else:
-            args['limit'] = 100
-        if args['offset']:
->>>>>>> d1f0837dc2c8928dcc3316087cddfd13508d8eea
         else:
             args['offset'] = 0
+
 
         memcache_exists, memcache_results = in_memcache(args)
         if memcache_exists:
