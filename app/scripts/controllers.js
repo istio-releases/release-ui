@@ -118,16 +118,80 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
     $scope.labelFilterChange = function (input) {
       $scope.labelValue = input;
-      //request more data
-    }
 
+      var method = $scope.sortType;
+      var reverse = $scope.sortReverse;
+      var sort_method;
 
-    $scope.pageChange = function (input) {
-      $scope.currentPage = $scope.currentPage + input;
-      if($scope.currentPage == $scope.totalPages) {
-        // request more data from backend
+      if(method == 'name' && reverse) {
+        sort_method = 1;
       }
+      else if (method == 'name') {
+        sort_method = 2;
+      }
+      else if (method == 'started' && reverse) {
+        sort_method = 3;
+      }
+      else if (method == 'started') {
+        sort_method = 4;
+      }
+      else if(method == 'last_modified' && reverse) {
+        sort_method = 5;
+      }
+      else if (method == 'last_modified') {
+        sort_method = 6;
+      }
+      else if (method == 'last_active_task' && reverse) {
+        sort_method = 7;
+      }
+      else if (method == 'last_active_task') {
+        sort_method = 8;
+      }
+
+      var state;
+      if($scope.stateValue == null) {
+        state = 0;
+      }
+      else {
+        state = $scope.stateValue;
+      }
+
+      var datetype;
+      if ($scope.whichDate == 'started') {
+        datetype = 0;
+      }
+      else {
+        datetype = 1;
+      }
+
+      var start = $scope.fromDate.getTime();
+      var end = $scope.toDate.getTime();
+
+      var url_string = 'http://localhost:8080/page?state=' + state +
+                   '&label=' + $scope.labelValue + '&start_date=' + start +
+                   '&end_date=' + end + '&datetype=' + datetype +
+                   '&sort_method='+ sort_method + '&limit=' + 100 + '&offset=' + 0;
+
+        $log.log(url_string);
+    var getData = function () {
+      return $http({
+            method: 'POST',
+            url: url_string
+          }).then(function successCallback(response) {
+            $log.log(response);
+          }, function errorCallback(response) {
+            $log.log(response);
+      });
     };
+    getData();
+  };
+
+  $scope.pageChange = function (input) {
+    $scope.currentPage = $scope.currentPage + input;
+    if($scope.currentPage == $scope.totalPages) {
+      // request more data from backend
+    }
+  };
 
 }]);
 
