@@ -22,11 +22,11 @@ def getData(start_date, end_date, datetype): # used to find all releases in the 
     result = memcache.get('releases')
     filtered = {}
     for item in result.items():
-        if datetype == 0:
+        if datetype == 0: # filter by date created
             if item[1]['started'] >= start_date and item[1]['started'] <= end_date:
                 item[1]['started']
                 filtered[item[1]['name']] = item[1]
-        elif datetype == 1:
+        elif datetype == 1: # filter by date modified
             if item[1]['last_modified'] >= start_date and item[1]['last_modified'] <= end_date:
                 filtered[item[1]['name']] = item[1]
     return filtered
