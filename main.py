@@ -100,7 +100,7 @@ def in_memcache(args):
     else:
         return False, key
 
-#--------REST API--------#
+#-------------------------REST API----------------------------#
 class Releases(Resource):
     def get(self):
         result = memcache.get('releases')
@@ -123,12 +123,13 @@ class Pagination(Resource):
 
         memcache_exists, memcache_results = in_memcache(args)
         if memcache_exists:
-            return memcache_results[args['offset']:args['limit']]
+            return memcache_results[int(args['offset']):int(args['limit'])]
         else:
             response = filter(args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
             response = sort(response, args['sort_method'])
-            memcache.add(key=memcache_results, value=response)
-            return response[args['offset']:args['limit']]
+            memcache.add(key=memcache_results, value=response, time=3600)
+            # time adds an expiration time of one hour, in order to keep the memcache somewhat up to date
+            return response[int(args['offset']):int(args['limit'])]
 
 
 
@@ -139,8 +140,7 @@ if __name__ == '__main__':
      app.run(port='8080', debug=True)
 
 
-
-#-----------Handlers------------#
+#---------------------Handlers-------------------------#
 @app.route('/')
 @app.route('/details')
 def basic_pages():
