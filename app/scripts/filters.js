@@ -5,7 +5,7 @@
 var app = angular.module('ReleaseUI.filters', []);
 
 // Filter on all properties
-app.filter('propFilter', function($log) {
+app.filter('propFilter', function() {
   return function(items, state, label, from, to, which) {
 
     //filter based on created dates
@@ -102,3 +102,12 @@ function intersection() {
   }
   return result;
 }
+
+app.filter('range', function() {
+  return function(input, total) {
+    total = parseInt(total);
+    for (var i=0; i<total && i < 3; i++)
+      input.push(i-1);
+    return input;
+  };
+});
