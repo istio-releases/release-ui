@@ -122,12 +122,18 @@ class Pagination(Resource):
         args = parser.parse_args()
 
         if args['limit']:
+<<<<<<< HEAD
             print ''
         else:
             args['limit'] = 100
 
         if args['offset']:
             print ''
+=======
+        else:
+            args['limit'] = 100
+        if args['offset']:
+>>>>>>> d1f0837dc2c8928dcc3316087cddfd13508d8eea
         else:
             args['offset'] = 0
 
