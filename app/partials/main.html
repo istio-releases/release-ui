@@ -2,11 +2,11 @@
 
   <div class="active-cyan-3 active-cyan-4 mb-4 row">
     <div class="col-sm">
-      <md-datepicker md-current-view="year" ng-model="startDate" ng-change="fromDate = startDate; minToDate = startDate"
+      <md-datepicker md-current-view="year" ng-model="startDate" ng-change="fromDateChange(startDate)"
         md-placeholder="From" md-max-date="maxFromDate"></md-datepicker>
     </div>
     <div class="col-sm">
-      <md-datepicker md-current-view="year" ng-model="endDate" ng-change="toDate = endDate; maxFromDate = endDate"
+      <md-datepicker md-current-view="year" ng-model="endDate" ng-change="toDateChange(endDate)"
         md-placeholder="To" md-min-date="minToDate" md-max-date="maxDate"> </md-datepicker>
     </div>
     <div class="col-sm">
@@ -22,41 +22,41 @@
     </div>
     <button type="button" class="btn btn-danger" ng-click="resetFilter()">Reset Filters</button>
   </div>
-  <table class="table">
+  <table id="release-table" ng-table="releaseTable" class="table">
       <thead>
         <th>
           <div>
             <select class="form-control dropdown"
               ng-model="selectedValue"
               ng-options="state.id as state.status for state in stateValues track by state.id"
-              ng-change="stateValue = selectedValue">
+              ng-change="statusFilterChange(selectedValue)">
               <option value="">Status</option>
             </select>
           </div>
         </th>
         <th>
-          <button class="btn table-header" type="button" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+          <button class="btn table-header" type="button" ng-click="sortChange('name')">
             Version
             <span ng-show="sortType == 'name' && sortReverse == false" class="caret">&#9660;</span>
             <span ng-show="sortType == 'name' && sortReverse == true" class="caret">&#9650;</span>
           </button>
         </th>
         <th>
-          <button class="btn table-header" type="button" ng-click="sortType = 'started'; sortReverse = !sortReverse">
+          <button class="btn table-header" type="button" ng-click="sortChange('started')">
             Creation
             <span ng-show="sortType == 'started' && sortReverse == false" class="caret">&#9660;</span>
             <span ng-show="sortType == 'started' && sortReverse == true" class="caret">&#9650;</span>
           </button>
         </th>
         <th>
-          <button class="btn table-header" type="button" ng-click="sortType = 'last_modified'; sortReverse = !sortReverse">
+          <button class="btn table-header" type="button" ng-click="sortChange('last_modified')">
             Last Modified
             <span ng-show="sortType == 'last_modified' && sortReverse == false" class="caret">&#9660;</span>
             <span ng-show="sortType == 'last_modified' && sortReverse == true" class="caret">&#9650;</span>
           </button>
         </th>
         <th>
-          <button class="btn table-header" type="button" ng-click="sortType = 'last_active_task'; sortReverse = !sortReverse">
+          <button class="btn table-header" type="button" ng-click="sortChange('last_active_task')">
             Last Active Task
             <span ng-show="sortType == 'last_active_task' && sortReverse == false" class="caret">&#9660;</span>
             <span ng-show="sortType == 'last_active_task' && sortReverse == true" class="caret">&#9650;</span>
@@ -67,16 +67,15 @@
             <select class="form-control dropdown"
               ng-model="selectedLabel"
               ng-options="label as label for label in labels"
-              ng-change="labelValue = selectedLabel">
+              ng-change="labelFilterChange(selectedLabel)">
               <option value="">All Labels</option>
             </select>
           </div>
         </th>
       </thead>
-
       <tbody id="dashboard">
-          <tr ng-repeat="(version, release) in releases | orderObjectBy:sortType:sortReverse | filter:searchTale | propFilter:stateValue:labelValue:fromDate:toDate:whichDate"
-               ng-click="redirectToDetails(release)" ng-class="{greyed: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
+          <tr ng-repeat="(key, release) in filteredReleases = (releases | orderObjectBy:sortType:sortReverse | propFilter:stateValue:labelValue:fromDate:toDate:whichDate) | limitTo:numPerPage:numPerPage*(currentPage-1)"
+              ng-click="redirectToDetails(release)" ng-class="{greyed: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
             <td>
               <img ng-if="release.state == 2" src="/app/assets/images/check.png">
               <img ng-if="release.state == 3" src="/app/assets/images/error.png">
@@ -103,5 +102,41 @@
           </tr>
       </tbody>
   </table>
+
+  <ul class="pagination justify-content-center">
+    <li class="page-item">
+      <a ng-if="currentPage > 1" ng-click="pageChange(-1)" class="page-link" href="" aria-label="Next">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+      <a ng-if="currentPage == 1" class="page-link" aria-label="Next">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li ng-if="currentPage == 1" ng-repeat="n in [] | range:totalPages" class="page-item">
+      <a ng-if="currentPage + $index == 1" class="page-link">{{currentPage + $index}}</a>
+      <a ng-if="currentPage + $index != 1" ng-click="pageChange($index)" href="" class="page-link">{{currentPage + $index}}</a>
+    </li>
+    <li ng-if="currentPage > 1 && currentPage < totalPages" ng-repeat="n in [] | range:totalPages" class="page-item">
+      <a ng-if="n == 0" class="page-link">{{currentPage}}</a>
+      <a ng-if="n != 0" class="page-link" ng-click="pageChange(n)" href="">{{currentPage + n}}</a>
+    </li>
+    <li ng-if="currentPage >= totalPages && totalPages >= 3" class="page-item">
+      <a ng-click="pageChange(-2)" href="" class="page-link">{{currentPage - 2}}</a>
+    </li>
+    <li ng-if="currentPage >= totalPages && totalPages >= 2" class="page-item">
+      <a ng-click="pageChange(-1)" href="" class="page-link">{{currentPage -1}}</a>
+    </li>
+    <li ng-if="currentPage >= totalPages && currentPage != 1">
+      <a class="page-link">{{currentPage}}</a>
+    </li>
+    <li>
+      <a ng-if="currentPage < totalPages" ng-click="pageChange(1)" class="page-link" href="" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+      <a ng-if="currentPage >= totalPages" class="page-link" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
 
 </div>

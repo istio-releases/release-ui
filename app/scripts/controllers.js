@@ -2,31 +2,39 @@
 
 /* Controllers */
 
-var app = angular.module('ReleaseUI.controllers', []);
+var app = angular.module('ReleaseUI.controllers', ['ngTable']);
 
-app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease',
-  function($scope, $http, $location, $log, serviceRelease) {
+app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease', 'NgTableParams',
+  function($scope, $http, $location, $log, serviceRelease, NgTableParams) {
 
     // Get information from http request
     var labelSet = new Set();
-    var labels;
-    $http({
-      method: 'GET',
-      url: 'http://localhost:8080/releases',
-      cache: true
-    }).then(function successCallback(response) {
-      var releases = angular.fromJson(response.data);
-      angular.forEach(releases, function(value, key) {
-        for (var i = 0; i < value.labels.length; i++) {
-          labelSet.add(value.labels[i]);
-        }
+
+    // pagination
+    $scope.currentPage = 1;
+    $scope.numPerPage = 9;
+    $scope.filteredReleases = [];
+
+    $scope.getReleases = function () {
+      return $http({
+        method: 'GET',
+        url: 'http://localhost:8080/releases',
+        cache: true
+      }).then(function successCallback(response) {
+        var releases = angular.fromJson(response.data);
+        angular.forEach(releases, function(value, key) {
+          for (var i = 0; i < value.labels.length; i++) {
+            labelSet.add(value.labels[i]);
+          }
+        });
+        $scope.labels = Array.from(labelSet);
+        $scope.releases = releases;
+        $scope.totalPages = Math.ceil(Object.keys($scope.releases).length / $scope.numPerPage);
+      }, function errorCallback(response) {
+        $log.log(response);
       });
-      $scope.releases = releases;
-      $scope.labels = Array.from(labelSet);
-      labels = $scope.labels;
-    }, function errorCallback(response) {
-      $log.log(response);
-    });
+    };
+    $scope.getReleases();
 
     // Starting settings for datepicker
     $scope.maxDate = new Date();
@@ -79,9 +87,59 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     $scope.redirectToDetails = function (input) {
       serviceRelease.set(input);
       $location.path('/details');
+    };
+
+    // functions that may request more data from server
+    $scope.fromDateChange = function (input) {
+      $scope.fromDate = input;
+      $scope.minToDate = input;
+      // request more data from backend
+    };
+
+    $scope.toDateChange = function (input) {
+      $scope.toDate = input;
+      $scope.maxFromDate = input;
+      // request more data from backend
+    };
+
+    $scope.statusFilterChange = function (input) {
+      $scope.stateValue = input;
+      $log.log($scope.filteredReleases);
+      $log.
+      $scope.totalPages = Math.floor(Object.keys($scope.filteredReleases).length / $scope.numPerPage);
+      // request more data from backend
+    };
+
+    $scope.sortChange = function (input) {
+      $scope.sortType = input;
+      $scope.sortReverse = !$scope.sortReverse;
+      //request more data from backend
+    };
+
+    $scope.labelFilterChange = function (input) {
+      $scope.labelValue = input;
+      //request more data
     }
+
+
+    $scope.pageChange = function (input) {
+      $scope.currentPage = $scope.currentPage + input;
+      if($scope.currentPage == $scope.totalPages) {
+        // request more data from backend
+      }
+    };
+
 }]);
 
 app.controller('DetailsController', ['$scope','serviceRelease', function ($scope, serviceRelease) {
   $scope.release = serviceRelease.get();
 }]);
+
+function toArray(input) {
+  var output = [], item;
+
+  angular.forEach(input, function(item) {
+    output.push(item);
+  });
+   return output;
+}
