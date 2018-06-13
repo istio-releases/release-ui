@@ -86,6 +86,9 @@ def sort(unsorted, sort_method):
         result = sorted(unsorted, key=lambda k: k['last_active_task'])
     return result
 
+def in_memcache(params):
+    return False
+
 #--------REST API--------#
 class Releases(Resource):
     def get(self):
@@ -104,7 +107,33 @@ class Sort(Resource):
         parser.add_argument('state')
         parser.add_argument('label')
         parser.add_argument('sort_method')
+        parser.add_argument('limit')
+        parser.add_argument('offset')
         args = parser.parse_args()
+
+        response = filter(args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
+        response = sort(response, args['sort_method'])
+        return json.dumps(response), 200
+class Pagination(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('start_date')
+        parser.add_argument('end_date')
+        parser.add_argument('datetype')
+        parser.add_argument('state')
+        parser.add_argument('label')
+        parser.add_argument('sort_method')
+        parser.add_argument('limit')
+        parser.add_argument('offset')
+        args = parser.parse_args()
+
+        if in_memcache(args):
+            return 500
+        else:
+            response = filter(args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
+            response = sort(response, args['sort_method'])
+        return response[args['offset']:args['limit']]
+
 
         response = filter(args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
         response = sort(response, args['sort_method'])
@@ -112,9 +141,9 @@ class Sort(Resource):
 
 
 
-
 api.add_resource(Releases, '/releases')
 api.add_resource(Sort, '/sort')
+api.add_resource(Pagination, '/page')
 
 if __name__ == '__main__':
      app.run(port='8080', debug=True)
