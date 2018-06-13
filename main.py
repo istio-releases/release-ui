@@ -15,21 +15,76 @@ memcache.add(key="releases", value=parsed_json)
 
 
 #--------Functions to be used for sorting/filtering-------#
-def getData(start_date, end_date, datetype): # used to find all releases in the given date range
+def filter_by_date(start_date, end_date, datetype): # used to find all releases in the given date range
     start_date = int(start_date)
     end_date = int(end_date)
     datetype = int(datetype) # designates whether to sort by creation date(0) or date modified(1)
     result = memcache.get('releases')
-    filtered = {}
+    filtered = []
     for item in result.items():
         if datetype == 0: # filter by date created
             if item[1]['started'] >= start_date and item[1]['started'] <= end_date:
-                item[1]['started']
-                filtered[item[1]['name']] = item[1]
+                filtered.append(item[1])
         elif datetype == 1: # filter by date modified
             if item[1]['last_modified'] >= start_date and item[1]['last_modified'] <= end_date:
-                filtered[item[1]['name']] = item[1]
+                filtered.append(item[1])
+    # sort the filtered results (probably going to be moved later)
+    if datetype == 0:
+        filtered = sorted(filtered, key=lambda k: k['started'])
+    elif datetype == 1:
+        filtered = sorted(filtered, key=lambda k: k['last_modified'])
     return filtered
+
+def filter(state, label, start_date, end_date, datetype):
+    # convert variables from unix type to something usableself
+    state = int(state)
+    start_date = int(start_date)
+    end_date = int(end_date)
+    datetype = int(datetype) # designates whether to sort by creation date(0) or date modified(1)
+    data = memcache.get('releases')
+    filtered = []
+    for item in data.items():
+        if end_date > 0: # see if there is a valid end date - if not, don't consider it
+            if datetype == 1: # filter by date modified
+                if item[1]['last_modified'] >= start_date and item[1]['last_modified'] <= end_date:
+                    if item[1]['state'] == state:
+                        if label != 'None':
+                            for l in item[1]['labels']:
+                                if l == label:
+                                    filtered.append(item[1])
+                        else:
+                            filtered.append(item[1])
+            else: #filter by date created
+                if item[1]['started'] >= start_date and item[1]['started'] <= end_date:
+                    if item[1]['state'] == state:
+                        if label != 'None':
+                            for l in item[1]['labels']:
+                                if l == label:
+                                    filtered.append(item[1])
+                        else:
+                            filtered.append(item[1])
+        else:
+            if datetype == 1: # filter by date modified
+                if item[1]['last_modified'] >= start_date:
+                    if item[1]['state'] == state:
+                        if label != 'None':
+                            for l in item[1]['labels']:
+                                if l == label:
+                                    filtered.append(item[1])
+                        else:
+                            filtered.append(item[1])
+            else: #filter by date created
+                if item[1]['started'] >= start_date:
+                    if item[1]['state'] == state:
+                        if label != 'None':
+                            for l in item[1]['labels']:
+                                if l == label:
+                                    filtered.append(item[1])
+                        else:
+                            filtered.append(item[1])
+    print filtered
+    return filtered
+
 
 #--------REST API--------#
 class Releases(Resource):
@@ -46,11 +101,12 @@ class Sort(Resource):
         parser.add_argument('start_date')
         parser.add_argument('end_date')
         parser.add_argument('datetype')
-        parser.add_argument('filter_by')
+        parser.add_argument('state')
+        parser.add_argument('label')
         args = parser.parse_args()
-        print args['start_date']
-        response = getData(args['start_date'], args['end_date'], args['datetype'])
-        return json.dumps(response)
+
+        response = filter(args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
+        return json.dumps(response), 200
 
 
 
