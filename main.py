@@ -86,8 +86,19 @@ def sort(unsorted, sort_method):
         result = sorted(unsorted, key=lambda k: k['last_active_task'])
     return result
 
-def in_memcache(params):
-    return False
+def in_memcache(args):
+    start_date = hex(int(args['start_date']))
+    end_date = hex(int(args['end_date']))
+    datetype = str(int(args['datetype']))
+    state = str(int(args['state']))
+    label = str(args['label'])
+    sort_method = str(int(args['sort_method']))
+    key = start_date + end_date + datetype + state + label + sort_method
+
+    if memcache.get(key):
+        return key, memcache.get(key)
+    else:
+        return False, key
 
 #--------REST API--------#
 class Releases(Resource):
@@ -95,6 +106,8 @@ class Releases(Resource):
         result = memcache.get('releases')
         result = json.dumps(result)
         return result, 200
+
+
 class Sort(Resource):
     def get(self):
         releases = getData()
@@ -114,6 +127,8 @@ class Sort(Resource):
         response = filter(args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
         response = sort(response, args['sort_method'])
         return json.dumps(response), 200
+
+
 class Pagination(Resource):
     def post(self):
         parser = reqparse.RequestParser()
@@ -127,17 +142,14 @@ class Pagination(Resource):
         parser.add_argument('offset')
         args = parser.parse_args()
 
-        if in_memcache(args):
-            return 500
+        memcache_exists, memcache_results = in_memcache(args)
+        if memcache_exists:
+            return memcache_results[args['offset']:args['limit']]
         else:
             response = filter(args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
             response = sort(response, args['sort_method'])
-        return response[args['offset']:args['limit']]
-
-
-        response = filter(args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
-        response = sort(response, args['sort_method'])
-        return json.dumps(response), 200
+            memcache.add(key=memcache_results, value=response)
+            return response[args['offset']:args['limit']]
 
 
 
