@@ -22,47 +22,55 @@ def filter(state, label, start_date, end_date, datetype):
     start_date = int(start_date)
     end_date = int(end_date)
     datetype = int(datetype) # designates whether to sort by creation date(0) or date modified(1)
+    print state
+    print start_date
+    print end_date
+    print datetype
+    print label
+    if str(label) == 'null':
+        print "HELLLLOOOOOOOOOOOOOOOO"
     data = memcache.get('releases')
     filtered = []
     for item in data.items():
         if end_date > 0: # see if there is a valid end date - if not, don't consider it
             if datetype == 1: # filter by date modified
                 if item[1]['last_modified'] >= start_date and item[1]['last_modified'] <= end_date:
-                    if item[1]['state'] == state:
-                        if label != 'None':
+                    if item[1]['state'] == state or state == 0:
+                        if label != 'null':
                             for l in item[1]['labels']:
-                                if l == label or l == 'null':
+                                if l == label:
                                     filtered.append(item[1])
                         else:
                             filtered.append(item[1])
             else: #filter by date created
                 if item[1]['started'] >= start_date and item[1]['started'] <= end_date:
-                    if item[1]['state'] == state:
-                        if label != 'None':
+                    if item[1]['state'] == state or state == 0:
+                        if label != 'null':
                             for l in item[1]['labels']:
-                                if l == label or l == 'null':
+                                if l == label:
                                     filtered.append(item[1])
                         else:
                             filtered.append(item[1])
         else:
             if datetype == 1: # filter by date modified
                 if item[1]['last_modified'] >= start_date:
-                    if item[1]['state'] == state:
-                        if label != 'None':
+                    if item[1]['state'] == state or state == 0:
+                        if label != 'null':
                             for l in item[1]['labels']:
-                                if l == label or l == 'null':
+                                if l == label:
                                     filtered.append(item[1])
                         else:
                             filtered.append(item[1])
             else: #filter by date created
                 if item[1]['started'] >= start_date:
-                    if item[1]['state'] == state:
-                        if label != 'None':
+                    if item[1]['state'] == state or state == 0:
+                        if label != 'null':
                             for l in item[1]['labels']:
-                                if l == label or l == 'null':
+                                if l == label:
                                     filtered.append(item[1])
                         else:
                             filtered.append(item[1])
+    print filtered
     return filtered
 
 # sorts unsorted according to sort_method. See https://docs.google.com/document/d/1JDD_NX2XVL7yqYcfFOqkef1FKv98nrlRFJ0OpSZprMU/ for enumerations
