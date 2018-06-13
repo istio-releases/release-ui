@@ -22,7 +22,7 @@
     </div>
     <button type="button" class="btn btn-danger" ng-click="resetFilter()">Reset Filters</button>
   </div>
-  <table ng-table="releaseTable" class="table">
+  <table id="release-table" ng-table="releaseTable" class="table">
       <thead>
         <th>
           <div>
@@ -74,7 +74,7 @@
         </th>
       </thead>
       <tbody id="dashboard">
-          <tr ng-repeat="(key, release) in filteredReleases = (releases | orderObjectBy:sortType:sortReverse | propFilter:stateValue:labelValue:fromDate:toDate:whichDate:hasData) | limitTo:numPerPage:numPerPage*(currentPage-1)"
+          <tr ng-repeat="(key, release) in filteredReleases = (releases | orderObjectBy:sortType:sortReverse | propFilter:stateValue:labelValue:fromDate:toDate:whichDate) | limitTo:numPerPage:numPerPage*(currentPage-1)"
               ng-click="redirectToDetails(release)" ng-class="{greyed: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
             <td>
               <img ng-if="release.state == 2" src="/app/assets/images/check.png">
@@ -104,7 +104,7 @@
   </table>
 
   <ul class="pagination justify-content-center">
-    <li ng-switch class="page-item">
+    <li class="page-item">
       <a ng-if="currentPage > 1" ng-click="pageChange(-1)" class="page-link" href="" aria-label="Next">
         <span aria-hidden="true">&laquo;</span>
       </a>
@@ -133,7 +133,7 @@
       <a ng-if="currentPage < totalPages" ng-click="pageChange(1)" class="page-link" href="" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
       </a>
-      <a ng-if="currentPage == totalPages" class="page-link" aria-label="Next">
+      <a ng-if="currentPage >= totalPages" class="page-link" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
       </a>
     </li>

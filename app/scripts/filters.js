@@ -5,7 +5,7 @@
 var app = angular.module('ReleaseUI.filters', []);
 
 // Filter on all properties
-app.filter('propFilter', function($log) {
+app.filter('propFilter', function() {
   return function(items, state, label, from, to, which) {
 
     //filter based on created dates

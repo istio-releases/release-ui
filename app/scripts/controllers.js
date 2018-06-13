@@ -9,11 +9,11 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
     // Get information from http request
     var labelSet = new Set();
-    $scope.hasData = false;
 
     // pagination
     $scope.currentPage = 1;
-    $scope.numPerPage = 10;
+    $scope.numPerPage = 9;
+    $scope.filteredReleases = [];
 
     $scope.getReleases = function () {
       return $http({
@@ -29,8 +29,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
         });
         $scope.labels = Array.from(labelSet);
         $scope.releases = releases;
-        $scope.totalPages = Math.floor(Object.keys($scope.releases).length / $scope.numPerPage);
-        $scope.hasData = true;
+        $scope.totalPages = Math.ceil(Object.keys($scope.releases).length / $scope.numPerPage);
       }, function errorCallback(response) {
         $log.log(response);
       });
@@ -105,6 +104,9 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
     $scope.statusFilterChange = function (input) {
       $scope.stateValue = input;
+      $log.log($scope.filteredReleases);
+      $log.
+      $scope.totalPages = Math.floor(Object.keys($scope.filteredReleases).length / $scope.numPerPage);
       // request more data from backend
     };
 
