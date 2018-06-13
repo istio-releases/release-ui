@@ -15,26 +15,7 @@ memcache.add(key="releases", value=parsed_json)
 
 
 #--------Functions to be used for sorting/filtering-------#
-def filter_by_date(start_date, end_date, datetype): # used to find all releases in the given date range
-    start_date = int(start_date)
-    end_date = int(end_date)
-    datetype = int(datetype) # designates whether to sort by creation date(0) or date modified(1)
-    result = memcache.get('releases')
-    filtered = []
-    for item in result.items():
-        if datetype == 0: # filter by date created
-            if item[1]['started'] >= start_date and item[1]['started'] <= end_date:
-                filtered.append(item[1])
-        elif datetype == 1: # filter by date modified
-            if item[1]['last_modified'] >= start_date and item[1]['last_modified'] <= end_date:
-                filtered.append(item[1])
-    # sort the filtered results (probably going to be moved later)
-    if datetype == 0:
-        filtered = sorted(filtered, key=lambda k: k['started'])
-    elif datetype == 1:
-        filtered = sorted(filtered, key=lambda k: k['last_modified'])
-    return filtered
-
+# Filters by all of the criteria shown below, returns an array of filtered releases
 def filter(state, label, start_date, end_date, datetype):
     # convert variables from unix type to something usableself
     state = int(state)
@@ -82,9 +63,28 @@ def filter(state, label, start_date, end_date, datetype):
                                     filtered.append(item[1])
                         else:
                             filtered.append(item[1])
-    print filtered
     return filtered
 
+# sorts unsorted according to sort_method. See https://docs.google.com/document/d/1JDD_NX2XVL7yqYcfFOqkef1FKv98nrlRFJ0OpSZprMU/ for enumerations
+def sort(unsorted, sort_method):
+    sort_method = int(sort_method)
+    if sort_method == 1:
+        result = sorted(unsorted, key=lambda k: k['name'], reverse=True)
+    elif sort_method == 2:
+        result = sorted(unsorted, key=lambda k: k['name'])
+    elif sort_method == 3:
+        result = sorted(unsorted, key=lambda k: k['started'], reverse=True)
+    elif sort_method == 4:
+        result = sorted(unsorted, key=lambda k: k['started'])
+    elif sort_method == 5:
+        result = sorted(unsorted, key=lambda k: k['last_modified'], reverse=True)
+    elif sort_method == 6:
+        result = sorted(unsorted, key=lambda k: k['last_modified'])
+    elif sort_method == 7:
+        result = sorted(unsorted, key=lambda k: k['last_active_task'], reverse=True)
+    elif sort_method == 8:
+        result = sorted(unsorted, key=lambda k: k['last_active_task'])
+    return result
 
 #--------REST API--------#
 class Releases(Resource):
@@ -103,9 +103,11 @@ class Sort(Resource):
         parser.add_argument('datetype')
         parser.add_argument('state')
         parser.add_argument('label')
+        parser.add_argument('sort_method')
         args = parser.parse_args()
 
         response = filter(args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
+        response = sort(response, args['sort_method'])
         return json.dumps(response), 200
 
 
@@ -133,10 +135,6 @@ def getReleases():
     result = json.dumps(result)
     return result, 200
 
-# @app.route('/list)
-# def list():
-#     # Get list of releases from memcache or adapter interface
-#     result = memcache.get('releases')
-#     request.data = result
-#     request.data = json.dumps(request.data)
-#     return request.data, 200
+# TODO(dommarques):
+#     - implement server-side pagination
+#     - implement caching of sorted, filtered releases
