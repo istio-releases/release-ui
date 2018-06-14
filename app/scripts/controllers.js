@@ -89,36 +89,8 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       $location.path('/details');
     };
 
-    // functions that may request more data from server
-    $scope.fromDateChange = function (input) {
-      $scope.fromDate = input;
-      $scope.minToDate = input;
-      // request more data from backend
-    };
-
-    $scope.toDateChange = function (input) {
-      $scope.toDate = input;
-      $scope.maxFromDate = input;
-      // request more data from backend
-    };
-
-    $scope.statusFilterChange = function (input) {
-      $scope.stateValue = input;
-      $log.log($scope.filteredReleases);
-      $log.
-      $scope.totalPages = Math.floor(Object.keys($scope.filteredReleases).length / $scope.numPerPage);
-      // request more data from backend
-    };
-
-    $scope.sortChange = function (input) {
-      $scope.sortType = input;
-      $scope.sortReverse = !$scope.sortReverse;
-      //request more data from backend
-    };
-
-    $scope.labelFilterChange = function (input) {
-      $scope.labelValue = input;
-
+    // Helper function for post http requests
+    var helper = function () {
       var method = $scope.sortType;
       var reverse = $scope.sortReverse;
       var sort_method;
@@ -172,27 +144,62 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
                    '&end_date=' + end + '&datetype=' + datetype +
                    '&sort_method='+ sort_method + '&limit=' + 100 + '&offset=' + 0;
 
-        $log.log(url_string);
-    var getData = function () {
-      return $http({
-            method: 'POST',
-            url: url_string
-          }).then(function successCallback(response) {
-            $log.log(response);
-          }, function errorCallback(response) {
-            $log.log(response);
+      $http({
+          method: 'POST',
+          url: url_string,
+          cache: true
+      }).then(function successCallback(response) {
+          $scope.releases = angular.fromJson(response.data);
+          $scope.totalPages = Math.ceil(Object.keys($scope.releases).length / $scope.numPerPage);
+      }, function errorCallback(response) {
+          $log.log(response);
       });
+
     };
-    getData();
-  };
 
-  $scope.pageChange = function (input) {
-    $scope.currentPage = $scope.currentPage + input;
-    if($scope.currentPage == $scope.totalPages) {
-      // request more data from backend
-    }
-  };
+    // functions that may request more data from server
+    $scope.fromDateChange = function (input) {
+      $scope.fromDate = input;
+      $scope.minToDate = input;
+      helper();
+      $scope.currentPage = 1;
+    };
 
+    $scope.toDateChange = function (input) {
+      $scope.toDate = input;
+      $scope.maxFromDate = input;
+      helper();
+      $scope.currentPage = 1;
+    };
+
+    $scope.statusFilterChange = function (input) {
+      $scope.stateValue = input;
+      helper();
+      $scope.currentPage = 1;
+
+    };
+
+    $scope.sortChange = function (input) {
+      $scope.sortType = input;
+      $scope.sortReverse = !$scope.sortReverse;
+      helper();
+      $scope.currentPage = 1;
+
+    };
+
+    $scope.labelFilterChange = function (input) {
+      $scope.labelValue = input;
+      helper();
+      $scope.currentPage = 1;
+
+    };
+
+    $scope.pageChange = function (input) {
+      $scope.currentPage = $scope.currentPage + input;
+      if($scope.currentPage == $scope.totalPages) {
+        helper();
+      }
+    };
 }]);
 
 app.controller('DetailsController', ['$scope','serviceRelease', function ($scope, serviceRelease) {
