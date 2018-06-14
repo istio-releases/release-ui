@@ -14,27 +14,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     $scope.currentPage = 1;
     $scope.numPerPage = 10;
     $scope.filteredReleases = [];
-
-    $scope.getReleases = function () {
-      return $http({
-        method: 'GET',
-        url: 'http://localhost:8080/releases',
-        cache: true
-      }).then(function successCallback(response) {
-        var releases = angular.fromJson(response.data);
-        angular.forEach(releases, function(value, key) {
-          for (var i = 0; i < value.labels.length; i++) {
-            labelSet.add(value.labels[i]);
-          }
-        });
-        $scope.labels = Array.from(labelSet);
-        $scope.releases = releases;
-        $scope.totalPages = Math.ceil(Object.keys($scope.releases).length / $scope.numPerPage);
-      }, function errorCallback(response) {
-        $log.log(response);
-      });
-    };
-    $scope.getReleases();
+    $scope.totalPages = 0;
 
     // Starting settings for datepicker
     $scope.maxDate = new Date();
@@ -117,20 +97,21 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
         datetype = 1;
       }
 
-      var start = $scope.fromDate.getTime() / 1000;
-      var end = $scope.toDate.getTime() / 1000;
+      var start = Math.floor($scope.fromDate.getTime() / 1000);
+      var end = Math.ceil($scope.toDate.getTime() / 1000);
+      var offset = $scope.totalPages * $scope.numPerPage;
 
       var url_string = 'http://localhost:8080/page?state=' + state +
                    '&label=' + $scope.labelValue + '&start_date=' + start +
                    '&end_date=' + end + '&datetype=' + datetype +
-                   '&sort_method='+ sort_method + '&limit=' + 100 + '&offset=' + 0;
+                   '&sort_method='+ sort_method + '&limit=' + 100 + '&offset=' + offset;
                    $log.log(url_string);
       $http({
           method: 'POST',
           url: url_string,
           cache: true
       }).then(function successCallback(response) {
-        $log.log(response.data);
+          $log.log(response.data);
           $scope.releases = angular.fromJson(response.data);
           $scope.totalPages = Math.ceil(Object.keys($scope.releases).length / $scope.numPerPage);
       }, function errorCallback(response) {
@@ -138,6 +119,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       });
 
     };
+    helper();
 
     // functions that may request more data from server
     $scope.fromDateChange = function (input) {
@@ -178,7 +160,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
     $scope.pageChange = function (input) {
       $scope.currentPage = $scope.currentPage + input;
-      if($scope.currentPage == $scope.totalPages) {
+      if($scope.currentPage == $scope.totalPages - 1) {
         helper();
       }
     };
