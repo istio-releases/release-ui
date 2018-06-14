@@ -7,7 +7,7 @@ blank_template = blank_release['release2_id']
 new_data = {}
 
 #---Set the number of releases you want in the JSON file here---#
-number_of_releases = 25
+number_of_releases = 500
 
 #-----Creates the data to put into the JSON-----#
 for i in range(number_of_releases):
