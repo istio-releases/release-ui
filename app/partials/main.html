@@ -74,7 +74,7 @@
         </th>
       </thead>
       <tbody id="dashboard">
-          <tr ng-repeat="release in filteredReleases = (releases | orderBy:sortType:sortReverse | propFilter:stateValue:labelValue:fromDate:toDate:whichDate) | limitTo:numPerPage:numPerPage*(currentPage-1)"
+          <tr ng-repeat="release in filteredReleases | limitTo:numPerPage:numPerPage*(currentPage-1)"
               ng-click="redirectToDetails(release)" ng-class="{greyed: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
             <td>
               <img ng-if="release.state == 2" src="/app/assets/images/check.png">

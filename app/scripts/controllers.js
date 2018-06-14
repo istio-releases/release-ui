@@ -4,8 +4,8 @@
 
 var app = angular.module('ReleaseUI.controllers', ['ngTable']);
 
-app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease', 'NgTableParams',
-  function($scope, $http, $location, $log, serviceRelease, NgTableParams) {
+app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease', 'NgTableParams', '$filter',
+  function($scope, $http, $location, $log, serviceRelease, NgTableParams, $filter) {
 
     $scope.releases = [];
 
@@ -14,6 +14,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     $scope.numPerPage = 10;
     $scope.totalPages = 0;
     $scope.totalReleases = 30;
+    $scope.numRequested = 30;
 
     // Starting settings for datepicker
     $scope.maxDate = new Date();
@@ -62,7 +63,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     };
 
     // Helper function for post http requests
-    var helper = function () {
+    var requestData = function () {
       var method = $scope.sortType;
       var reverse = $scope.sortReverse;
       var sort_method;
@@ -114,23 +115,24 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       var url_string = 'http://localhost:8080/page?state=' + state +
                    '&label=' + $scope.labelValue + '&start_date=' + start +
                    '&end_date=' + end + '&datetype=' + datetype +
-                   '&sort_method='+ sort_method + '&limit=' + $scope.totalReleases + '&offset=' + $scope.releases.length;
-      $log.log(url_string);
+                   '&sort_method='+ sort_method + '&limit=' + $scope.numRequested + '&offset=' + $scope.releases.length;
+
       $http({
           method: 'POST',
           url: url_string,
           cache: true
       }).then(function successCallback(response) {
           $scope.releases = $scope.releases.concat(toArray(angular.fromJson(response.data)));
+          $scope.filteredReleases = $filter('propFilter')($scope.releases, $scope.stateValue, $scope.labelValue, $scope.fromDate, $scope.toDate, $scope.whichDate);
           $scope.lastDate = $scope.releases[$scope.releases.length - 1].last_modified;
-          $scope.totalPages = Math.ceil($scope.releases.length / $scope.numPerPage);
+          $scope.totalPages = Math.ceil($scope.filteredReleases.length / $scope.numPerPage);
           $log.log('request made');
       }, function errorCallback(response) {
           $log.log(response);
       });
 
     };
-    helper();
+    requestData();
 
     // functions that may request more data from server
     $scope.fromDateChange = function (input) {
@@ -146,9 +148,18 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     };
 
     $scope.statusFilterChange = function (input) {
-      $log.log($scope.filteredReleases);
       $scope.stateValue = input;
       $scope.currentPage = 1;
+      $scope.filteredReleases = $filter('propFilter')($scope.releases, $scope.stateValue, $scope.labelValue, $scope.fromDate, $scope.toDate, $scope.whichDate);
+      if ($scope.filteredReleases.length <= $scope.totalReleases) {
+        $scope.numRequested = $scope.totalReleases - $scope.filteredReleases.length;
+        $log.log($scope.numRequested);
+        requestData();
+      }
+      else {
+        $scope.totalPages = Math.ceil($scope.filteredReleases.length / $scope.numPerPage);
+        $scope.lastDate = $scope.releases[$scope.releases.length - 1].last_modified;
+      }
 
     };
 
@@ -162,7 +173,16 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     $scope.labelFilterChange = function (input) {
       $scope.labelValue = input;
       $scope.currentPage = 1;
-
+      $scope.filteredReleases = $filter('propFilter')($scope.releases, $scope.stateValue, $scope.labelValue, $scope.fromDate, $scope.toDate, $scope.whichDate);
+      if ($scope.filteredReleases.length <= $scope.totalReleases) {
+        $scope.numRequested = $scope.totalReleases - $scope.filteredReleases.length;
+        $log.log($scope.numRequested);
+        requestData();
+      }
+      else {
+        $scope.totalPages = Math.ceil($scope.filteredReleases.length / $scope.numPerPage);
+        $scope.lastDate = $scope.releases[$scope.releases.length - 1].last_modified;
+      }
     };
 
     $scope.pageChange = function (input) {
@@ -173,7 +193,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
         $scope.currentPage = $scope.currentPage + input;
       }
       if($scope.currentPage >= $scope.totalPages - 1) {
-        helper();
+        requestData();
       }
     };
 
@@ -194,7 +214,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
       $scope.sortType = 'last_modified';
       $scope.sortReverse = true;
-      helper();
+      requestData();
     };
 }]);
 
