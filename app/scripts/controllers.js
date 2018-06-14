@@ -7,14 +7,13 @@ var app = angular.module('ReleaseUI.controllers', ['ngTable']);
 app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease', 'NgTableParams',
   function($scope, $http, $location, $log, serviceRelease, NgTableParams) {
 
-    // Get information from http request
-    var labelSet = new Set();
+    $scope.releases = [];
 
     // pagination
     $scope.currentPage = 1;
     $scope.numPerPage = 10;
-    $scope.filteredReleases = [];
     $scope.totalPages = 0;
+    $scope.totalReleases = 30;
 
     // Starting settings for datepicker
     $scope.maxDate = new Date();
@@ -25,7 +24,19 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     $scope.whichDate = 'started';
     $scope.filterDate = 'started';
 
-    // Starting settings for label filtered
+    // Starting settings for Labels
+    var getLabels = function () {
+      $http({
+                method: 'GET',
+                url: 'http://localhost:8080/labels',
+                cache: true
+            }).then(function successCallback(response) {
+                $scope.labels = angular.fromJson(response.data);
+            }, function errorCallback(response) {
+                $log.log(response);
+            })
+    };
+    getLabels();
     $scope.labelValue = null;
 
     // Starting settings for search filter
@@ -99,21 +110,21 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
       var start = Math.floor($scope.fromDate.getTime() / 1000);
       var end = Math.ceil($scope.toDate.getTime() / 1000);
-      var offset = $scope.totalPages * $scope.numPerPage;
 
       var url_string = 'http://localhost:8080/page?state=' + state +
                    '&label=' + $scope.labelValue + '&start_date=' + start +
                    '&end_date=' + end + '&datetype=' + datetype +
-                   '&sort_method='+ sort_method + '&limit=' + 100 + '&offset=' + offset;
-                   $log.log(url_string);
+                   '&sort_method='+ sort_method + '&limit=' + $scope.totalReleases + '&offset=' + $scope.releases.length;
+      $log.log(url_string);
       $http({
           method: 'POST',
           url: url_string,
           cache: true
       }).then(function successCallback(response) {
-          $log.log(response.data);
-          $scope.releases = angular.fromJson(response.data);
-          $scope.totalPages = Math.ceil(Object.keys($scope.releases).length / $scope.numPerPage);
+          $scope.releases = $scope.releases.concat(toArray(angular.fromJson(response.data)));
+          $scope.lastDate = $scope.releases[$scope.releases.length - 1].last_modified;
+          $scope.totalPages = Math.ceil($scope.releases.length / $scope.numPerPage);
+          $log.log('request made');
       }, function errorCallback(response) {
           $log.log(response);
       });
@@ -125,20 +136,18 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     $scope.fromDateChange = function (input) {
       $scope.fromDate = input;
       $scope.minToDate = input;
-      helper();
       $scope.currentPage = 1;
     };
 
     $scope.toDateChange = function (input) {
       $scope.toDate = input;
       $scope.maxFromDate = input;
-      helper();
       $scope.currentPage = 1;
     };
 
     $scope.statusFilterChange = function (input) {
+      $log.log($scope.filteredReleases);
       $scope.stateValue = input;
-      helper();
       $scope.currentPage = 1;
 
     };
@@ -146,21 +155,24 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     $scope.sortChange = function (input) {
       $scope.sortType = input;
       $scope.sortReverse = !$scope.sortReverse;
-      helper();
       $scope.currentPage = 1;
 
     };
 
     $scope.labelFilterChange = function (input) {
       $scope.labelValue = input;
-      helper();
       $scope.currentPage = 1;
 
     };
 
     $scope.pageChange = function (input) {
-      $scope.currentPage = $scope.currentPage + input;
-      if($scope.currentPage == $scope.totalPages - 1) {
+      if (input == -2) {
+        $scope.currentPage = 1;
+      }
+      else {
+        $scope.currentPage = $scope.currentPage + input;
+      }
+      if($scope.currentPage >= $scope.totalPages - 1) {
         helper();
       }
     };

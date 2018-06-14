@@ -68,13 +68,13 @@
               ng-model="selectedLabel"
               ng-options="label as label for label in labels"
               ng-change="labelFilterChange(selectedLabel)">
-              <option value="">All Labels</option>
+              <option value="">Labels</option>
             </select>
           </div>
         </th>
       </thead>
       <tbody id="dashboard">
-          <tr ng-repeat="(key, release) in filteredReleases = (releases | orderObjectBy:sortType:sortReverse | propFilter:stateValue:labelValue:fromDate:toDate:whichDate) | limitTo:numPerPage:numPerPage*(currentPage-1)"
+          <tr ng-repeat="release in filteredReleases = (releases | orderBy:sortType:sortReverse | propFilter:stateValue:labelValue:fromDate:toDate:whichDate) | limitTo:numPerPage:numPerPage*(currentPage-1)"
               ng-click="redirectToDetails(release)" ng-class="{greyed: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
             <td>
               <img ng-if="release.state == 2" src="/app/assets/images/check.png">
@@ -105,7 +105,7 @@
 
   <ul class="pagination justify-content-center">
     <li class="page-item">
-      <a ng-if="currentPage > 1" ng-click="pageChange(-1)" class="page-link" href="" aria-label="Next">
+      <a ng-if="currentPage > 1" ng-click="pageChange(-2)" class="page-link" href="" aria-label="Next">
         <span aria-hidden="true">&laquo;</span>
       </a>
       <a ng-if="currentPage == 1" class="page-link" aria-label="Next">

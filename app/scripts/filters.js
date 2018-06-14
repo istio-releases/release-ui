@@ -10,7 +10,7 @@ app.filter('propFilter', function() {
 
     //filter based on created dates
     var filteredDate = [];
-    angular.forEach(items, function (item) {
+    items.forEach(function (item) {
       var time;
       if(which == 'started'){
         time = item.started * 1000;
@@ -21,7 +21,7 @@ app.filter('propFilter', function() {
       if (time >= from && time <= to){
         filteredDate.push(item);
       }
-    })
+    });
 
     //filter based on state
     var filteredState = [];
@@ -29,11 +29,11 @@ app.filter('propFilter', function() {
       filteredState = items;
     }
     else {
-      angular.forEach(items, function (item) {
+      items.forEach(function (item) {
         if (item.state == state){
           filteredState.push(item);
         }
-      })
+      });
     }
 
     //filter based on label
@@ -42,13 +42,13 @@ app.filter('propFilter', function() {
       filteredLabel = items;
     }
     else {
-      angular.forEach(items, function (item) {
+      items.forEach(function (item) {
         for(var i = 0; i < item.labels.length; i++){
           if (item.labels[i] == label){
             filteredLabel.push(item);
           }
         }
-      })
+      });
     }
 
     // return intersection of arrays
