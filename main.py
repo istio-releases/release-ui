@@ -73,7 +73,7 @@ def filter(state, label, start_date, end_date, datetype):
     print filtered
     return filtered
 
-# sorts unsorted according to sort_method. See https://docs.google.com/document/d/1JDD_NX2XVL7yqYcfFOqkef1FKv98nrlRFJ0OpSZprMU/ for enumerations
+# sorts 'unsorted' according to 'sort_method'. See https://docs.google.com/document/d/1JDD_NX2XVL7yqYcfFOqkef1FKv98nrlRFJ0OpSZprMU/ for enumerations
 def sort(unsorted, sort_method):
     sort_method = int(sort_method)
     if sort_method == 1:
@@ -108,6 +108,19 @@ def in_memcache(args):
     else:
         return False, key
 
+def get_labels():
+    if memcache.get('labels'):
+        return memcache.get('labels')
+    else:
+        releases = memcache.get('releases')
+        labels = []
+        for release in releases:
+            for label in releases[release]['labels']:
+                if label not in labels:
+                    labels.append(label)
+        memcache.add(key = 'labels', value = labels, time=3600)
+        return labels
+
 #-------------------------REST API----------------------------#
 class Releases(Resource):
     def get(self):
@@ -133,7 +146,6 @@ class Pagination(Resource):
             print 'limit exists'
         else:
             args['limit'] = 100
-
         if args['offset']:
             print 'offset exists'
         else:
@@ -149,10 +161,15 @@ class Pagination(Resource):
             # time adds an expiration time of one hour, in order to keep the memcache somewhat up to date
             return json.dumps(response[int(args['offset']):int(args['limit'])])
 
+class GetLabels(Resource):
+    def get(self):
+        labels = get_labels()
+        return json.dumps(labels)
 
 
 api.add_resource(Releases, '/releases')
 api.add_resource(Pagination, '/page')
+api.add_resource(GetLabels, '/labels')
 
 if __name__ == '__main__':
      app.run(port='8080', debug=True)
