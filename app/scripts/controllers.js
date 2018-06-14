@@ -12,7 +12,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
     // pagination
     $scope.currentPage = 1;
-    $scope.numPerPage = 9;
+    $scope.numPerPage = 10;
     $scope.filteredReleases = [];
 
     $scope.getReleases = function () {
@@ -63,25 +63,6 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     // Starting Settings for OrderBy filter
     $scope.sortType = 'last_modified';
     $scope.sortReverse = true;
-
-    // Reset Filters and OrderBy
-    $scope.resetFilter = function () {
-      $scope.fromDate = new Date(0);
-      $scope.toDate = new Date();
-      $scope.startDate = null;
-      $scope.endDate = null;
-      $scope.whichDate = 'started';
-      $scope.filterDate = 'started';
-
-      $scope.labelValue = null;
-      $scope.selectedLabel = null;
-
-      $scope.stateValue = null;
-      $scope.selectedValue = null;
-
-      $scope.sortType = 'last_modified';
-      $scope.sortReverse = true;
-    };
 
     // Redirect to Details function
     $scope.redirectToDetails = function (input) {
@@ -136,19 +117,20 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
         datetype = 1;
       }
 
-      var start = $scope.fromDate.getTime();
-      var end = $scope.toDate.getTime();
+      var start = $scope.fromDate.getTime() / 1000;
+      var end = $scope.toDate.getTime() / 1000;
 
       var url_string = 'http://localhost:8080/page?state=' + state +
                    '&label=' + $scope.labelValue + '&start_date=' + start +
                    '&end_date=' + end + '&datetype=' + datetype +
                    '&sort_method='+ sort_method + '&limit=' + 100 + '&offset=' + 0;
-
+                   $log.log(url_string);
       $http({
           method: 'POST',
           url: url_string,
           cache: true
       }).then(function successCallback(response) {
+        $log.log(response.data);
           $scope.releases = angular.fromJson(response.data);
           $scope.totalPages = Math.ceil(Object.keys($scope.releases).length / $scope.numPerPage);
       }, function errorCallback(response) {
@@ -199,6 +181,26 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       if($scope.currentPage == $scope.totalPages) {
         helper();
       }
+    };
+
+    // Reset Filters and OrderBy
+    $scope.resetFilter = function () {
+      $scope.fromDate = new Date(0);
+      $scope.toDate = new Date();
+      $scope.startDate = null;
+      $scope.endDate = null;
+      $scope.whichDate = 'started';
+      $scope.filterDate = 'started';
+
+      $scope.labelValue = null;
+      $scope.selectedLabel = null;
+
+      $scope.stateValue = null;
+      $scope.selectedValue = null;
+
+      $scope.sortType = 'last_modified';
+      $scope.sortReverse = true;
+      helper();
     };
 }]);
 
