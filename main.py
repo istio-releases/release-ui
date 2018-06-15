@@ -22,13 +22,6 @@ def filter(state, label, start_date, end_date, datetype):
     start_date = int(start_date)
     end_date = int(end_date)
     datetype = int(datetype) # designates whether to sort by creation date(0) or date modified(1)
-    print state
-    print start_date
-    print end_date
-    print datetype
-    print label
-    if str(label) == 'null':
-        print "HELLLLOOOOOOOOOOOOOOOO"
     data = memcache.get('releases')
     filtered = []
     for item in data.items():
@@ -70,7 +63,6 @@ def filter(state, label, start_date, end_date, datetype):
                                     filtered.append(item[1])
                         else:
                             filtered.append(item[1])
-    print filtered
     return filtered
 
 # sorts 'unsorted' according to 'sort_method'. See https://docs.google.com/document/d/1JDD_NX2XVL7yqYcfFOqkef1FKv98nrlRFJ0OpSZprMU/ for enumerations
@@ -153,7 +145,7 @@ class Pagination(Resource):
         # checks if the filtered, sorted data is already in memcache
         memcache_exists, memcache_results = in_memcache(args)
         if memcache_exists:
-            return json.dumps(memcache_results[int(args['offset']):int(args['limit'])])
+            return json.dumps(memcache_results[int(args['offset']):(int(args['limit'])+int(args['offset']))])
         else:
             response = filter(args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
             response = sort(response, args['sort_method'])
@@ -180,14 +172,3 @@ if __name__ == '__main__':
 @app.route('/details')
 def basic_pages():
     return make_response(open('templates/index.html').read())
-
-
-@app.route('/getReleases')
-def getReleases():
-    # return render_template('details.html')
-    result = memcache.get('releases')
-    result = json.dumps(result)
-    return result, 200
-
-# TODO(dommarques):
-#    - implement a way to log and cache all of the labels in each release
