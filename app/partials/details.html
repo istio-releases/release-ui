@@ -23,7 +23,7 @@
     </div>
 
     <div style="float:right;">
-      <a href="{{release.repo_url}}"><button type="button" class="btn btn-primary btn-lg">View on Github</button></a>
+      <a href="{{release.repo_url}}" target="_blank"><button type="button" class="btn btn-primary btn-lg">View on Github</button></a>
     </div>
 
     <div class="row" id="labels">
@@ -73,7 +73,7 @@
                 {{task.last_modified * 1000 | date:'medium'}}
               </td>
               <td>
-                <a href="{{task.log_url}}"> logs </a>
+                <a href="{{task.log_url}}" target="_blank"> logs </a>
               </td>
             </tr>
         </tbody>

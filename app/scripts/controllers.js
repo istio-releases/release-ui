@@ -50,7 +50,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
     // Redirect to Details function onclick of table row
     $scope.redirectToDetails = function (input) {
-      serviceRelease.set(input);
+      serviceRelease.set(input, $scope.releases);
       $location.path('/details');
     };
 
