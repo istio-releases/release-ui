@@ -80,6 +80,13 @@ p
     background-color: #F2F2F2;
 }
 
+#footer {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin-bottom: 10px;
+}
 
 /* -------------------------- */
 /* details.html styling */

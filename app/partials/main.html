@@ -101,42 +101,48 @@
             </td>
           </tr>
       </tbody>
+      <tfoot>
+
+      </tfoot>
   </table>
 
-  <ul class="pagination justify-content-center">
-    <li class="page-item">
-      <a ng-if="currentPage > 1" ng-click="pageChange(-2)" class="page-link" href="" aria-label="Next">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-      <a ng-if="currentPage == 1" class="page-link" aria-label="Next">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    <li ng-if="currentPage == 1" ng-repeat="n in [] | range:totalPages" class="page-item">
-      <a ng-if="currentPage + $index == 1" class="page-link">{{currentPage + $index}}</a>
-      <a ng-if="currentPage + $index != 1" ng-click="pageChange($index)" href="" class="page-link">{{currentPage + $index}}</a>
-    </li>
-    <li ng-if="currentPage > 1 && currentPage < totalPages" ng-repeat="n in [] | range:totalPages" class="page-item">
-      <a ng-if="n == 0" class="page-link">{{currentPage}}</a>
-      <a ng-if="n != 0" class="page-link" ng-click="pageChange(n)" href="">{{currentPage + n}}</a>
-    </li>
-    <li ng-if="currentPage >= totalPages && totalPages >= 3" class="page-item">
-      <a ng-click="pageChange(-2)" href="" class="page-link">{{currentPage - 2}}</a>
-    </li>
-    <li ng-if="currentPage >= totalPages && totalPages >= 2" class="page-item">
-      <a ng-click="pageChange(-1)" href="" class="page-link">{{currentPage -1}}</a>
-    </li>
-    <li ng-if="currentPage >= totalPages && currentPage != 1">
-      <a class="page-link">{{currentPage}}</a>
-    </li>
-    <li>
-      <a ng-if="currentPage < totalPages" ng-click="pageChange(1)" class="page-link" href="" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-      <a ng-if="currentPage >= totalPages" class="page-link" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  </ul>
+  <section id="footer">
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a ng-if="currentPage > 1" ng-click="pageChange(-2)" class="page-link" href="" aria-label="Next">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+        <a ng-if="currentPage == 1" class="page-link" aria-label="Next">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li ng-if="currentPage == 1" ng-repeat="n in [] | range:totalPages" class="page-item">
+        <a ng-if="currentPage + $index == 1" class="page-link">{{currentPage + $index}}</a>
+        <a ng-if="currentPage + $index != 1" ng-click="pageChange($index)" href="" class="page-link">{{currentPage + $index}}</a>
+      </li>
+      <li ng-if="currentPage > 1 && currentPage < totalPages" ng-repeat="n in [] | range:totalPages" class="page-item">
+        <a ng-if="n == 0" class="page-link">{{currentPage}}</a>
+        <a ng-if="n != 0" class="page-link" ng-click="pageChange(n)" href="">{{currentPage + n}}</a>
+      </li>
+      <li ng-if="currentPage >= totalPages && totalPages >= 3" class="page-item">
+        <a ng-click="pageChange(-2)" href="" class="page-link">{{currentPage - 2}}</a>
+      </li>
+      <li ng-if="currentPage >= totalPages && totalPages >= 2" class="page-item">
+        <a ng-click="pageChange(-1)" href="" class="page-link">{{currentPage -1}}</a>
+      </li>
+      <li ng-if="currentPage >= totalPages && currentPage != 1">
+        <a class="page-link">{{currentPage}}</a>
+      </li>
+      <li>
+        <a ng-if="currentPage < totalPages" ng-click="pageChange(1)" class="page-link" href="" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+        <a ng-if="currentPage >= totalPages" class="page-link" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </section>
+
 
 </div>
