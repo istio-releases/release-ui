@@ -26,8 +26,8 @@ for i in range(number_of_releases):
     new_data[release_id]['ref'] = 'reference number ' + str(random.randint(0,1023))
     new_data[release_id]['state'] = random.randint(1,4)
     new_data[release_id]['stage'] = random.randint(1,7)
-    new_data[release_id]['started'] = random.randint(0, 2147483647)
-    new_data[release_id]['last_modified'] = random.randint(0, 2147483647)
+    new_data[release_id]['started'] = random.randint(0, 1528996059)
+    new_data[release_id]['last_modified'] = random.randint(0, 1528996059)
     new_data[release_id]['artifacts_link'] = 'https://youtu.be/dQw4w9WgXcQ'
     new_data[release_id]['release_url'] = 'https://youtu.be/dQw4w9WgXcQ'
     new_data[release_id]['tasks'] = {}
