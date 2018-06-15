@@ -2,7 +2,7 @@
 /* index.html styling */
 #top-bar
 {
-    padding: 30px;
+    padding: 20px;
     background-color: #2C6AC4;
 }
 
@@ -35,6 +35,11 @@ main img
     max-width: 100%;
 }
 
+body
+{
+    font-size: 0.9rem;
+}
+
 
 /* -------------------------- */
 /* main.html styling */
@@ -55,19 +60,10 @@ main img
     height: 75%;
 }
 
-.date
-{
-    width: 75%
-}
 
 label
 {
     color: #858585;
-}
-
-p
-{
-    margin: 2px;
 }
 
 .caret
@@ -85,7 +81,7 @@ p
     bottom: 0px;
     left: 0px;
     right: 0px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 /* -------------------------- */
