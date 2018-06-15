@@ -62,8 +62,8 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       $location.path('/details');
     };
 
-    // Helper function for post http requests
-    var requestData = function () {
+    // Helper function that makes URL for post request
+    var requestURL = function () {
       var method = $scope.sortType;
       var reverse = $scope.sortReverse;
       var sort_method;
@@ -112,27 +112,36 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       var start = Math.floor($scope.fromDate.getTime() / 1000);
       var end = Math.ceil($scope.toDate.getTime() / 1000);
 
-      var url_string = 'http://localhost:8080/page?state=' + state +
+      var offset;
+      var limit;
+      if ($scope.currentPage == -1) {
+        offset = -30;
+        limit = $scope.numRequested
+      }
+      else {
+        offset = $scope.releases.length;
+        limit = $scope.numRequested
+      }
+
+      return 'http://localhost:8080/page?state=' + state +
                    '&label=' + $scope.labelValue + '&start_date=' + start +
                    '&end_date=' + end + '&datetype=' + datetype +
                    '&sort_method='+ sort_method + '&limit=' + $scope.numRequested + '&offset=' + $scope.releases.length;
-
-      $http({
-          method: 'POST',
-          url: url_string,
-          cache: true
-      }).then(function successCallback(response) {
-          $scope.releases = $scope.releases.concat(toArray(angular.fromJson(response.data)));
-          $scope.filteredReleases = $filter('propFilter')($scope.releases, $scope.stateValue, $scope.labelValue, $scope.fromDate, $scope.toDate, $scope.whichDate);
-          $scope.lastDate = $scope.releases[$scope.releases.length - 1].last_modified;
-          $scope.totalPages = Math.ceil($scope.filteredReleases.length / $scope.numPerPage);
-          $log.log('request made');
-      }, function errorCallback(response) {
-          $log.log(response);
-      });
-
     };
-    requestData();
+
+    // First HTTP request when page opens
+    $http({
+        method: 'POST',
+        url: requestURL(),
+        cache: true
+    }).then(function successCallback(response) {
+        $scope.releases = toArray(angular.fromJson(response.data));
+        $scope.lastDate = $scope.releases[$scope.releases.length - 1].last_modified;
+        $scope.totalPages = Math.ceil($scope.releases.length / $scope.numPerPage);
+        $log.log('request made');
+    }, function errorCallback(response) {
+        $log.log(response);
+    });
 
     // functions that may request more data from server
     $scope.fromDateChange = function (input) {
@@ -152,15 +161,21 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       $scope.currentPage = 1;
       $scope.filteredReleases = $filter('propFilter')($scope.releases, $scope.stateValue, $scope.labelValue, $scope.fromDate, $scope.toDate, $scope.whichDate);
       if ($scope.filteredReleases.length <= $scope.totalReleases) {
+        $scope.releases = [];
         $scope.numRequested = $scope.totalReleases - $scope.filteredReleases.length;
-        $log.log($scope.numRequested);
-        requestData();
+        $http({
+            method: 'POST',
+            url: requestURL(),
+            cache: true
+        }).then(function successCallback(response) {
+            $scope.releases = toArray(angular.fromJson(response.data));
+            $scope.filteredReleases = $filter('propFilter')($scope.releases, $scope.stateValue, $scope.labelValue, $scope.fromDate, $scope.toDate, $scope.whichDate);
+            $scope.totalPages = Math.ceil($scope.filteredReleases.length / $scope.numPerPage);
+            $log.log('request made');
+        }, function errorCallback(response) {
+            $log.log(response);
+        });
       }
-      else {
-        $scope.totalPages = Math.ceil($scope.filteredReleases.length / $scope.numPerPage);
-        $scope.lastDate = $scope.releases[$scope.releases.length - 1].last_modified;
-      }
-
     };
 
     $scope.sortChange = function (input) {
@@ -175,25 +190,45 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       $scope.currentPage = 1;
       $scope.filteredReleases = $filter('propFilter')($scope.releases, $scope.stateValue, $scope.labelValue, $scope.fromDate, $scope.toDate, $scope.whichDate);
       if ($scope.filteredReleases.length <= $scope.totalReleases) {
+        $scope.releases = [];
         $scope.numRequested = $scope.totalReleases - $scope.filteredReleases.length;
-        $log.log($scope.numRequested);
-        requestData();
+        $http({
+            method: 'POST',
+            url: requestURL(),
+            cache: true
+        }).then(function successCallback(response) {
+            $scope.releases = toArray(angular.fromJson(response.data));
+            $scope.filteredReleases = $filter('propFilter')($scope.releases, $scope.stateValue, $scope.labelValue, $scope.fromDate, $scope.toDate, $scope.whichDate);
+            $log.log('request made');
+        }, function errorCallback(response) {
+            $log.log(response);
+        });
       }
-      else {
-        $scope.totalPages = Math.ceil($scope.filteredReleases.length / $scope.numPerPage);
-        $scope.lastDate = $scope.releases[$scope.releases.length - 1].last_modified;
-      }
+      $scope.totalPages = Math.ceil($scope.filteredReleases.length / $scope.numPerPage);
+
     };
 
     $scope.pageChange = function (input) {
       if (input == -2) {
         $scope.currentPage = 1;
       }
-      else {
+      else if ($scope.currentPage + input < $scope.totalPages - 1){
         $scope.currentPage = $scope.currentPage + input;
       }
-      if($scope.currentPage >= $scope.totalPages - 1) {
-        requestData();
+      else {
+        $http({
+            method: 'POST',
+            url: requestURL(),
+            cache: true
+        }).then(function successCallback(response) {
+            $scope.releases = $scope.releases.concat(toArray(angular.fromJson(response.data)));
+            $scope.filteredReleases = $filter('propFilter')($scope.releases, $scope.stateValue, $scope.labelValue, $scope.fromDate, $scope.toDate, $scope.whichDate);
+            $scope.totalPages = Math.ceil($scope.filteredReleases.length / $scope.numPerPage);
+            $log.log('request made');
+        }, function errorCallback(response) {
+            $log.log(response);
+        });
+        $scope.currentPage = $scope.currentPage + input;
       }
     };
 
