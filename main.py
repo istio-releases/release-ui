@@ -151,7 +151,7 @@ class Pagination(Resource):
             response = sort(response, args['sort_method'])
             memcache.add(key=memcache_results, value=response, time=3600)
             # time adds an expiration time of one hour, in order to keep the memcache somewhat up to date
-            return json.dumps(response[int(args['offset']):int(args['limit'])])
+            return json.dumps(response[int(args['offset']):(int(args['limit'])+int(args['offset']))])
 
 class GetLabels(Resource):
     def get(self):

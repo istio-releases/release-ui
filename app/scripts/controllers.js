@@ -4,37 +4,13 @@
 
 var app = angular.module('ReleaseUI.controllers', ['ngTable']);
 
-app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease', 'NgTableParams',
-  function($scope, $http, $location, $log, serviceRelease, NgTableParams) {
+app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease',
+  function($scope, $http, $location, $log, serviceRelease) {
 
-    // Get information from http request
-    var labelSet = new Set();
-
-    // pagination
+    // Starting settings for pagination
     $scope.currentPage = 1;
-    $scope.numPerPage = 9;
-    $scope.filteredReleases = [];
-
-    $scope.getReleases = function () {
-      return $http({
-        method: 'GET',
-        url: 'http://localhost:8080/releases',
-        cache: true
-      }).then(function successCallback(response) {
-        var releases = angular.fromJson(response.data);
-        angular.forEach(releases, function(value, key) {
-          for (var i = 0; i < value.labels.length; i++) {
-            labelSet.add(value.labels[i]);
-          }
-        });
-        $scope.labels = Array.from(labelSet);
-        $scope.releases = releases;
-        $scope.totalPages = Math.ceil(Object.keys($scope.releases).length / $scope.numPerPage);
-      }, function errorCallback(response) {
-        $log.log(response);
-      });
-    };
-    $scope.getReleases();
+    $scope.numPerPage = 15;
+    $scope.numRequested = 45;
 
     // Starting settings for datepicker
     $scope.maxDate = new Date();
@@ -42,14 +18,23 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     $scope.minToDate = new Date(0);
     $scope.fromDate = $scope.minToDate;
     $scope.toDate = $scope.maxDate;
-    $scope.whichDate = 'started';
     $scope.filterDate = 'started';
+    $scope.whichDate = 0;
 
-    // Starting settings for label filtered
+    // Starting settings for Labels
+    var getLabels = function () {
+      $http({
+          method: 'GET',
+          url: 'http://localhost:8080/labels',
+          cache: true
+      }).then(function successCallback(response) {
+          $scope.labels = angular.fromJson(response.data);
+      }, function errorCallback(response) {
+          $log.log(response);
+      });
+    };
+    getLabels();
     $scope.labelValue = null;
-
-    // Starting settings for search filter
-    $scope.searchTable = undefined;
 
     // Starting settings for state filter
     $scope.stateValues = [
@@ -60,93 +45,17 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     ];
     $scope.stateValue = null;
 
-    // Starting Settings for OrderBy filter
-    $scope.sortType = 'last_modified';
-    $scope.sortReverse = true;
+    // Starting settings for sort
+    $scope.sortMethod = 3;
 
-    // Reset Filters and OrderBy
-    $scope.resetFilter = function () {
-      $scope.fromDate = new Date(0);
-      $scope.toDate = new Date();
-      $scope.startDate = null;
-      $scope.endDate = null;
-      $scope.whichDate = 'started';
-      $scope.filterDate = 'started';
-
-      $scope.labelValue = null;
-      $scope.selectedLabel = null;
-
-      $scope.stateValue = null;
-      $scope.selectedValue = null;
-
-      $scope.sortType = 'last_modified';
-      $scope.sortReverse = true;
-    };
-
-    // Redirect to Details function
+    // Redirect to Details function onclick of table row
     $scope.redirectToDetails = function (input) {
-      serviceRelease.set(input);
+      serviceRelease.set(input, $scope.releases);
       $location.path('/details');
     };
 
-    // functions that may request more data from server
-    $scope.fromDateChange = function (input) {
-      $scope.fromDate = input;
-      $scope.minToDate = input;
-      // request more data from backend
-    };
-
-    $scope.toDateChange = function (input) {
-      $scope.toDate = input;
-      $scope.maxFromDate = input;
-      // request more data from backend
-    };
-
-    $scope.statusFilterChange = function (input) {
-      $scope.stateValue = input;
-      $log.log($scope.filteredReleases);
-      $log.
-      $scope.totalPages = Math.floor(Object.keys($scope.filteredReleases).length / $scope.numPerPage);
-      // request more data from backend
-    };
-
-    $scope.sortChange = function (input) {
-      $scope.sortType = input;
-      $scope.sortReverse = !$scope.sortReverse;
-      //request more data from backend
-    };
-
-    $scope.labelFilterChange = function (input) {
-      $scope.labelValue = input;
-
-      var method = $scope.sortType;
-      var reverse = $scope.sortReverse;
-      var sort_method;
-
-      if(method == 'name' && reverse) {
-        sort_method = 1;
-      }
-      else if (method == 'name') {
-        sort_method = 2;
-      }
-      else if (method == 'started' && reverse) {
-        sort_method = 3;
-      }
-      else if (method == 'started') {
-        sort_method = 4;
-      }
-      else if(method == 'last_modified' && reverse) {
-        sort_method = 5;
-      }
-      else if (method == 'last_modified') {
-        sort_method = 6;
-      }
-      else if (method == 'last_active_task' && reverse) {
-        sort_method = 7;
-      }
-      else if (method == 'last_active_task') {
-        sort_method = 8;
-      }
+    // Helper function that makes gets releases
+    var getReleases = function (isPage) {
 
       var state;
       if($scope.stateValue == null) {
@@ -156,49 +65,117 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
         state = $scope.stateValue;
       }
 
-      var datetype;
-      if ($scope.whichDate == 'started') {
-        datetype = 0;
+      var start = Math.floor($scope.fromDate.getTime() / 1000);
+      var end = Math.ceil($scope.toDate.getTime() / 1000);
+
+      var offset;
+      if (isPage) {
+        offset = $scope.releases.length;
       }
       else {
-        datetype = 1;
+        offset = 0;
+        $scope.currentPage = 1;
       }
 
-      var start = $scope.fromDate.getTime();
-      var end = $scope.toDate.getTime();
-
       var url_string = 'http://localhost:8080/page?state=' + state +
-                   '&label=' + $scope.labelValue + '&start_date=' + start +
-                   '&end_date=' + end + '&datetype=' + datetype +
-                   '&sort_method='+ sort_method + '&limit=' + 100 + '&offset=' + 0;
+          '&label=' + $scope.labelValue + '&start_date=' + start +
+          '&end_date=' + end + '&datetype=' + $scope.whichDate +
+          '&sort_method='+ $scope.sortMethod + '&limit=' + $scope.numRequested +
+          '&offset=' + offset;
 
-        $log.log(url_string);
-    var getData = function () {
-      return $http({
-            method: 'POST',
-            url: url_string
-          }).then(function successCallback(response) {
-            $log.log(response);
-          }, function errorCallback(response) {
-            $log.log(response);
-      });
+      $http({
+           method: 'POST',
+           url: url_string,
+           cache: true
+       }).then(function successCallback(response) {
+          if (isPage) {
+            $scope.releases = $scope.releases.concat(toArray(angular.fromJson(response.data)));
+          }
+          else {
+            $scope.releases = toArray(angular.fromJson(response.data));
+          }
+           $scope.totalPages = Math.ceil($scope.releases.length / $scope.numPerPage);
+           $log.log('request successful');
+       }, function errorCallback(response) {
+           $log.log(response);
+       });
     };
-    getData();
-  };
+    getReleases(false);
 
-  $scope.pageChange = function (input) {
-    $scope.currentPage = $scope.currentPage + input;
-    if($scope.currentPage == $scope.totalPages) {
-      // request more data from backend
-    }
-  };
+    // onclick/onchange functions that may request more data from server
+    $scope.dateChange = function (from, input) {
+      if (from) {
+        $scope.fromDate = input;
+        $scope.minToDate = input;
+      }
+      else {
+        $scope.toDate = input;
+        $scope.maxFromDate = input;
+      }
+      getReleases(false);
+    };
 
+    $scope.filterChange = function (status, input) {
+      if (status) {
+        $scope.stateValue = input;
+      }
+      else {
+        $scope.labelValue = input;
+      }
+      getReleases(false);
+    };
+
+    $scope.sortChange = function (input) {
+      if ($scope.sortMethod % 2 == 0) {
+        $scope.sortMethod = input;
+      }
+      else {
+        $scope.sortMethod = input + 1;
+      }
+      getReleases(false);
+    };
+
+    $scope.pageChange = function (input) {
+      if (input == -2) {
+        $scope.currentPage = 1;
+      }
+      else if ($scope.currentPage + input < $scope.totalPages - 1){
+        $scope.currentPage = $scope.currentPage + input;
+      }
+      else {
+        getReleases(true);
+        $scope.currentPage = $scope.currentPage + input;
+      }
+    };
+
+    // Reset Filters and OrderBy
+    $scope.resetFilter = function () {
+      $scope.fromDate = new Date(0);
+      $scope.toDate = new Date();
+      $scope.startDate = null;
+      $scope.endDate = null;
+      $scope.whichDate = 0;
+      $scope.filterDate = 'started';
+
+      $scope.labelValue = null;
+      $scope.selectedLabel = null;
+
+      $scope.stateValue = null;
+      $scope.selectedValue = null;
+
+      $scope.sortType = 3;
+      getReleases(false);
+    };
 }]);
 
-app.controller('DetailsController', ['$scope','serviceRelease', function ($scope, serviceRelease) {
+app.controller('DetailsController', ['$scope','serviceRelease', '$location', function ($scope, serviceRelease, $location) {
   $scope.release = serviceRelease.get();
+  $scope.homePage = function() {
+    $location.path('/main');
+  };
 }]);
 
+// Helper function that turns object to array
 function toArray(input) {
   var output = [], item;
 

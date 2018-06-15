@@ -16,3 +16,18 @@ app.factory('serviceRelease', function() {
     get: get
   }
 });
+
+app.factory('serviceReleaseList', function () {
+  var releaseList = [];
+  function set(data){
+    releaseList = data;
+  }
+  function get(){
+    return releaseList;
+  }
+
+  return {
+    set: set,
+    get: get
+  }
+});
