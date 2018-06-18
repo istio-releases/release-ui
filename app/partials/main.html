@@ -11,15 +11,15 @@
 
   <main id="main">
     <div class="row" id="filters">
-      <div class="col-sm">
+      <div class="col">
         <md-datepicker md-current-view="year" ng-model="startDate" ng-change="dateChange(true,startDate)"
           md-placeholder="From" md-max-date="maxFromDate"></md-datepicker>
       </div>
-      <div class="col-sm">
+      <div class="col">
         <md-datepicker md-current-view="year" ng-model="endDate" ng-change="dateChange(false,endDate)"
           md-placeholder="To" md-min-date="minToDate" md-max-date="maxDate"> </md-datepicker>
       </div>
-      <div class="col-sm">
+      <div class="col">
         <input type="radio" ng-model="filterDate" value="started" ng-click="whichDate = 0" default>
         <label>
           Filter by Creation Date

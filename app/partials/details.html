@@ -9,7 +9,7 @@
     </div>
   </nav>
 
-  <main class="container p-5">
+  <main id="details">
     <div id="title" class="row">
       <div class="col-" id = "release-image">
         <img ng-if="release.state == 2" src="/app/assets/images/check.png">
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div style="float:right;" class="btn-group-vertical">
+    <div style="float:right; width: 18%;" class="btn-group-vertical">
       <a href="{{release.repo_url}}" target="_blank" ><button type="button" style="width:120px;" class="link btn btn-primary btn-lg">Repo Link</button></a>
       <a href="{{release.artifacts_link}}" target="_blank"><button type="button" style="width:120px;" class="btn btn-primary btn-lg link">Artifacts Link</button></a>
       <a href="{{release.release_url}}" target="_blank"><button type="button" style="width:120px;" class="btn btn-primary btn-lg link">Release Link</button></a>

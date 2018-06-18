@@ -61,7 +61,8 @@ body
 
 #filters
 {
-    width: 100%;
+    float:left;
+    margin: 20px;
 }
 
 .table-header
@@ -111,9 +112,17 @@ label
 
 /* -------------------------- */
 /* details.html styling */
+
+#details
+{
+    width: 100%;
+    margin: 30px;
+}
+
 #title
 {
     width:50%;
+    margin-left: 20px;
 }
 
 .label
@@ -125,12 +134,14 @@ label
 .link
 {
     margin-bottom: 7px;
+    margin-right: 20px;
 }
 
 #dates
 {
   margin-top: 10px;
   margin-bottom: 25px;
+  margin-left: 18px;
 }
 
 #detail_release_title
@@ -152,14 +163,14 @@ h1
 
 #release-image
 {
-    margin-top: 7px;
+    margin-top: 10px;
     margin-right: 10px;
 }
 
 #labels
 {
-    margin-left: 5px;
     margin-top: 20px;
+    margin-left: 20px;
 }
 
 h6
