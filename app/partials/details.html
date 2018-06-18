@@ -22,8 +22,10 @@
       </div>
     </div>
 
-    <div style="float:right;">
-      <a href="{{release.repo_url}}" target="_blank"><button type="button" class="btn btn-primary btn-lg">View on Github</button></a>
+    <div style="float:right;" class="btn-group-vertical">
+      <a href="{{release.repo_url}}" target="_blank" ><button type="button" style="width:120px;" class="link btn btn-primary btn-lg">Repo Link</button></a>
+      <a href="{{release.artifacts_link}}" target="_blank"><button type="button" style="width:120px;" class="btn btn-primary btn-lg link">Artifacts Link</button></a>
+      <a href="{{release.release_url}}" target="_blank"><button type="button" style="width:120px;" class="btn btn-primary btn-lg link">Release Link</button></a>
     </div>
 
     <div class="row" id="labels">
@@ -47,16 +49,17 @@
 
 
     <div id="detail-table">
-      <table class="table table-striped">
+      <table class="table">
         <thead>
           <th>Status</th>
           <th>Task</th>
           <th>Start Time</th>
           <th>Last Modified</th>
+          <th>Dependencies</th>
           <th>View Logs</th>
         </thead>
         <tbody>
-            <tr ng-repeat="(name, task) in release.tasks">
+            <tr ng-class="{greyed: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false" ng-repeat-start="task in tasks | orderBy:'-started'" ng-click="task.expanded = !task.expanded">
               <td>
                 <img ng-if="task.status == 2" src="/app/assets/images/check.png">
                 <img ng-if="task.status == 3" src="/app/assets/images/error.png">
@@ -67,14 +70,25 @@
                 {{ task.task_name }}
               </td>
               <td>
-                {{task.started * 1000 | date:'medium'}}
+                {{task.started * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
               </td>
               <td>
-                {{task.last_modified * 1000 | date:'medium'}}
+                {{task.last_modified * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
+              </td>
+              <td>
+                <button ng-if="task.dependent_on.length == 0" type="button" class="btn btn-sm">
+                  None
+                </button>
+                <button ng-if="task.dependent_on.length != 0" ng-repeat="tag in task.dependent_on" type="button" class="btn btn-sm">
+                  {{tag}}
+                </button>
               </td>
               <td>
                 <a href="{{task.log_url}}" target="_blank"> logs </a>
               </td>
+            </tr>
+            <tr ng-if="task.expanded" ng-repeat-end="">
+              <td colspan="6"><b>ERROR:</b> {{task.error}}</td>
             </tr>
         </tbody>
 

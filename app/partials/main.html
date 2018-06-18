@@ -34,7 +34,7 @@
     </div>
     <table id="release-table" ng-table="releaseTable" class="table">
         <thead>
-          <th style="width: 12%">
+          <th style="width: 13%">
             <div>
               <select class="form-control dropdown"
                 ng-model="selectedValue"
@@ -86,7 +86,7 @@
         <tbody id="dashboard">
             <tr ng-repeat="release in releases | limitTo:numPerPage:numPerPage*(currentPage-1)"
                 ng-click="redirectToDetails(release)" ng-class="{greyed: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
-              <td style="width: 12%">
+              <td style="width: 13%">
                 <img ng-if="release.state == 2" src="/app/assets/images/check.png">
                 <img ng-if="release.state == 3" src="/app/assets/images/error.png">
                 <img ng-if="release.state == 1" src="/app/assets/images/pending.png">
@@ -99,13 +99,13 @@
                 {{release.started * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
               </td>
               <td>
-                {{release.last_modified * 1000 | date:'medium'}}
+                {{release.last_modified * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
               </td>
               <td>
                 {{release.last_active_task}}
               </td>
               <td>
-                <button ng-repeat="tag in release.labels "type="button" class="btn btn-secondary btn-sm {{tag}}">
+                <button ng-repeat="tag in release.labels "type="button" class="btn btn-secondary btn-sm">
                   {{tag}}
                 </button>
               </td>
