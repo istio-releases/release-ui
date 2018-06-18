@@ -117,9 +117,7 @@ def get_labels():
 #-------------------------REST API----------------------------#
 class Releases(Resource):
     def get(self):
-        try:
-            memcache.get('releases')
-        except NameError:
+        if memcache.get('releases') == None:
             file_adapter()
         result = memcache.get('releases')
         result = json.dumps(result)
@@ -128,9 +126,7 @@ class Releases(Resource):
 
 class Pagination(Resource):
     def post(self):
-        try:
-            memcache.get('releases')
-        except NameError:
+        if memcache.get('releases') == None:
             file_adapter()
         parser = reqparse.RequestParser()
         parser.add_argument('start_date')
@@ -164,9 +160,7 @@ class Pagination(Resource):
 
 class GetLabels(Resource):
     def get(self):
-        try:
-            memcache.get('releases')
-        except NameError:
+        if memcache.get('releases') == None:
             file_adapter()
         labels = get_labels()
         return json.dumps(labels)
