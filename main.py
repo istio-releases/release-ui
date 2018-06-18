@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, request, json, render_template, send_file, make_response, abort
 from flask_restful import Api, Resource, reqparse
-import json
 from google.appengine.api import memcache
+import json
+import filter
 
 
 # creating the Flask application
@@ -13,86 +14,6 @@ json_data = open("fake_data.json").read()
 parsed_json = json.loads(json_data)
 memcache.add(key="releases", value=parsed_json)
 
-
-#--------Functions to be used for sorting/filtering-------#
-# Filters by all of the criteria shown below, returns an array of filtered releases
-def filter(state, label, start_date, end_date, datetype):
-    # convert variables from unix type to something usable
-    state = int(state)
-    start_date = int(start_date)
-    end_date = int(end_date)
-    datetype = int(datetype) # designates whether to sort by creation date(0) or date modified(1)
-    print state
-    print start_date
-    print end_date
-    print datetype
-    print label
-    if str(label) == 'null':
-        print "HELLLLOOOOOOOOOOOOOOOO"
-    data = memcache.get('releases')
-    filtered = []
-    for item in data.items():
-        if end_date > 0: # see if there is a valid end date - if not, don't consider it
-            if datetype == 1: # filter by date modified
-                if item[1]['last_modified'] >= start_date and item[1]['last_modified'] <= end_date:
-                    if item[1]['state'] == state or state == 0:
-                        if label != 'null':
-                            for l in item[1]['labels']:
-                                if l == label:
-                                    filtered.append(item[1])
-                        else:
-                            filtered.append(item[1])
-            else: #filter by date created
-                if item[1]['started'] >= start_date and item[1]['started'] <= end_date:
-                    if item[1]['state'] == state or state == 0:
-                        if label != 'null':
-                            for l in item[1]['labels']:
-                                if l == label:
-                                    filtered.append(item[1])
-                        else:
-                            filtered.append(item[1])
-        else:
-            if datetype == 1: # filter by date modified
-                if item[1]['last_modified'] >= start_date:
-                    if item[1]['state'] == state or state == 0:
-                        if label != 'null':
-                            for l in item[1]['labels']:
-                                if l == label:
-                                    filtered.append(item[1])
-                        else:
-                            filtered.append(item[1])
-            else: #filter by date created
-                if item[1]['started'] >= start_date:
-                    if item[1]['state'] == state or state == 0:
-                        if label != 'null':
-                            for l in item[1]['labels']:
-                                if l == label:
-                                    filtered.append(item[1])
-                        else:
-                            filtered.append(item[1])
-    print filtered
-    return filtered
-
-# sorts 'unsorted' according to 'sort_method'. See https://docs.google.com/document/d/1JDD_NX2XVL7yqYcfFOqkef1FKv98nrlRFJ0OpSZprMU/ for enumerations
-def sort(unsorted, sort_method):
-    sort_method = int(sort_method)
-    if sort_method == 1:
-        result = sorted(unsorted, key=lambda k: k['name'], reverse=True)
-    elif sort_method == 2:
-        result = sorted(unsorted, key=lambda k: k['name'])
-    elif sort_method == 3:
-        result = sorted(unsorted, key=lambda k: k['started'], reverse=True)
-    elif sort_method == 4:
-        result = sorted(unsorted, key=lambda k: k['started'])
-    elif sort_method == 5:
-        result = sorted(unsorted, key=lambda k: k['last_modified'], reverse=True)
-    elif sort_method == 6:
-        result = sorted(unsorted, key=lambda k: k['last_modified'])
-    elif sort_method == 7:
-        result = sorted(unsorted, key=lambda k: k['last_active_task'], reverse=True)
-    elif sort_method == 8:
-        result = sorted(unsorted, key=lambda k: k['last_active_task'])
-    return result
 
 def in_memcache(args):
     start_date = hex(int(args['start_date']))
@@ -155,8 +76,8 @@ class Pagination(Resource):
         if memcache_exists:
             return json.dumps(memcache_results[int(args['offset']):(int(args['limit'])+int(args['offset']))])
         else:
-            response = filter(args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
-            response = sort(response, args['sort_method'])
+            response = filter.filter(memcache.get('releases'), args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
+            response = filter.sort(response, args['sort_method'])
             memcache.add(key=memcache_results, value=response, time=3600)
             # time adds an expiration time of one hour, in order to keep the memcache somewhat up to date
             return json.dumps(response[int(args['offset']):(int(args['limit'])+int(args['offset']))])
