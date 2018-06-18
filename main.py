@@ -9,9 +9,10 @@ app = Flask(__name__)
 api = Api(app)
 
 #--------"File Adapter"(temporary)-------#
-json_data = open("fake_data.json").read()
-parsed_json = json.loads(json_data)
-memcache.add(key="releases", value=parsed_json)
+def file_adapter():
+    json_data = open("fake_data.json").read()
+    parsed_json = json.loads(json_data)
+    memcache.add(key="releases", value=parsed_json)
 
 
 #--------Functions to be used for sorting/filtering-------#
@@ -116,6 +117,10 @@ def get_labels():
 #-------------------------REST API----------------------------#
 class Releases(Resource):
     def get(self):
+        try:
+            memcache.get('releases')
+        except NameError:
+            file_adapter()
         result = memcache.get('releases')
         result = json.dumps(result)
         return result, 200
@@ -123,6 +128,10 @@ class Releases(Resource):
 
 class Pagination(Resource):
     def post(self):
+        try:
+            memcache.get('releases')
+        except NameError:
+            file_adapter()
         parser = reqparse.RequestParser()
         parser.add_argument('start_date')
         parser.add_argument('end_date')
@@ -151,10 +160,14 @@ class Pagination(Resource):
             response = sort(response, args['sort_method'])
             memcache.add(key=memcache_results, value=response, time=3600)
             # time adds an expiration time of one hour, in order to keep the memcache somewhat up to date
-            return json.dumps(response[int(args['offset']):(int(args['limit'])+int(args['offset']))])
+            return json.dumps(response[int(args['offset']):int(args['limit'])])
 
 class GetLabels(Resource):
     def get(self):
+        try:
+            memcache.get('releases')
+        except NameError:
+            file_adapter()
         labels = get_labels()
         return json.dumps(labels)
 
