@@ -29,7 +29,14 @@
     </div>
 
     <div class="row" id="labels">
-      <button ng-repeat="tag in release.labels "type="button" class="btn btn-secondary btn-sm {{tag}}">
+      <button ng-if="release.stage == 1" type="button" class="btn btn-info btn-sm">Initializing</button>
+      <button ng-if="release.stage == 2" type="button" class="btn btn-info btn-sm">Building</button>
+      <button ng-if="release.stage == 3" type="button" class="btn btn-info btn-sm">Qualifying</button>
+      <button ng-if="release.stage == 4" type="button" class="btn btn-info btn-sm">Publishing</button>
+      <button ng-if="release.stage == 5" type="button" class="btn btn-info btn-sm">Tagging</button>
+      <button ng-if="release.stage == 6" type="button" class="btn btn-info btn-sm">Finalizing</button>
+      <button ng-if="release.stage == 7" type="button" class="btn btn-info btn-sm">Done</button>
+      <button ng-repeat="tag in release.labels "type="button" class="btn btn-secondary btn-sm">
         {{tag}}
       </button>
     </div>
