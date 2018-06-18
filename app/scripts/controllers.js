@@ -176,7 +176,7 @@ app.controller('DetailsController', ['$scope','serviceRelease', '$location', '$l
 function ($scope, serviceRelease, $location, $log) {
   $scope.release = serviceRelease.get();
   $scope.tasks = toArray($scope.release.tasks);
-  $log.log($scope.tasks);
+  $log.log($scope.tasks)
   $scope.homePage = function() {
     $location.path('/main');
   };

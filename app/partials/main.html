@@ -9,8 +9,8 @@
     </div>
   </nav>
 
-  <main class="container p-5">
-    <div class="active-cyan-3 active-cyan-4 mb-4 row">
+  <main id="main">
+    <div class="row" id="filters">
       <div class="col-sm">
         <md-datepicker md-current-view="year" ng-model="startDate" ng-change="dateChange(true,startDate)"
           md-placeholder="From" md-max-date="maxFromDate"></md-datepicker>

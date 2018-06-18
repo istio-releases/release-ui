@@ -53,6 +53,17 @@ body
 
 /* -------------------------- */
 /* main.html styling */
+#main
+{
+    width: 100%;
+    margin-top: 25px;
+}
+
+#filters
+{
+    width: 100%;
+}
+
 .table-header
 {
     background-color: #2C6AC4;
