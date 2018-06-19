@@ -60,13 +60,10 @@ class Pagination(Resource):
         if cache_exists:
             return json.dumps(cache_results[int(args['offset']):(int(args['limit'])+int(args['offset']))])
         else:
-            print(releases)
             response = filter(releases, args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
-            print(response)
             response = sort(response, args['sort_method'])
             release_requests[cache_results] = response
 
-            print(response)
             # time adds an expiration time of one hour, in order to keep the memcache somewhat up to date
             return json.dumps(response[int(args['offset']):(int(args['limit'])+int(args['offset']))])
 
@@ -87,5 +84,4 @@ class GetTasks(Resource):
         for task in release_tasks:
             response.append(tasks['task-' + str(task)])
 
-        print(response)
         return json.dumps(response)
