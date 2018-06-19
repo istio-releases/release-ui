@@ -28,10 +28,20 @@ def in_cache(args):
         return False, key
 
 
-class Releases(Resource):
+class ReleaseList(Resource):
     def get(self):
         result = json.dumps(releases)
         return result, 200
+
+
+class Release(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('release')
+        args = parser.parse_args()
+
+        print(releases[str(args['release'])])
+        return json.dumps(releases[str(args['release'])])
 
 
 class Pagination(Resource):

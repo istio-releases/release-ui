@@ -2,14 +2,15 @@
 
 from flask import Flask, jsonify, request, json, render_template, send_file, make_response, abort
 from flask_restful import Api, Resource, reqparse
-from restAPI import Releases, Pagination, GetLabels, GetTasks
+from restAPI import ReleaseList, Release, Pagination, GetLabels, GetTasks
 
 
 # creating the Flask application
 app = Flask(__name__)
 api = Api(app)
 
-api.add_resource(Releases, '/releases')
+api.add_resource(ReleaseList, '/releases')
+api.add_resource(Release, '/release')
 api.add_resource(Pagination, '/page')
 api.add_resource(GetLabels, '/labels')
 api.add_resource(GetTasks, '/tasks')

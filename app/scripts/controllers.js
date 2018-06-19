@@ -72,7 +72,8 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
     // Redirect to Details function onclick of table row
     $scope.redirectToDetails = function (input) {
-      serviceRelease.set(input, $scope.$storage.releases);
+      $log.log(input);
+      serviceRelease.set(input);
       var newRoute = '/' + input.name;
       $location.path(newRoute);
     };
@@ -222,14 +223,26 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     };
 }]);
 
-app.controller('DetailsController', ['$scope','serviceRelease', '$location', '$log', '$http',
-function ($scope, serviceRelease, $location, $log, $http) {
-  $scope.release = serviceRelease.get();
+app.controller('DetailsController', ['$scope','serviceRelease', '$location', '$log', '$http', '$routeParams',
+function ($scope, serviceRelease, $location, $log, $http, $routeParams) {
+
+  var release_name = $routeParams.releasename;
+
+  $http({
+       method: 'POST',
+       url: 'http://localhost:8080/release?release=' + release_name,
+       cache: true
+   }).then(function successCallback(response) {
+       $scope.release = angular.fromJson(response.data);
+       $log.log($scope.release)
+   }, function errorCallback(response) {
+       $log.log(response);
+   });
 
   // Request specific task details
   $http({
        method: 'POST',
-       url: 'http://localhost:8080/tasks?release=' + $scope.release.name,
+       url: 'http://localhost:8080/tasks?release=' + release_name,
        cache: true
    }).then(function successCallback(response) {
         $scope.tasks = toArray(angular.fromJson(response.data));
