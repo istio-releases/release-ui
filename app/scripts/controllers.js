@@ -150,29 +150,37 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
     // Reset Filters and OrderBy
     $scope.resetFilter = function () {
-      $scope.fromDate = new Date(0);
-      $scope.toDate = new Date();
+      $scope.maxDate = new Date();
+      $scope.maxFromDate = $scope.maxDate;
+      $scope.minToDate = new Date(0);
+      $scope.fromDate = $scope.minToDate;
+      $scope.toDate = $scope.maxDate;
       $scope.startDate = null;
       $scope.endDate = null;
-      $scope.whichDate = 0;
       $scope.filterDate = 'started';
+      $scope.whichDate = 0;
 
       $scope.labelValue = null;
-      $scope.selectedLabel = null;
+      $scope.selectedLabel = "";
 
       $scope.stateValue = null;
-      $scope.selectedValue = null;
+      delete $scope.selectedValue;
 
       $scope.sortType = 3;
       getReleases(false);
+      $log.log()
     };
 }]);
 
-app.controller('DetailsController', ['$scope','serviceRelease', '$location', function ($scope, serviceRelease, $location) {
+app.controller('DetailsController', ['$scope','serviceRelease', '$location', '$log',
+function ($scope, serviceRelease, $location, $log) {
   $scope.release = serviceRelease.get();
+  $scope.tasks = toArray($scope.release.tasks);
+  $log.log($scope.tasks)
   $scope.homePage = function() {
     $location.path('/main');
   };
+
 }]);
 
 // Helper function that turns object to array

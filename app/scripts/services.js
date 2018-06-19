@@ -31,3 +31,17 @@ app.factory('serviceReleaseList', function () {
     get: get
   }
 });
+
+app.factory('PersistentData','$log', function () {
+  var savedData = {};
+
+  // Starting settings for
+  savedData.currentPage = 1;
+
+  savedData.ChangeCurrentPage = function (value) {
+    savedData.currentPage = value;
+  };
+
+  return savedData
+
+});

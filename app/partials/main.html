@@ -2,24 +2,24 @@
 
   <nav id="top-bar" class="navbar sticky-top navbar-light">
     <div class="navbar-header">
-      <a id="top-bar-content" class="navbar-brand" href="" ng-click="resetFilter()">
+      <a id="top-bar-content" class="navbar-brand" href="/">
         <img src="/app/assets/images/logo.png" style="width:20%;">
         <span>ISTIO Releases</span>
       </a>
     </div>
   </nav>
 
-  <main class="container p-5">
-    <div class="active-cyan-3 active-cyan-4 mb-4 row">
-      <div class="col-sm">
+  <main id="main">
+    <div class="row" id="filters">
+      <div class="col">
         <md-datepicker md-current-view="year" ng-model="startDate" ng-change="dateChange(true,startDate)"
           md-placeholder="From" md-max-date="maxFromDate"></md-datepicker>
       </div>
-      <div class="col-sm">
+      <div class="col">
         <md-datepicker md-current-view="year" ng-model="endDate" ng-change="dateChange(false,endDate)"
           md-placeholder="To" md-min-date="minToDate" md-max-date="maxDate"> </md-datepicker>
       </div>
-      <div class="col-sm">
+      <div class="col">
         <input type="radio" ng-model="filterDate" value="started" ng-click="whichDate = 0" default>
         <label>
           Filter by Creation Date
@@ -30,11 +30,11 @@
           Filter by Modified Date
         </label>
       </div>
-      <button type="button" class="btn btn-danger" ng-click="resetFilter()">Reset Filters</button>
+      <a href="/"><button type="button" class="btn btn-danger">Reset Filters</button></a>
     </div>
     <table id="release-table" ng-table="releaseTable" class="table">
         <thead>
-          <th style="width: 12%">
+          <th style="width: 13%">
             <div>
               <select class="form-control dropdown"
                 ng-model="selectedValue"
@@ -86,7 +86,7 @@
         <tbody id="dashboard">
             <tr ng-repeat="release in releases | limitTo:numPerPage:numPerPage*(currentPage-1)"
                 ng-click="redirectToDetails(release)" ng-class="{greyed: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
-              <td style="width: 12%">
+              <td style="width: 13%">
                 <img ng-if="release.state == 2" src="/app/assets/images/check.png">
                 <img ng-if="release.state == 3" src="/app/assets/images/error.png">
                 <img ng-if="release.state == 1" src="/app/assets/images/pending.png">
@@ -99,13 +99,13 @@
                 {{release.started * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
               </td>
               <td>
-                {{release.last_modified * 1000 | date:'medium'}}
+                {{release.last_modified * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
               </td>
               <td>
                 {{release.last_active_task}}
               </td>
               <td>
-                <button ng-repeat="tag in release.labels "type="button" class="btn btn-secondary btn-sm {{tag}}">
+                <button ng-repeat="tag in release.labels "type="button" class="btn btn-secondary btn-sm">
                   {{tag}}
                 </button>
               </td>
