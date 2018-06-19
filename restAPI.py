@@ -46,14 +46,12 @@ class Pagination(Resource):
         parser.add_argument('limit')
         parser.add_argument('offset')
         args = parser.parse_args() # this all parses the post request for the requisite info
+
         #check if limit and offset exists, if not, provide the first 100 releases
-        if args['limit']:
-            print 'limit exists'
-        else:
+        if not args['limit']:
             args['limit'] = 100
-        if args['offset']:
-            print 'offset exists'
-        else:
+
+        if not args['offset']:
             args['offset'] = 0
 
         # checks if the filtered, sorted data is already in memcache
@@ -71,5 +69,5 @@ class Pagination(Resource):
 
 class GetLabels(Resource):
     def get(self):
-        labels = fileAdapter.get_labels()
+        labels = adapter.getLabels()
         return json.dumps(labels)

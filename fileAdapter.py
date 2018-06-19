@@ -11,6 +11,7 @@ class FileAdapter(ReleaseData):
 
 
     def getLabels(self):
+        releases = self.getReleases()
         labels = []
         for release in releases:
             for label in releases[release]['labels']:
