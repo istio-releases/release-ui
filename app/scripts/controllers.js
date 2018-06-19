@@ -4,7 +4,7 @@
 
 var app = angular.module('ReleaseUI.controllers', ['ngTable']);
 
-app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease',
+app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease', '$routeParams',
   function($scope, $http, $location, $log, serviceRelease) {
 
     // Starting settings for pagination
@@ -19,7 +19,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     $scope.fromDate = $scope.minToDate;
     $scope.toDate = $scope.maxDate;
     $scope.filterDate = 'started';
-    $scope.whichDate = 0;
+    $scope.whichDate = 'started';
 
     // Starting settings for Labels
     var getLabels = function () {
@@ -50,8 +50,9 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
     // Redirect to Details function onclick of table row
     $scope.redirectToDetails = function (input) {
-      serviceRelease.set(input, $scope.releases);
-      $location.path('/details');
+      serviceRelease.set(input);
+      var newRoute = "/" + input.name
+      $location.path(newRoute);
     };
 
     // Helper function that makes gets releases
@@ -158,7 +159,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       $scope.startDate = null;
       $scope.endDate = null;
       $scope.filterDate = 'started';
-      $scope.whichDate = 0;
+      $scope.whichDate = 'started';
 
       $scope.labelValue = null;
       $scope.selectedLabel = "";
@@ -170,15 +171,15 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       getReleases(false);
       $log.log()
     };
+
 }]);
 
 app.controller('DetailsController', ['$scope','serviceRelease', '$location', '$log',
 function ($scope, serviceRelease, $location, $log) {
   $scope.release = serviceRelease.get();
   $scope.tasks = toArray($scope.release.tasks);
-  $log.log($scope.tasks)
   $scope.homePage = function() {
-    $location.path('/main');
+    $location.path('/');
   };
 
 }]);

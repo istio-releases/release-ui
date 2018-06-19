@@ -1,7 +1,8 @@
 from flask_restful import Api, Resource, reqparse
-import json
-import filter
 from fileAdapter import FileAdapter
+from filter import filter, sort
+import json
+
 
 # Cached API requests
 release_requests = {}
@@ -14,7 +15,7 @@ releases = adapter.getReleases()
 def in_cache(args):
     start_date = hex(int(args['start_date']))
     end_date = hex(int(args['end_date']))
-    datetype = str(int(args['datetype']))
+    datetype = str(args['datetype'])
     state = str(int(args['state']))
     label = str(args['label'])
     sort_method = str(int(args['sort_method']))
@@ -36,6 +37,7 @@ class Releases(Resource):
 
 class Pagination(Resource):
     def post(self):
+        # parse the post request for the requisite info
         parser = reqparse.RequestParser()
         parser.add_argument('start_date')
         parser.add_argument('end_date')
@@ -45,7 +47,7 @@ class Pagination(Resource):
         parser.add_argument('sort_method')
         parser.add_argument('limit')
         parser.add_argument('offset')
-        args = parser.parse_args() # this all parses the post request for the requisite info
+        args = parser.parse_args()
 
         #check if limit and offset exists, if not, provide the first 100 releases
         if not args['limit']:
@@ -59,8 +61,8 @@ class Pagination(Resource):
         if cache_exists:
             return json.dumps(cache_results[int(args['offset']):(int(args['limit'])+int(args['offset']))])
         else:
-            response = filter.filter(releases, args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
-            response = filter.sort(response, args['sort_method'])
+            response = filter(releases, args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
+            response = sort(response, args['sort_method'])
             release_requests[cache_results] = response
 
             # time adds an expiration time of one hour, in order to keep the memcache somewhat up to date

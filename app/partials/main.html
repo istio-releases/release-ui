@@ -20,12 +20,12 @@
           md-placeholder="To" md-min-date="minToDate" md-max-date="maxDate"> </md-datepicker>
       </div>
       <div class="col">
-        <input type="radio" ng-model="filterDate" value="started" ng-click="whichDate = 0" default>
+        <input type="radio" ng-model="filterDate" value="started" ng-click="whichDate = 'started'" default>
         <label>
           Filter by Creation Date
         </label>
         <br/>
-        <input type="radio" ng-model="filterDate" value="modified" ng-click="whichDate = 1">
+        <input type="radio" ng-model="filterDate" value="modified" ng-click="whichDate = 'last_modified'">
         <label>
           Filter by Modified Date
         </label>
