@@ -15,7 +15,6 @@ api.add_resource(restAPI.GetLabels, '/labels')
 if __name__ == '__main__':
      app.run(port='8080', debug=True)
 
-
 #---------------------Handlers-------------------------#
 @app.route('/')
 @app.route('/details')

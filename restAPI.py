@@ -1,14 +1,16 @@
 from flask_restful import Api, Resource, reqparse
 import json
 import filter
+from fileAdapter import FileAdapter
 
-
-#--------"File Adapter"(temporary)-------#
-json_data = open("fake_data.json").read()
-releases = json.loads(json_data)
+# Cached API requests
 release_requests = {}
-labels = []
+adapter = FileAdapter()
+releases = adapter.getReleases()
 
+#-------------------------Helper Functions----------------------------#
+
+# Checks if request arguments are in cache
 def in_cache(args):
     start_date = hex(int(args['start_date']))
     end_date = hex(int(args['end_date']))
@@ -23,15 +25,9 @@ def in_cache(args):
     else:
         return False, key
 
-def get_labels():
-    labels = []
-    for release in releases:
-        for label in releases[release]['labels']:
-            if label not in labels:
-                labels.append(label)
-    return labels
 
 #-------------------------REST API----------------------------#
+
 class Releases(Resource):
     def get(self):
         result = json.dumps(releases)
@@ -75,5 +71,5 @@ class Pagination(Resource):
 
 class GetLabels(Resource):
     def get(self):
-        labels = get_labels()
+        labels = fileAdapter.get_labels()
         return json.dumps(labels)
