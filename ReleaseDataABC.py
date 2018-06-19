@@ -1,3 +1,5 @@
+#-------------------------Astract Base Class for Release Data----------------------------#
+
 import abc
 
 class ReleaseData(object):
@@ -10,6 +12,10 @@ class ReleaseData(object):
         """Retrieve all release information"""
         pass
 
+    @abc.abstractmethod
+    def getTasks(self):
+        """Retrieve all task information"""
+        pass
 
     @abc.abstractmethod
     def getLabels(self):

@@ -1,15 +1,16 @@
+#-------------------------REST API----------------------------#
+
 from flask_restful import Api, Resource, reqparse
-from fileAdapter import FileAdapter
 from filter import filter, sort
+from fileAdapter import FileAdapter
 import json
 
-
-# Cached API requests
-release_requests = {}
-adapter = FileAdapter()
+adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
 releases = adapter.getReleases()
+tasks = adapter.getTasks()
+labels = adapter.getLabels()
+release_requests = {}
 
-#-------------------------Helper Functions----------------------------#
 
 # Checks if request arguments are in cache
 def in_cache(args):
@@ -26,8 +27,6 @@ def in_cache(args):
     else:
         return False, key
 
-
-#-------------------------REST API----------------------------#
 
 class Releases(Resource):
     def get(self):
@@ -61,15 +60,32 @@ class Pagination(Resource):
         if cache_exists:
             return json.dumps(cache_results[int(args['offset']):(int(args['limit'])+int(args['offset']))])
         else:
+            print(releases)
             response = filter(releases, args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
+            print(response)
             response = sort(response, args['sort_method'])
             release_requests[cache_results] = response
 
+            print(response)
             # time adds an expiration time of one hour, in order to keep the memcache somewhat up to date
             return json.dumps(response[int(args['offset']):(int(args['limit'])+int(args['offset']))])
 
 
 class GetLabels(Resource):
     def get(self):
-        labels = adapter.getLabels()
         return json.dumps(labels)
+
+
+class GetTasks(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('release')
+        args = parser.parse_args()
+
+        release_tasks = releases[str(args['release'])]['tasks']
+        response = [];
+        for task in release_tasks:
+            response.append(tasks['task-' + str(task)])
+
+        print(response)
+        return json.dumps(response)

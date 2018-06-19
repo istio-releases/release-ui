@@ -32,16 +32,8 @@ app.factory('serviceReleaseList', function () {
   }
 });
 
-app.factory('PersistentData','$log', function () {
-  var savedData = {};
-
-  // Starting settings for
-  savedData.currentPage = 1;
-
-  savedData.ChangeCurrentPage = function (value) {
-    savedData.currentPage = value;
-  };
-
-  return savedData
-
+app.factory('cachedData','$log', '$cacheFactory', function ($cacheFactory) {
+  return $cacheFactory('cachedData', function ($cacheFactory) {
+      return $cacheFactory('cachedData');
+  });
 });

@@ -2,10 +2,10 @@
 
 /* Controllers */
 
-var app = angular.module('ReleaseUI.controllers', ['ngTable']);
+var app = angular.module('ReleaseUI.controllers', ['ngTable','ngStorage']);
 
-app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease', '$routeParams',
-  function($scope, $http, $location, $log, serviceRelease) {
+app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease', '$localStorage',
+  function($scope, $http, $location, $log, serviceRelease, $localStorage) {
 
     // Starting settings for pagination
     $scope.currentPage = 1;
@@ -43,15 +43,14 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       {"id":1, "status": "Pending"},
       {"id":4, "status": "Suspended"},
     ];
-    $scope.stateValue = null;
 
     // Starting settings for sort
     $scope.sortMethod = 3;
 
     // Redirect to Details function onclick of table row
     $scope.redirectToDetails = function (input) {
-      serviceRelease.set(input);
-      var newRoute = "/" + input.name
+      serviceRelease.set(input, $scope.releases);
+      var newRoute = '/' + input.name;
       $location.path(newRoute);
     };
 
@@ -171,13 +170,24 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       getReleases(false);
       $log.log()
     };
-
 }]);
 
-app.controller('DetailsController', ['$scope','serviceRelease', '$location', '$log',
-function ($scope, serviceRelease, $location, $log) {
+app.controller('DetailsController', ['$scope','serviceRelease', '$location', '$log', '$http',
+function ($scope, serviceRelease, $location, $log, $http) {
   $scope.release = serviceRelease.get();
-  $scope.tasks = toArray($scope.release.tasks);
+
+  // Request specific task details
+  $http({
+       method: 'POST',
+       url: 'http://localhost:8080/tasks?release=' + $scope.release.name,
+       cache: true
+   }).then(function successCallback(response) {
+        $scope.tasks = toArray(angular.fromJson(response.data));
+   }, function errorCallback(response) {
+       $log.log(response);
+   });
+
+  // Return to main dashboard
   $scope.homePage = function() {
     $location.path('/');
   };
