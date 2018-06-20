@@ -22,8 +22,6 @@ span
 
 main
 {
-    /* scroll horizontally as needed */
-    overflow-x: auto;
 
     /* center contents */
     text-align: center;
@@ -125,16 +123,16 @@ label
     margin-left: 20px;
 }
 
+#links
+{
+    float: left;
+    width: 50%;
+}
+
 .label
 {
     margin-top: 7px;
     padding: .15rem .5rem;
-}
-
-.link
-{
-    margin-bottom: 7px;
-    margin-right: 20px;
 }
 
 #dates
@@ -152,7 +150,7 @@ label
 
 #detail-table
 {
-    width:75%;
+    width:90%;
     margin-top: 20px;
 }
 
