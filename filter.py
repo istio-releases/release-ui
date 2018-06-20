@@ -1,59 +1,31 @@
-#--------Functions to be used for sorting/filtering-------#
+#--------Helper Functions to be used for sorting and filtering-------#
+import datetime
+
 
 # Filters by all of the criteria shown below, returns an array of filtered releases
 def filter(data, state, label, start_date, end_date, datetype):
+
     # convert variables from unix type to something usable
     state = int(state)
     start_date = int(start_date)
     end_date = int(end_date)
-    datetype = int(datetype) # designates whether to sort by creation date(0) or date modified(1)
 
     filtered = []
-    for item in data.items():
-        # check for valid end date - if not, don't consider it
-        if end_date > 0:
-            # filter by date modified
-            if datetype == 1:
-                if item[1]['last_modified'] >= start_date and item[1]['last_modified'] <= end_date:
-                    if item[1]['state'] == state or state == 0:
-                        if label != 'null':
-                            for l in item[1]['labels']:
-                                if l == label:
-                                    filtered.append(item[1])
-                        else:
-                            filtered.append(item[1])
 
-            #filter by date created
-            else:
-                if item[1]['started'] >= start_date and item[1]['started'] <= end_date:
-                    if item[1]['state'] == state or state == 0:
-                        if label != 'null':
-                            for l in item[1]['labels']:
-                                if l == label:
-                                    filtered.append(item[1])
-                        else:
+    # Validate end_date value
+    if end_date <= 0:
+        end_date = (datetime.datetime.now()-datetime.datetime(1970,1,1)).total_seconds()
+
+    for item in data.items():
+        if item[1][datetype] >= start_date and item[1][datetype] <= end_date:
+            if item[1]['state'] == state or state == 0:
+                if label != 'null':
+                    for l in item[1]['labels']:
+                        if l == label:
                             filtered.append(item[1])
-        else:
-            # filter by date modified
-            if datetype == 1:
-                if item[1]['last_modified'] >= start_date:
-                    if item[1]['state'] == state or state == 0:
-                        if label != 'null':
-                            for l in item[1]['labels']:
-                                if l == label:
-                                    filtered.append(item[1])
-                        else:
-                            filtered.append(item[1])
-            #filter by date created
-            else:
-                if item[1]['started'] >= start_date:
-                    if item[1]['state'] == state or state == 0:
-                        if label != 'null':
-                            for l in item[1]['labels']:
-                                if l == label:
-                                    filtered.append(item[1])
-                        else:
-                            filtered.append(item[1])
+                else:
+                    filtered.append(item[1])
+
     return filtered
 
 

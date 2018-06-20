@@ -1,20 +1,22 @@
+#-------------------------REST API----------------------------#
+
 from flask_restful import Api, Resource, reqparse
-import json
-import filter
+from filter import filter, sort
 from fileAdapter import FileAdapter
+import json
 
-# Cached API requests
-release_requests = {}
-adapter = FileAdapter()
+adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
 releases = adapter.getReleases()
+tasks = adapter.getTasks()
+labels = adapter.getLabels()
+release_requests = {}
 
-#-------------------------Helper Functions----------------------------#
 
 # Checks if request arguments are in cache
 def in_cache(args):
     start_date = hex(int(args['start_date']))
     end_date = hex(int(args['end_date']))
-    datetype = str(int(args['datetype']))
+    datetype = str(args['datetype'])
     state = str(int(args['state']))
     label = str(args['label'])
     sort_method = str(int(args['sort_method']))
@@ -26,16 +28,25 @@ def in_cache(args):
         return False, key
 
 
-#-------------------------REST API----------------------------#
-
-class Releases(Resource):
+class ReleaseList(Resource):
     def get(self):
         result = json.dumps(releases)
         return result, 200
 
 
+class Release(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('release')
+        args = parser.parse_args()
+
+        print(releases[str(args['release'])])
+        return json.dumps(releases[str(args['release'])])
+
+
 class Pagination(Resource):
     def post(self):
+        # parse the post request for the requisite info
         parser = reqparse.RequestParser()
         parser.add_argument('start_date')
         parser.add_argument('end_date')
@@ -45,7 +56,7 @@ class Pagination(Resource):
         parser.add_argument('sort_method')
         parser.add_argument('limit')
         parser.add_argument('offset')
-        args = parser.parse_args() # this all parses the post request for the requisite info
+        args = parser.parse_args()
 
         #check if limit and offset exists, if not, provide the first 100 releases
         if not args['limit']:
@@ -59,8 +70,8 @@ class Pagination(Resource):
         if cache_exists:
             return json.dumps(cache_results[int(args['offset']):(int(args['limit'])+int(args['offset']))])
         else:
-            response = filter.filter(releases, args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
-            response = filter.sort(response, args['sort_method'])
+            response = filter(releases, args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
+            response = sort(response, args['sort_method'])
             release_requests[cache_results] = response
 
             # time adds an expiration time of one hour, in order to keep the memcache somewhat up to date
@@ -69,5 +80,18 @@ class Pagination(Resource):
 
 class GetLabels(Resource):
     def get(self):
-        labels = adapter.getLabels()
         return json.dumps(labels)
+
+
+class GetTasks(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('release')
+        args = parser.parse_args()
+
+        release_tasks = releases[str(args['release'])]['tasks']
+        response = [];
+        for task in release_tasks:
+            response.append(tasks['task-' + str(task)])
+
+        return json.dumps(response)
