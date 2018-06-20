@@ -31,9 +31,3 @@ app.factory('serviceReleaseList', function () {
     get: get
   }
 });
-
-app.factory('cachedData','$log', '$cacheFactory', function ($cacheFactory) {
-  return $cacheFactory('cachedData', function ($cacheFactory) {
-      return $cacheFactory('cachedData');
-  });
-});

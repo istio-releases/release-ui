@@ -2,53 +2,14 @@
 
 /* Controllers */
 
-var app = angular.module('ReleaseUI.controllers', ['ngTable','ngStorage']);
+var app = angular.module('ReleaseUI.controllers', ['ngStorage']);
 
-app.controller('MainController', ['$scope','$http','$location','$log','serviceRelease', '$sessionStorage',
-  function($scope, $http, $location, $log, serviceRelease, $sessionStorage) {
+app.controller('MainController', ['$scope','$http','$location','$log', '$sessionStorage',
+  function($scope, $http, $location, $log, $sessionStorage) {
 
-    $scope.$storage = $sessionStorage.$default({
-      stateValue: null,
-      currentPage: 1,
-      maxDate: new Date(),
-      maxFromDate: new Date(),
-      minToDate: new Date(0),
-      fromDate: new Date(0),
-      toDate: new Date(),
-      startDate: null,
-      endDate: null,
-      whichDate: 'started',
-      labelValue: null,
-      sortMethod: 3,
-      releases: []
-    });
-
-    var setScope = function () {
-      $scope.numPerPage = 15;
-      $scope.numRequested = 45;
-
-      $scope.maxDate = new Date($scope.$storage.maxDate);
-      $scope.maxFromDate = new Date($scope.$storage.maxFromDate);
-      $scope.minToDate = new Date($scope.$storage.minToDate);
-      $scope.fromDate = new Date($scope.$storage.fromDate);
-      $scope.toDate = new Date($scope.$storage.toDate);
-      $scope.filterDate = $scope.$storage.filterDate;
-
-      if ($scope.$storage.startDate != null ) {
-        $scope.startDate = new Date($scope.$storage.startDate);
-      }
-      if ($scope.$storage.endDate != null){
-        $scope.endDate = new Date($scope.$storage.endDate);
-      }
-
-      $scope.filterDate = $scope.$storage.whichDate;
-      $scope.selectedValue = $scope.$storage.stateValue;
-      $scope.selectedLabel = $scope.$storage.labelValue;
-    };
-    setScope();
-
-
-    // Dynamically Set Labels
+    // Set static variables
+    $scope.numPerPage = 15;
+    $scope.numRequested = 45;
     var getLabels = function () {
       $http({
           method: 'GET',
@@ -62,7 +23,6 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     };
     getLabels();
 
-    // Starting settings for state filter
     $scope.stateValues = [
       {"id":2, "status": "Finished"},
       {"id":3, "status": "Failed"},
@@ -70,15 +30,48 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
       {"id":4, "status": "Suspended"},
     ];
 
-    // Redirect to Details function onclick of table row
-    $scope.redirectToDetails = function (input) {
-      $log.log(input);
-      serviceRelease.set(input);
-      var newRoute = '/' + input.name;
-      $location.path(newRoute);
+    // Set default values for storage
+    var defaultStorage = {
+      stateValue: null,
+      currentPage: 1,
+      maxDate: new Date(),
+      maxFromDate: new Date(),
+      minToDate: new Date(0),
+      fromDate: new Date(0),
+      toDate: new Date(),
+      startDate: null,
+      endDate: null,
+      whichDate: 'started',
+      labelValue: null,
+      sortMethod: 3,
+      releases: []
+    };
+    $scope.$storage = $sessionStorage.$default(defaultStorage);
+
+    // Instantiates variables in scope based on stored information
+    var setScope = function () {
+      $scope.maxDate = new Date($scope.$storage.maxDate);
+      $scope.maxFromDate = new Date($scope.$storage.maxFromDate);
+      $scope.minToDate = new Date($scope.$storage.minToDate);
+      $scope.fromDate = new Date($scope.$storage.fromDate);
+      $scope.toDate = new Date($scope.$storage.toDate);
+      $scope.filterDate = $scope.$storage.whichDate;
+
+      if ($scope.$storage.startDate != null ) {
+        $scope.startDate = new Date($scope.$storage.startDate);
+      }
+      if ($scope.$storage.endDate != null){
+        $scope.endDate = new Date($scope.$storage.endDate);
+      }
+
+      $scope.selectedValue = $scope.$storage.stateValue;
+      $scope.selectedLabel = $scope.$storage.labelValue;
     };
 
-    // Helper function that makes gets releases
+    // Set Scope when loading page
+    setScope();
+
+    // HTTP Request to get release information
     var getReleases = function (method) {
 
       var state;
@@ -117,11 +110,12 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
            url: url_string,
            cache: true
        }).then(function successCallback(response) {
+          var data = transform(response.data);
           if (method == 'page') {
-            $scope.$storage.releases = $scope.$storage.releases.concat(toArray(angular.fromJson(response.data)));
+            $scope.$storage.releases = $scope.$storage.releases.concat(data);
           }
           else {
-            $scope.$storage.releases = toArray(angular.fromJson(response.data));
+            $scope.$storage.releases = data;
           }
            $scope.totalPages = Math.ceil($scope.$storage.releases.length / $scope.numPerPage);
            $log.log('request successful');
@@ -198,22 +192,11 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
     // Reset Filters and OrderBy
     $scope.resetFilter = function () {
-      $sessionStorage.$reset({
-        stateValue: null,
-        currentPage: 1,
-        maxDate: new Date(),
-        maxFromDate: new Date(),
-        minToDate: new Date(0),
-        fromDate: new Date(0),
-        toDate: new Date(),
-        startDate: null,
-        endDate: null,
-        whichDate: 'started',
-        labelValue: null,
-        sortMethod: 3,
-        releases: []
-      });
+      // Reset default settings and scope
+      $sessionStorage.$reset(defaultStorage);
       setScope();
+
+      // Reset dropdowns in UI
       $scope.defaultStatus = true;
       $scope.defaultLabel = true;
       $scope.startDate = null;
@@ -221,43 +204,45 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
 
       getReleases('onload');
     };
+
+    // Redirect to Details function onclick of table row
+    $scope.redirectToDetails = function (input) {
+      var newRoute = '/' + input.name;
+      $location.path(newRoute);
+    };
 }]);
 
-app.controller('DetailsController', ['$scope','serviceRelease', '$location', '$log', '$http', '$routeParams',
-function ($scope, serviceRelease, $location, $log, $http, $routeParams) {
+app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$routeParams',
+  function ($scope, $location, $log, $http, $routeParams) {
 
-  var release_name = $routeParams.releasename;
+    var release_name = $routeParams.releasename;
 
-  $http({
-       method: 'POST',
-       url: 'http://localhost:8080/release?release=' + release_name,
-       cache: true
-   }).then(function successCallback(response) {
-       $scope.release = angular.fromJson(response.data);
-       $log.log($scope.release)
-   }, function errorCallback(response) {
-       $log.log(response);
-   });
+    // Request release details
+    $http({
+         method: 'POST',
+         url: 'http://localhost:8080/release?release=' + release_name,
+         cache: true
+     }).then(function successCallback(response) {
+         $scope.release = angular.fromJson(response.data);
+     }, function errorCallback(response) {
+         $log.log(response);
+     });
 
-  // Request specific task details
-  $http({
-       method: 'POST',
-       url: 'http://localhost:8080/tasks?release=' + release_name,
-       cache: true
-   }).then(function successCallback(response) {
-        $scope.tasks = toArray(angular.fromJson(response.data));
-   }, function errorCallback(response) {
-       $log.log(response);
-   });
-
-  // Return to main dashboard
-  $scope.homePage = function() {
-    $location.path('/');
-  };
+    // Request task details
+    $http({
+         method: 'POST',
+         url: 'http://localhost:8080/tasks?release=' + release_name,
+         cache: true
+     }).then(function successCallback(response) {
+          $scope.tasks = transform(response.data);
+     }, function errorCallback(response) {
+         $log.log(response);
+     });
 }]);
 
-// Helper function that turns object to array
-function toArray(input) {
+// Transforms json data to array
+function transform(input) {
+  input = angular.fromJson(input);
   var output = [], item;
 
   angular.forEach(input, function(item) {
