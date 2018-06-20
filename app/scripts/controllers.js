@@ -52,7 +52,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
     var getLabels = function () {
       $http({
           method: 'GET',
-          url: 'http://localhost:8080/labels',
+          url: 'https://istio-release-ui.appspot.com/labels',
           cache: true
       }).then(function successCallback(response) {
           $scope.labels = angular.fromJson(response.data);
@@ -106,7 +106,7 @@ app.controller('MainController', ['$scope','$http','$location','$log','serviceRe
         $scope.$storage.currentPage = 1;
       }
 
-      var url_string = 'http://localhost:8080/page?state=' + state +
+      var url_string = 'https://istio-release-ui.appspot.com/page?state=' + state +
           '&label=' + $scope.$storage.labelValue + '&start_date=' + start +
           '&end_date=' + end + '&datetype=' + $scope.$storage.whichDate +
           '&sort_method='+ $scope.$storage.sortMethod + '&limit=' + $scope.numRequested +
@@ -230,7 +230,7 @@ function ($scope, serviceRelease, $location, $log, $http, $routeParams) {
 
   $http({
        method: 'POST',
-       url: 'http://localhost:8080/release?release=' + release_name,
+       url: 'https://istio-release-ui.appspot.com/release?release=' + release_name,
        cache: true
    }).then(function successCallback(response) {
        $scope.release = angular.fromJson(response.data);
@@ -242,7 +242,7 @@ function ($scope, serviceRelease, $location, $log, $http, $routeParams) {
   // Request specific task details
   $http({
        method: 'POST',
-       url: 'http://localhost:8080/tasks?release=' + release_name,
+       url: 'https://istio-release-ui.appspot.com/tasks?release=' + release_name,
        cache: true
    }).then(function successCallback(response) {
         $scope.tasks = toArray(angular.fromJson(response.data));
