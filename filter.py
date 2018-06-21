@@ -3,7 +3,7 @@ import datetime
 
 
 # Filters by all of the criteria shown below, returns an array of filtered releases
-def filter(data, state, label, start_date, end_date, datetype):
+def filter_releases(data, state, label, start_date, end_date, datetype):
 
     # convert variables from unix type to something usable
     state = int(state)
@@ -14,23 +14,28 @@ def filter(data, state, label, start_date, end_date, datetype):
 
     # Validate end_date value
     if end_date <= 0:
-        end_date = (datetime.datetime.now()-datetime.datetime(1970,1,1)).total_seconds()
+        end_date = (datetime.datetime.now()-datetime.datetime(1970, 1, 1)).total_seconds()
 
-    for item in data.items():
-        if item[1][datetype] >= start_date and item[1][datetype] <= end_date:
-            if item[1]['state'] == state or state == 0:
+    for item in data.values():
+        if item[datetype] >= start_date and item[datetype] <= end_date:
+            if item['state'] == state or state == 0:
                 if label != 'null':
-                    for l in item[1]['labels']:
+                    for l in item['labels']:
                         if l == label:
-                            filtered.append(item[1])
+                            filtered.append(item])
                 else:
-                    filtered.append(item[1])
+                    filtered.append(item)
 
     return filtered
 
 
-# sorts 'unsorted' according to 'sort_method'. See https://docs.google.com/document/d/1JDD_NX2XVL7yqYcfFOqkef1FKv98nrlRFJ0OpSZprMU/ for enumerations
+#
 def sort(unsorted, sort_method):
+    """
+    Sorts 'unsorted' according to 'sort_method'.
+    See https://docs.google.com/document/d/1JDD_NX2XVL7yqYcfFOqkef1FKv98nrlRFJ0OpSZprMU/
+    for enumerations
+    """
     sort_method = int(sort_method)
     if sort_method == 1:
         result = sorted(unsorted, key=lambda k: k['name'], reverse=True)
