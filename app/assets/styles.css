@@ -18,7 +18,7 @@
 #login
 {
     float: left;
-    margin-right: 20px;
+    height: 75%;
 }
 
 #main
@@ -43,6 +43,7 @@ html
 {
     float:left;
     margin: 20px;
+    width: 90%
 }
 
 .table-header

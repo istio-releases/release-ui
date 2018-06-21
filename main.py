@@ -1,8 +1,8 @@
 #---------------------UI Server, Connects all Components-------------------------#
 
-from flask import Flask, jsonify, request, json, render_template, send_file, make_response, abort
-from flask_restful import Api, Resource, reqparse
-from restAPI import RestAPI
+from flask import Flask, make_response
+from flask_restful import Api
+from rest_api import RestAPI
 
 
 # creating the Flask application

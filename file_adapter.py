@@ -1,7 +1,7 @@
 #--------File Adapter for Fake Data-------#
 
 import abc
-from ReleaseDataABC import ReleaseData
+from release_data_ABC import ReleaseData
 import json
 
 class FileAdapter(ReleaseData):

@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-var app = angular.module('ReleaseUI.controllers', ['ngStorage']);
+var app = angular.module('ReleaseUI.controllers', ['ngStorage', 'firebase']);
 
 app.controller('MainController', ['$scope','$http','$location','$log', '$sessionStorage',
   function($scope, $http, $location, $log, $sessionStorage) {
