@@ -53,7 +53,7 @@ app.filter('propFilter', function() {
 
     // return intersection of arrays
     return intersection(filteredDate, filteredLabel, filteredState);
-  }
+  };
 });
 
 // OrderBy function for dictionary instead of array

@@ -1,15 +1,17 @@
-#-------------------------REST API----------------------------#
+"""REST API"""
 
 from flask_restful import Resource, reqparse
-from filter import filter, sort
+from filter import filter_releases, sort
 from file_adapter import FileAdapter
 import json
 
 adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
 release_requests = {}
 
+
 # Checks if request arguments are in cache
 def in_cache(args):
+
     start_date = hex(int(args['start_date']))
     end_date = hex(int(args['end_date']))
     datetype = str(args['datetype'])
@@ -50,7 +52,7 @@ class Releases(Resource):
         if cache_exists:
             return json.dumps(cache_results[int(args['offset']):(int(args['limit'])+int(args['offset']))])
         else:
-            response = filter(adapter.get_releases(), args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
+            response = filter_releases(adapter.get_releases(), args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
             response = sort(response, args['sort_method'])
             release_requests[cache_results] = response
 

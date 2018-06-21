@@ -1,4 +1,4 @@
-#-------------------------Astract Base Class for Release Data----------------------------#
+"""Astract Base Class for Release Data"""
 
 import abc
 

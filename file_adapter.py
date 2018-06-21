@@ -1,10 +1,11 @@
-#--------File Adapter for Fake Data-------#
+"""File Adapter for Fake Data"""
 
-import abc
-from release_data_ABC import ReleaseData
 import json
+from release_data_abc import ReleaseData
+
 
 class FileAdapter(ReleaseData):
+    """File Adapter Class"""
 
     # Constructor takes two files: release data and task data
     def __init__(self, releasesFile, tasksFile):

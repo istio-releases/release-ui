@@ -8,4 +8,4 @@ handlers:
   static_dir: app
 
 - url: /.*
-  script: main.app
+  script: main.APP

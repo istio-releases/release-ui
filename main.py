@@ -1,4 +1,4 @@
-#---------------------UI Server, Connects all Components-------------------------#
+"""UI Server, Connects all Components"""
 
 from flask import Flask, make_response
 from flask_restful import Api
@@ -6,19 +6,20 @@ from rest_api import RestAPI
 
 
 # creating the Flask application
-app = Flask(__name__)
-api = Api(app)
+APP = Flask(__name__)
+API = Api(APP)
 
-RestAPI = RestAPI()
+REST = RestAPI()
 
-api.add_resource(RestAPI.releases, '/releases')
-api.add_resource(RestAPI.release, '/release')
-api.add_resource(RestAPI.labels, '/labels')
-api.add_resource(RestAPI.tasks, '/tasks')
+API.add_resource(REST.releases, '/releases')
+API.add_resource(REST.release, '/release')
+API.add_resource(REST.labels, '/labels')
+API.add_resource(REST.tasks, '/tasks')
 
 if __name__ == '__main__':
-     app.run(port='8080', debug=True)
+    APP.run(port='8080', debug=True)
 
-@app.route('/')
+@APP.route('/')
 def basic_pages():
+    """Serves Webpage"""
     return make_response(open('templates/index.html').read())

@@ -14,13 +14,13 @@ app.factory('serviceRelease', function() {
   return {
     set: set,
     get: get
-  }
+  };
 });
 
 app.factory('serviceReleaseList', function () {
   var releaseList = [];
   function set(data){
-    releaseList = data;s
+    releaseList = data;
   }
   function get(){
     return releaseList;
@@ -29,7 +29,7 @@ app.factory('serviceReleaseList', function () {
   return {
     set: set,
     get: get
-  }
+  };
 });
 
 app.factory('authService', function ($firebaseAuth, firebaseDataService, cityTimerService) {

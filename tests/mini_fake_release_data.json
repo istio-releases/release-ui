@@ -1,199 +1,197 @@
 {
   "release-260": {
     "tasks": [
-      0, 
-      2, 
-      1, 
-      2, 
+      0,
+      2,
+      1,
+      2,
       1
-    ], 
-    "name": "release-260", 
+    ],
+    "name": "release-260",
     "links": [
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Release"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Artifacts"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Istio Repo"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "API Repo"
       }
-    ], 
-    "started": 1158781609, 
+    ],
+    "started": 1158781609,
     "labels": [
-      "label0", 
+      "label0",
       "label1"
-    ], 
-    "state": 4, 
-    "last_modified": 341231047, 
-    "last_active_task": "task4_ID", 
-    "ref": "reference number 682", 
+    ],
+    "state": 4,
+    "last_modified": 341231047,
+    "last_active_task": "task4_ID",
+    "ref": "reference number 682",
     "stage": 1
-  }, 
+  },
   "release-49": {
     "tasks": [
-      2, 
-      1, 
-      2, 
+      2,
+      1,
+      2,
       0
-    ], 
-    "name": "release-49", 
+    ],
+    "name": "release-49",
     "links": [
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Release"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Artifacts"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Istio Repo"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "API Repo"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Proxy Repo"
       }
-    ], 
-    "started": 366826421, 
+    ],
+    "started": 366826421,
     "labels": [
-      "label0", 
-      "label1", 
-      "label2", 
-      "label3", 
-      "label4"
-    ], 
-    "state": 3, 
-    "last_modified": 464169283, 
-    "last_active_task": "task2_ID", 
-    "ref": "reference number 552", 
+      "label0",
+      "label1",
+      "label2",
+      "label3"
+    ],
+    "state": 3,
+    "last_modified": 464169283,
+    "last_active_task": "task2_ID",
+    "ref": "reference number 552",
     "stage": 4
-  }, 
+  },
   "release-611": {
     "tasks": [
-      2, 
+      2,
       0
-    ], 
-    "name": "release-611", 
+    ],
+    "name": "release-611",
     "links": [
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Release"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Artifacts"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Istio Repo"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "API Repo"
       }
-    ], 
-    "started": 1483497730, 
+    ],
+    "started": 1483497730,
     "labels": [
-      "label0", 
+      "label0",
       "label1"
-    ], 
-    "state": 4, 
-    "last_modified": 471027051, 
-    "last_active_task": "task5_ID", 
-    "ref": "reference number 396", 
+    ],
+    "state": 4,
+    "last_modified": 471027051,
+    "last_active_task": "task5_ID",
+    "ref": "reference number 396",
     "stage": 4
-  }, 
+  },
   "release-103": {
     "tasks": [
-      2, 
-      2, 
-      0, 
-      2, 
+      2,
+      2,
+      0,
+      2,
       0
-    ], 
-    "name": "release-103", 
+    ],
+    "name": "release-103",
     "links": [
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Release"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Artifacts"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Istio Repo"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "API Repo"
       }
-    ], 
-    "started": 761816097, 
+    ],
+    "started": 761816097,
     "labels": [
-      "label0", 
-      "label1", 
-      "label2", 
+      "label0",
+      "label1",
+      "label2",
       "label3"
-    ], 
-    "state": 1, 
-    "last_modified": 843580957, 
-    "last_active_task": "task4_ID", 
-    "ref": "reference number 326", 
+    ],
+    "state": 1,
+    "last_modified": 843580957,
+    "last_active_task": "task4_ID",
+    "ref": "reference number 326",
     "stage": 3
-  }, 
+  },
   "release-439": {
     "tasks": [
-      2, 
-      0, 
-      0, 
+      2,
+      0,
+      0,
       0
-    ], 
-    "name": "release-439", 
+    ],
+    "name": "release-439",
     "links": [
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Release"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Artifacts"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "Istio Repo"
-      }, 
+      },
       {
-        "url": "https://youtu.be/dQw4w9WgXcQ", 
+        "url": "https://youtu.be/dQw4w9WgXcQ",
         "name": "API Repo"
       }
-    ], 
-    "started": 959000535, 
+    ],
+    "started": 959000535,
     "labels": [
-      "label0", 
-      "label1", 
-      "label2", 
-      "label3", 
-      "label4"
-    ], 
-    "state": 4, 
-    "last_modified": 672759710, 
-    "last_active_task": "task2_ID", 
-    "ref": "reference number 31", 
+      "label0",
+      "label1",
+      "label2",
+      "label3"
+    ],
+    "state": 4,
+    "last_modified": 672759710,
+    "last_active_task": "task2_ID",
+    "ref": "reference number 31",
     "stage": 6
   }
 }
