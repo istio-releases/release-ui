@@ -8,16 +8,16 @@ class ReleaseData(object):
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
-    def getReleases(self):
+    def get_releases(self):
         """Retrieve all release information"""
         pass
 
     @abc.abstractmethod
-    def getTasks(self):
+    def get_tasks(self):
         """Retrieve all task information"""
         pass
 
     @abc.abstractmethod
-    def getLabels(self):
+    def get_labels(self):
         """Retrieve all possible labels for UI"""
         pass

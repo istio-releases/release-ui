@@ -15,54 +15,35 @@
     color: white;
 }
 
-span
+#login
 {
-    padding-left: 15px;
+    float: left;
+    height: 75%;
 }
 
-main
+#main
 {
-    /* scroll horizontally as needed */
-    overflow-x: auto;
-
-    /* center contents */
+    width: 100%;
+    margin-top: 30px;
     text-align: center;
-}
-
-main img
-{
-    /* constrain images on small screens */
-    max-width: 100%;
 }
 
 html
 {
     height: 100%;
     background-color: white;
-}
-
-body
-{
     font-size: 0.9rem;
-    background-color: white;
-    overflow-x: auto;
-    height: 100%;
-
 }
 
 
 /* -------------------------- */
 /* main.html styling */
-#main
-{
-    width: 100%;
-    margin-top: 25px;
-}
 
 #filters
 {
     float:left;
     margin: 20px;
+    width: 90%
 }
 
 .table-header
@@ -78,16 +59,12 @@ body
 
 .btn-danger
 {
-    margin-left: 5px;
+    margin-left: 15px;
+    margin-top: 8px;
     height: 75%;
 }
 
-.btn, .dropdown
-{
-    font-size: 0.9rem;
-}
-
-label
+.greyed
 {
     color: #858585;
 }
@@ -95,11 +72,6 @@ label
 .caret
 {
     color: white;
-}
-
-.greyed
-{
-    background-color: #F2F2F2;
 }
 
 #footer {
@@ -110,78 +82,41 @@ label
     margin-bottom: 20px;
 }
 
+
 /* -------------------------- */
 /* details.html styling */
 
-#details
+.details
 {
-    width: 100%;
-    margin: 30px;
-}
-
-#title
-{
-    width:50%;
-    margin-left: 20px;
-}
-
-.label
-{
-    margin-top: 7px;
-    padding: .15rem .5rem;
-}
-
-.link
-{
-    margin-bottom: 7px;
-    margin-right: 20px;
-}
-
-#dates
-{
-  margin-top: 10px;
-  margin-bottom: 25px;
-  margin-left: 18px;
+    margin-left: 35px;
 }
 
 #detail_release_title
 {
     font-size: xx-large;
-    white-space: nowrap;
-}
-
-#detail-table
-{
-    width:75%;
-    margin-top: 20px;
-}
-
-h1
-{
-    padding-left: 20px;
 }
 
 #release-image
 {
-    margin-top: 10px;
-    margin-right: 10px;
-}
-
-#labels
-{
-    margin-top: 20px;
+    margin-top: 8px;
     margin-left: 20px;
 }
 
-h6
+.info
 {
-    color: #858585;
-    float : left;
-    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
 }
 
-main .form-control
+#links
 {
-    /* center form controls */
-    display: inline-block;
+    float: left;
+    width: 50%;
+}
+
+#detail-table
+{
+    width:90%;
+    margin-top: 20px;
 }

@@ -1,34 +1,16 @@
-<div ng-controller="DetailsController">
+<div class="details" ng-controller="DetailsController">
 
-  <nav id="top-bar" class="navbar sticky-top navbar-light">
-    <div class="navbar-header">
-      <a id="top-bar-content" class="navbar-brand" href="" ng-click="homePage()">
-        <img src="/app/assets/images/logo.png" style="width:20%;">
-        <span>ISTIO Releases</span>
-      </a>
-    </div>
-  </nav>
-
-  <main id="details">
-    <div id="title" class="row">
-      <div class="col-" id = "release-image">
+    <div class="row info">
+        <h1 id="detail_release_title"> {{ release.name }} </h1>
+      <div id ="release-image">
         <img ng-if="release.state == 2" src="/app/assets/images/check.png">
         <img ng-if="release.state == 3" src="/app/assets/images/error.png">
         <img ng-if="release.state == 1" src="/app/assets/images/pending.png">
         <img ng-if="release.state == 4" src="/app/assets/images/suspended.png">
       </div>
-      <div class="col-xl-">
-        <h1 id="detail_release_title"> {{ release.name }} </h1>
-      </div>
     </div>
 
-    <div style="float:right; width: 18%;" class="btn-group-vertical">
-      <a href="{{release.repo_url}}" target="_blank" ><button type="button" style="width:120px;" class="link btn btn-primary btn-lg">Repo Link</button></a>
-      <a href="{{release.artifacts_link}}" target="_blank"><button type="button" style="width:120px;" class="btn btn-primary btn-lg link">Artifacts Link</button></a>
-      <a href="{{release.release_url}}" target="_blank"><button type="button" style="width:120px;" class="btn btn-primary btn-lg link">Release Link</button></a>
-    </div>
-
-    <div class="row" id="labels">
+    <div class="row info">
       <button ng-if="release.stage == 1" type="button" class="btn btn-info btn-sm">Initializing</button>
       <button ng-if="release.stage == 2" type="button" class="btn btn-info btn-sm">Building</button>
       <button ng-if="release.stage == 3" type="button" class="btn btn-info btn-sm">Qualifying</button>
@@ -41,32 +23,35 @@
       </button>
     </div>
 
-    <div id="dates">
-      <div class="row">
-        <div class="col">
-          <h6>Created on: {{release.started * 1000 | date:'medium'}}</h6>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <h6>Last Modified: {{release.last_modified * 1000 | date:'medium'}}</h6>
-        </div>
-      </div>
+    <div class="row info greyed">
+        <h6>Created on: {{release.started * 1000 | date:'medium'}}</h6>
+    </div>
+    <div class="row info greyed">
+        <h6>Last Modified: {{release.last_modified * 1000 | date:'medium'}}</h6>
     </div>
 
+    <table id="links" class="table table-bordered">
+      <th>
+        Links:
+      </th>
+      <td ng-repeat="link in release.links">
+        <a href="{{link.url}}" target="_blank">{{ link.name }}</a>
+      </td>
+    </table>
 
     <div id="detail-table">
       <table class="table">
-        <thead>
+        <thead class="thead-light">
           <th>Status</th>
           <th>Task</th>
           <th>Start Time</th>
           <th>Last Modified</th>
           <th>Dependencies</th>
+          <th>Error</th>
           <th>View Logs</th>
         </thead>
         <tbody>
-            <tr ng-class="{greyed: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false" ng-repeat-start="task in tasks | orderBy:'-started'" ng-click="task.expanded = !task.expanded">
+            <tr ng-repeat="task in tasks | orderBy:'-started'">
               <td>
                 <img ng-if="task.status == 2" src="/app/assets/images/check.png">
                 <img ng-if="task.status == 3" src="/app/assets/images/error.png">
@@ -91,15 +76,14 @@
                 </button>
               </td>
               <td>
+                {{ task.error }}
+              </td>
+              <td>
                 <a href="{{task.log_url}}" target="_blank"> logs </a>
               </td>
             </tr>
-            <tr ng-if="task.expanded" ng-repeat-end="">
-              <td colspan="6"><b>ERROR:</b> {{task.error}}</td>
-            </tr>
         </tbody>
-
       </table>
     </div>
-  </main>
+
 </div>

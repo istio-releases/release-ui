@@ -1,16 +1,12 @@
 #-------------------------REST API----------------------------#
 
-from flask_restful import Api, Resource, reqparse
+from flask_restful import Resource, reqparse
 from filter import filter, sort
-from fileAdapter import FileAdapter
+from file_adapter import FileAdapter
 import json
 
 adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
-releases = adapter.getReleases()
-tasks = adapter.getTasks()
-labels = adapter.getLabels()
 release_requests = {}
-
 
 # Checks if request arguments are in cache
 def in_cache(args):
@@ -28,24 +24,8 @@ def in_cache(args):
         return False, key
 
 
-class ReleaseList(Resource):
+class Releases(Resource):
     def get(self):
-        result = json.dumps(releases)
-        return result, 200
-
-
-class Release(Resource):
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('release')
-        args = parser.parse_args()
-
-        print(releases[str(args['release'])])
-        return json.dumps(releases[str(args['release'])])
-
-
-class Pagination(Resource):
-    def post(self):
         # parse the post request for the requisite info
         parser = reqparse.RequestParser()
         parser.add_argument('start_date')
@@ -70,7 +50,7 @@ class Pagination(Resource):
         if cache_exists:
             return json.dumps(cache_results[int(args['offset']):(int(args['limit'])+int(args['offset']))])
         else:
-            response = filter(releases, args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
+            response = filter(adapter.get_releases(), args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
             response = sort(response, args['sort_method'])
             release_requests[cache_results] = response
 
@@ -78,20 +58,37 @@ class Pagination(Resource):
             return json.dumps(response[int(args['offset']):(int(args['limit'])+int(args['offset']))])
 
 
-class GetLabels(Resource):
+class Release(Resource):
     def get(self):
-        return json.dumps(labels)
-
-
-class GetTasks(Resource):
-    def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('release')
         args = parser.parse_args()
 
-        release_tasks = releases[str(args['release'])]['tasks']
+        return json.dumps(adapter.get_releases()[str(args['release'])])
+
+
+class Labels(Resource):
+    def get(self):
+        return json.dumps(adapter.get_labels())
+
+
+class Tasks(Resource):
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('release')
+        args = parser.parse_args()
+
+        release_tasks = adapter.get_releases()[str(args['release'])]['tasks']
         response = [];
         for task in release_tasks:
-            response.append(tasks['task-' + str(task)])
+            response.append(adapter.get_tasks()['task-' + str(task)])
 
         return json.dumps(response)
+
+
+class RestAPI(object):
+    def __init__(self):
+        self.releases = Releases
+        self.release = Release
+        self.labels = Labels
+        self.tasks = Tasks
