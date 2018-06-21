@@ -15,6 +15,12 @@
     color: white;
 }
 
+#login
+{
+    float: left;
+    margin-right: 20px;
+}
+
 #main
 {
     width: 100%;

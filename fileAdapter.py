@@ -13,13 +13,13 @@ class FileAdapter(ReleaseData):
         json_data = open(tasksFile).read()
         self.tasks = json.loads(json_data)
 
-    def getReleases(self):
+    def get_releases(self):
         return self.releases
 
-    def getTasks(self):
+    def get_tasks(self):
         return self.tasks
 
-    def getLabels(self):
+    def get_labels(self):
         labels = []
         for release in self.releases:
             for label in self.releases[release]['labels']:

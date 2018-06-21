@@ -99,14 +99,14 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
         $scope.$storage.currentPage = 1;
       }
 
-      var url_string = 'http://localhost:8080/page?state=' + state +
+      var url_string = 'http://localhost:8080/releases?state=' + state +
           '&label=' + $scope.$storage.labelValue + '&start_date=' + start +
           '&end_date=' + end + '&datetype=' + $scope.$storage.whichDate +
           '&sort_method='+ $scope.$storage.sortMethod + '&limit=' + $scope.numRequested +
           '&offset=' + offset;
 
       $http({
-           method: 'POST',
+           method: 'GET',
            url: url_string,
            cache: true
        }).then(function successCallback(response) {
@@ -191,7 +191,11 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
     };
 
     // Reset Filters and OrderBy
-    $scope.resetFilter = function () {
+    $scope.resetFilter = function () {	{
+
+
+
+	}
       // Reset default settings and scope
       $sessionStorage.$reset(defaultStorage);
       setScope();
@@ -219,7 +223,7 @@ app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$r
 
     // Request release details
     $http({
-         method: 'POST',
+         method: 'GET',
          url: 'http://localhost:8080/release?release=' + release_name,
          cache: true
      }).then(function successCallback(response) {
@@ -230,7 +234,7 @@ app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$r
 
     // Request task details
     $http({
-         method: 'POST',
+         method: 'GET',
          url: 'http://localhost:8080/tasks?release=' + release_name,
          cache: true
      }).then(function successCallback(response) {
