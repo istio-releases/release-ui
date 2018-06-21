@@ -3,7 +3,7 @@ import datetime
 
 
 # Filters by all of the criteria shown below, returns an array of filtered releases
-def filter_releases(data, state, label, start_date, end_date, datetype):
+def filter(data, state, label, start_date, end_date, datetype):
 
     # convert variables from unix type to something usable
     state = int(state)
@@ -16,15 +16,15 @@ def filter_releases(data, state, label, start_date, end_date, datetype):
     if end_date <= 0:
         end_date = (datetime.datetime.now()-datetime.datetime(1970, 1, 1)).total_seconds()
 
-    for item in data.values():
-        if item[datetype] >= start_date and item[datetype] <= end_date:
-            if item['state'] == state or state == 0:
+    for item in data.items():
+        if item[1][datetype] >= start_date and item[1][datetype] <= end_date:
+            if item[1]['state'] == state or state == 0:
                 if label != 'null':
-                    for l in item['labels']:
+                    for l in item[1]['labels']:
                         if l == label:
-                            filtered.append(item])
+                            filtered.append(item[1])
                 else:
-                    filtered.append(item)
+                    filtered.append(item[1])
 
     return filtered
 
