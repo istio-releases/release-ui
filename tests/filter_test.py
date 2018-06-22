@@ -46,6 +46,18 @@ class TestSort(unittest.TestCase):
       for item in filtered:
         if state != 0:
           self.assertEqual(item['state'], state)
-          
+
+  def test_filter_label(self):
+    labels = []
+    for release in self.unsorted:
+      for label in self.unsorted[release]['labels']:
+        if label not in labels:
+          labels.append(label)
+    for label in labels:
+      filtered = filter_releases(self.unsorted, 0, label, 0, self.current_time, 'started')  # pylint: disable=line-too-long
+      for item in filtered:
+        self.assertIn(label, item['labels'])
+
+
 if __name__ == '__main__':
   unittest.main()
