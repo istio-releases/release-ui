@@ -11,9 +11,6 @@ class TestSort(unittest.TestCase):
 
   def setUp(self):
     self.unsorted = json.loads(open('../fake_release_data.json').read())
-    # print type(self.unsorted)
-    # self.unsorted = self.unsorted.values()
-    # print type(self.unsorted)
 
   def test_sort_method_1(self):
     self.unsorted = self.unsorted.values()
