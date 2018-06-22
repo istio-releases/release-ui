@@ -17,50 +17,36 @@ app.factory('serviceRelease', function() {
   };
 });
 
-app.factory('serviceReleaseList', function () {
-  var releaseList = [];
-  function set(data){
-    releaseList = data;
-  }
-  function get(){
-    return releaseList;
-  }
-
-  return {
-    set: set,
-    get: get
-  };
-});
-
-app.factory('authService', function ($firebaseAuth, firebaseDataService, cityTimerService) {
-   var firebaseAuthObject = $firebaseAuth();
-   var service = {
-      firebaseAuthObject: firebaseAuthObject,
-      register: register,
-      login: login,
-      logout: logout,
-      isLoggedIn: isLoggedIn,
-      sendWelcomeEmail: sendWelcomeEmail
-   };
-   return service;
-
-   ////////////
-   function register(user) {
-      return firebaseAuthObject.$createUserWithEmailAndPassword(user.email, user.password);
-   }
-   function login(user) {
-      return firebaseAuthObject.$signInWithEmailAndPassword(user.email, user.password);
-   }
-   function logout() {
-      cityTimerService.reset();
-      firebaseAuthObject.$signOut();
-   }
-   function isLoggedIn() {
-      return firebaseAuthObject.$getAuth();
-   }
-   function sendWelcomeEmail(emailAddress) {
-      firebaseDataService.emails.push({
-          emailAddress: emailAddress
-      });
-   }
-});
+//app.factory('authService', function ($firebaseAuth, cityTimerService) {
+//   var firebaseAuthObject = $firebaseAuth();
+//   var service = {
+//      firebaseAuthObject: firebaseAuthObject,
+//      login: login,
+//      logout: logout,
+//      isLoggedIn: isLoggedIn,
+//   };
+//   return service;
+//
+//   function login() {
+//     var provider = new firebase.auth.GithubAuthProvider();
+//     firebase.auth().signInWithRedirect(provider)
+//     .then(function(result) {
+//        return result.user;
+//       $log.log(result.user);
+//     }).catch(function(error) {
+//        var errorCode = error.code;
+//        var errorMessage = error.message;
+//
+//        $log.log(errorCode);
+//        $log.log(errorMessage);
+//     });
+//   }
+//
+//   function logout() {
+//      cityTimerService.reset();
+//      firebaseAuthObject.$signOut();
+//   }
+//   function isLoggedIn() {
+//      return firebaseAuthObject.$getAuth();
+//   }
+//});

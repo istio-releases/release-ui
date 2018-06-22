@@ -2,10 +2,18 @@
 
 /* Controllers */
 
-var app = angular.module('ReleaseUI.controllers', ['ngStorage', 'firebase']);
+var app = angular.module('ReleaseUI.controllers', ['ngStorage']);
 
 app.controller('MainController', ['$scope','$http','$location','$log', '$sessionStorage',
   function($scope, $http, $location, $log, $sessionStorage) {
+
+    //authentication
+    //$scope.githubSignIn = function () {
+    //  authService.login();
+    //};
+    //$scope.githubSignOut = function () {
+
+    //};
 
     // Set static variables
     $scope.numPerPage = 15;

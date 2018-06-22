@@ -50,16 +50,18 @@ class Releases(Resource):
     if not args['offset']:
       args['offset'] = 0
 
+    array_from = int(args['offset'])
+    array_to = int(args['limit'])+int(args['offset'])
     # checks if the filtered, sorted data is already in memcache
     cache_exists, cache_results = in_cache(args)
     if cache_exists:
-      return json.dumps(cache_results[int(args['offset']):(int(args['limit'])+int(args['offset']))])
+      return json.dumps(cache_results[array_from:array_to])
     else:
       response = filter_releases(adapter.get_releases(), args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
       response = sort(response, args['sort_method'])
       release_requests[cache_results] = response
 
-      return json.dumps(response[int(args['offset']):(int(args['limit'])+int(args['offset']))])
+      return json.dumps(response[array_from:array_to])
 
 
 class Release(Resource):
