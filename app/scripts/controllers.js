@@ -191,11 +191,7 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
     };
 
     // Reset Filters and OrderBy
-    $scope.resetFilter = function () {	{
-
-
-
-	}
+    $scope.resetFilter = function () {
       // Reset default settings and scope
       $sessionStorage.$reset(defaultStorage);
       setScope();
@@ -245,12 +241,12 @@ app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$r
 }]);
 
 // Transforms json data to array
-function transform(input) {
+var transform = function (input) {
   input = angular.fromJson(input);
-  var output = [], item;
+  var output = [];
 
   angular.forEach(input, function(item) {
     output.push(item);
   });
    return output;
-}
+};
