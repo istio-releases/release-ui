@@ -5,9 +5,9 @@ from file_adapter import FileAdapter
 
 class TestFileAdapter(unittest.TestCase):
 
-    def __init__ (self):
+    def __init__(self):
         self.adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
-        
+
 
     def test_get_releases(self):
         self.assertEqual('foo'.upper(), 'FOO')
