@@ -13,18 +13,17 @@ def filter_releases(data, state, label, start_date, end_date, datetype):
 
   # Validate end_date value
   if end_date <= 0:
-    end_date = (datetime.datetime.now()-datetime.datetime(1970, 1, 1))
-    end_date = end_date.total_seconds()
+    end_date = (datetime.datetime.now()-datetime.datetime(1970, 1, 1)).total_seconds()
 
-  for item in data.items():
-    if item[1][datetype] >= start_date and item[1][datetype] <= end_date:
-      if item[1]['state'] == state or state == 0:
+  for item in data.values():
+    if item[datetype] >= start_date and item[datetype] <= end_date:
+      if item['state'] == state or state == 0:
         if label != 'null':
-          for l in item[1]['labels']:
+          for l in item['labels']:
             if l == label:
-              filtered.append(item[1])
+              filtered.append(item)
         else:
-          filtered.append(item[1])
+          filtered.append(item)
 
   return filtered
 
