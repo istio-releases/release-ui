@@ -1,11 +1,12 @@
 """REST API."""
-
-import json
-from file_adapter import FileAdapter
-from filter import filter_releases
-from filter import sort
-from flask_restful import reqparse
-from flask_restful import Resource
+import sys
+sys.path.append('../')
+import json   # pylint: disable=g-import-not-at-top
+from file_adapter import FileAdapter   # pylint: disable=g-import-not-at-top
+from filter import filter_releases   # pylint: disable=g-import-not-at-top
+from filter import sort   # pylint: disable=g-import-not-at-top
+from flask_restful import reqparse   # pylint: disable=g-import-not-at-top
+from flask_restful import Resource   # pylint: disable=g-import-not-at-top
 
 adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
 release_requests = {}

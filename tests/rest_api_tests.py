@@ -1,7 +1,9 @@
 """Unit Tests for Rest API."""
 
+import sys
 import unittest
-import rest_api
+sys.path.append('../')   # pylint diable=g-import-not-at-top
+import rest_api   # pylint: disable=g-import-not-at-top
 
 
 class TestRestApi(unittest.TestCase):

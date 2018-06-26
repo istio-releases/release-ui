@@ -1,3 +1,0 @@
-[console_scripts]
-oauth2l = oauth2l:main
-
