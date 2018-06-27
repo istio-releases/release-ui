@@ -1,9 +1,11 @@
 """REST API."""
 
 import json
-from flask_restful import Resource, reqparse
-from filter import filter_releases, sort
 from file_adapter import FileAdapter
+from filter import filter_releases
+from filter import sort
+from flask_restful import reqparse
+from flask_restful import Resource
 
 adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
 release_requests = {}
@@ -57,8 +59,9 @@ class Releases(Resource):
     if cache_exists:
       return json.dumps(cache_results[array_from:array_to])
     else:
-      response = filter_releases(adapter.get_releases(), args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
-      response = sort(response, args['sort_method'])
+      response = filter_releases(adapter.get_releases(), args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])  # pylint: disable=line-too-long
+      if args['end_date'] == 0:
+        response = sort(response, args['sort_method'])
       release_requests[cache_results] = response
 
       return json.dumps(response[array_from:array_to])
