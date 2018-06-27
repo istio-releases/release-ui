@@ -2,11 +2,14 @@
 import sys
 sys.path.append('../')
 import json   # pylint: disable=g-import-not-at-top
+import datetime
 from file_adapter import FileAdapter   # pylint: disable=g-import-not-at-top
 from filter import filter_releases   # pylint: disable=g-import-not-at-top
 from filter import sort   # pylint: disable=g-import-not-at-top
 from flask_restful import reqparse   # pylint: disable=g-import-not-at-top
 from flask_restful import Resource   # pylint: disable=g-import-not-at-top
+from airflow_connector import connect_to_cloudsql
+import MySQLdb
 
 adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
 release_requests = {}
@@ -102,6 +105,19 @@ class Tasks(Resource):
     return json.dumps(response)
 
 
+class AirflowDB(Resource):
+
+  def get(self):
+    db = connect_to_cloudsql()
+    cursor = db.cursor()
+    cursor.execute('SELECT * FROM dag_run;')
+    self.response = []
+    for r in cursor.fetchall():
+      self.response.append(str(r))
+
+    return json.dumps(self.response)
+
+
 class RestAPI(object):
 
   def __init__(self):
@@ -109,3 +125,4 @@ class RestAPI(object):
     self.release = Release
     self.labels = Labels
     self.tasks = Tasks
+    self.airflowdb = AirflowDB

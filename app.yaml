@@ -2,6 +2,10 @@ runtime: python27
 threadsafe: true
 api_version: 1
 
+env_variables:
+  CLOUDSQL_CONNECTION_NAME: istio-release-ui:us-central1:prod-airflow-snapshot-sandbox
+  CLOUDSQL_USER: root
+  CLOUDSQL_PASSWORD: ''
 
 handlers:
 - url: /app
@@ -9,3 +13,7 @@ handlers:
 
 - url: /.*
   script: main.APP
+
+libraries:
+- name: MySQLdb
+  version: "latest"
