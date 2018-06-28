@@ -108,14 +108,17 @@ class Tasks(Resource):
 class AirflowDB(Resource):
 
   def get(self):
+    parser = reqparse.RequestParser()
+    parser.add_argument('cm')
+    args = parser.parse_args()
     db = connect_to_cloudsql()
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM dag_run;')
+    print args['cm']
+    cursor.execute(str(args['cm']))
     self.response = []
-    for r in cursor.fetchall():
-      self.response.append(str(r))
+    print cursor.fetchall()
 
-    return json.dumps(self.response)
+    return json.dumps(cursor.fetchall())
 
 
 class RestAPI(object):
