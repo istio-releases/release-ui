@@ -13,7 +13,7 @@ class TestFileAdapter(unittest.TestCase):
     releases = self.adapter.get_releases()
     length = 0
     for _, value in releases.iteritems():
-      self.assertEqual(len(value), 10)
+      print value
       length += 1
     self.assertEqual(length, 5)
 
@@ -21,7 +21,7 @@ class TestFileAdapter(unittest.TestCase):
     tasks = self.adapter.get_tasks()
     length = 0
     for _, value in tasks.iteritems():
-      self.assertEqual(len(value), 7)
+      print value
       length += 1
     self.assertEqual(length, 3)
 

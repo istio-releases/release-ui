@@ -1,11 +1,9 @@
 """REST API."""
 
 import json
+from flask_restful import Resource, reqparse
+from filter import filter_releases, sort
 from file_adapter import FileAdapter
-from filter import filter_releases
-from filter import sort
-from flask_restful import reqparse
-from flask_restful import Resource
 
 adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
 release_requests = {}
@@ -27,6 +25,12 @@ def in_cache(args):
     return key, release_requests[key]
   else:
     return False, key
+
+def to_json(objects):
+  output = []
+  for object in objects:
+    output.append(object.to_dict())
+  return json.dumps(output)
 
 
 class Releases(Resource):
@@ -57,14 +61,13 @@ class Releases(Resource):
     # checks if the filtered, sorted data is already in memcache
     cache_exists, cache_results = in_cache(args)
     if cache_exists:
-      return json.dumps(cache_results[array_from:array_to])
+      return to_json(cache_results[array_from:array_to])
     else:
-      response = filter_releases(adapter.get_releases(), args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])  # pylint: disable=line-too-long
-      if args['end_date'] == 0:
-        response = sort(response, args['sort_method'])
+      response = filter_releases(adapter.get_releases(), args['state'], args['label'], args['start_date'], args['end_date'], args['datetype'])
+      response = sort(response, args['sort_method'])
       release_requests[cache_results] = response
 
-      return json.dumps(response[array_from:array_to])
+      return to_json(response[array_from:array_to])
 
 
 class Release(Resource):
@@ -75,7 +78,7 @@ class Release(Resource):
     parser.add_argument('release')
     args = parser.parse_args()
 
-    return json.dumps(adapter.get_releases()[str(args['release'])])
+    return json.dumps(adapter.get_release(str(args['release'])).to_dict())
 
 
 class Labels(Resource):
@@ -93,12 +96,12 @@ class Tasks(Resource):
     parser.add_argument('release')
     args = parser.parse_args()
 
-    release_tasks = adapter.get_releases()[str(args['release'])]['tasks']
+    release_tasks = adapter.get_release(str(args['release'])).tasks
     response = []
     for task in release_tasks:
-      response.append(adapter.get_tasks()['task-' + str(task)])
+      response.append(adapter.get_task('task-' + str(task)))
 
-    return json.dumps(response)
+    return to_json(response)
 
 
 class RestAPI(object):
