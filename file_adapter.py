@@ -15,10 +15,9 @@ class FileAdapter(ReleaseData):
     self.releases = {}
     for key in releases_dict:
       release = Release(key)
-      for k in releases_dict[key]:
-        setattr(release, k, releases_dict[key][k])
+      release.from_dict(releases_dict[key])
       self.releases[key] = release
-
+    print self.releases
     with open(tasks_file) as f:
       json_tasks = f.read()
 
@@ -26,8 +25,7 @@ class FileAdapter(ReleaseData):
     self.tasks = {}
     for key in tasks_dict:
       task = Task(key)
-      for k in tasks_dict[key]:
-        setattr(task, k, tasks_dict[key][k])
+      task.from_dict(tasks_dict[key])
       self.tasks[key] = task
 
     labels = set()

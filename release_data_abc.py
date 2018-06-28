@@ -24,7 +24,12 @@ class Release(object):
     self.last_modified = 0
     self.last_active_task = ""
 
+  def from_dict(self, dict):
+    for k, v in dict.iteritems():
+      setattr(self, k, v)
+
   def to_dict(self):
+    print self.__dict__
     return self.__dict__
 
 
@@ -40,6 +45,10 @@ class Task(object):
     self.dependent_on = []
     self.last_modified = 0
     self.error = ""
+
+  def from_dict(self, dict):
+    for k, v in dict.iteritems():
+      self.k = v
 
   def to_dict(self):
     return self.__dict__
