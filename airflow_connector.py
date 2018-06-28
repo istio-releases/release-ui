@@ -28,7 +28,8 @@ def connect_to_cloudsql():
     db = MySQLdb.connect(
         unix_socket=cloudsql_unix_socket,
         user=CLOUDSQL_USER,
-        passwd=CLOUDSQL_PASSWORD)
+        passwd=CLOUDSQL_PASSWORD,
+        db='airflow-db')
 
   else:
     db = MySQLdb.connect(
@@ -57,7 +58,7 @@ def query_airflow(request):
   return response
 
 # TODO(dommarques):
-#   - get the data into something usable
+#   - get the data into something usable (currently a tuple, possibly shunt to adapter portion)
 #   - implement the Adapter
 #   - make the connection secure
 #   - switch to production airflow server

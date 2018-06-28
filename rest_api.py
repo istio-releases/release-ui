@@ -8,7 +8,7 @@ from filter import filter_releases   # pylint: disable=g-import-not-at-top
 from filter import sort   # pylint: disable=g-import-not-at-top
 from flask_restful import reqparse   # pylint: disable=g-import-not-at-top
 from flask_restful import Resource   # pylint: disable=g-import-not-at-top
-from airflow_connector import connect_to_cloudsql
+from airflow_connector import query_airflow
 import MySQLdb
 
 adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
@@ -108,17 +108,9 @@ class Tasks(Resource):
 class AirflowDB(Resource):
 
   def get(self):
-    parser = reqparse.RequestParser()
-    parser.add_argument('cm')
-    args = parser.parse_args()
-    db = connect_to_cloudsql()
-    cursor = db.cursor()
-    print args['cm']
-    cursor.execute(str(args['cm']))
-    self.response = []
-    print cursor.fetchall()
+    data = query_airflow('show tables;')
 
-    return json.dumps(cursor.fetchall())
+    return json.dumps(data)
 
 
 class RestAPI(object):
