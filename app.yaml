@@ -6,6 +6,7 @@ env_variables:
   CLOUDSQL_CONNECTION_NAME: istio-release-ui:us-central1:prod-airflow-snapshot-sandbox
   CLOUDSQL_USER: root
   CLOUDSQL_PASSWORD: ''
+  CLOUDSQL_HOST: 35.193.234.53
 
 handlers:
 - url: /app
