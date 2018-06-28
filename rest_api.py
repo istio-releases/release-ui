@@ -1,15 +1,13 @@
 """REST API."""
 import sys
 sys.path.append('../')
-import json   # pylint: disable=g-import-not-at-top
-import datetime
+import json   # pylint: disable=g-import-not-at-top, g-bad-import-order
 from file_adapter import FileAdapter   # pylint: disable=g-import-not-at-top
 from filter import filter_releases   # pylint: disable=g-import-not-at-top
 from filter import sort   # pylint: disable=g-import-not-at-top
 from flask_restful import reqparse   # pylint: disable=g-import-not-at-top
 from flask_restful import Resource   # pylint: disable=g-import-not-at-top
-from airflow_connector import query_airflow
-import MySQLdb
+from airflow_connector import query_airflow  # pylint: disable=g-bad-import-order
 
 adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
 release_requests = {}
