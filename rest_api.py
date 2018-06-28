@@ -108,7 +108,10 @@ class Tasks(Resource):
 class AirflowDB(Resource):
 
   def get(self):
-    data = query_airflow('show tables;')
+    parser = reqparse.RequestParser()
+    parser.add_argument('cm')
+    args = parser.parse_args()
+    data = query_airflow(str(args['cm']))
 
     return json.dumps(data)
 
