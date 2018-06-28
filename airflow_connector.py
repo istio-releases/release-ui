@@ -16,7 +16,7 @@ if CLOUDSQL_CONNECTION_NAME is None:
 
 
 def connect_to_cloudsql():
-  """Connects to the Cloud SQL database."""
+  """Connects to the Cloud SQL database. No Args."""
   # When deployed to App Engine, the `SERVER_SOFTWARE` environment variable
   # will be set to 'Google App Engine/version'.
   if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
@@ -41,11 +41,20 @@ def connect_to_cloudsql():
 
 
 def query_airflow(request):
+  """Sends an SQL query to the airflow database.
+
+  Args:
+      request: the SQL request (string)
+
+  Returns:
+      The database result (tuple)
+  """
   db = connect_to_cloudsql()
   cursor = db.cursor()
   cursor.execute(request)
+  response = cursor.fetchall()
 
-  return cursor.fetchall()
+  return response
 
 # TODO(dommarques):
 #   - get the data into something usable
