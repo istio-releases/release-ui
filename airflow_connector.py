@@ -6,6 +6,13 @@ import MySQLdb
 CLOUDSQL_CONNECTION_NAME = os.environ.get('CLOUDSQL_CONNECTION_NAME')
 CLOUDSQL_USER = os.environ.get('CLOUDSQL_USER')
 CLOUDSQL_PASSWORD = os.environ.get('CLOUDSQL_PASSWORD')
+CLOUDSQL_HOST = os.environ.get('CLOUDSQL_HOST')
+
+if CLOUDSQL_CONNECTION_NAME is None:
+  CLOUDSQL_CONNECTION_NAME = 'istio-release-ui:us-central1:prod-airflow-snapshot-sandbox'  # pylint: disable=line-too-long
+  CLOUDSQL_USER = 'root'
+  CLOUDSQL_PASSWORD = ''
+  CLOUDSQL_HOST = '35.193.234.53'
 
 
 def connect_to_cloudsql():
@@ -25,7 +32,23 @@ def connect_to_cloudsql():
 
   else:
     db = MySQLdb.connect(
-        host='35.193.234.53',
-        user=CLOUDSQL_USER, passwd=CLOUDSQL_PASSWORD, db="airflow-db")
+        host=CLOUDSQL_HOST,
+        user=CLOUDSQL_USER,
+        passwd=CLOUDSQL_PASSWORD,
+        db='airflow-db')
 
   return db
+
+
+def query_airflow(request):
+  db = connect_to_cloudsql()
+  cursor = db.cursor()
+  cursor.execute(request)
+
+  return cursor.fetchall()
+
+# TODO(dommarques):
+#   - get the data into something usable
+#   - implement the Adapter
+#   - make the connection secure
+#   - switch to production airflow server
