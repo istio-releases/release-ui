@@ -2,8 +2,8 @@ import datetime
 import json
 import sys
 import unittest
-sys.path.append('../')  # pylint diable=g-import-not-at-top
-from filter import sort  # pylint diable=g-import-not-at-top
+sys.path.append('../')
+from filter_releases import sort  # pylint: disable=g-import-not-at-top
 
 
 class TestSort(unittest.TestCase):

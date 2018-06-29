@@ -17,6 +17,7 @@ if CLOUDSQL_CONNECTION_NAME is None:
 
 def connect_to_cloudsql():
   """Connects to the Cloud SQL database. No Args."""
+
   # When deployed to App Engine, the `SERVER_SOFTWARE` environment variable
   # will be set to 'Google App Engine/version'.
   if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
