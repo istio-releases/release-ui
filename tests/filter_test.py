@@ -4,7 +4,7 @@ import random
 import sys
 import unittest
 sys.path.append('../')  # pylint: disable=g-import-not-at-top
-from filter import filter_releases  # pylint: disable=g-import-not-at-top
+from filter_releases import filter_releases  # pylint: disable=g-import-not-at-top
 
 
 class TestSort(unittest.TestCase):
