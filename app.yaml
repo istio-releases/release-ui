@@ -7,6 +7,7 @@ env_variables:
   CLOUDSQL_USER: 'root'
   CLOUDSQL_PASSWORD: ''
   CLOUDSQL_HOST: '35.193.234.53'
+  CLOUDSQL_DB: 'airflow-db'
 
 handlers:
 - url: /app

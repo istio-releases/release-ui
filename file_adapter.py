@@ -7,9 +7,11 @@ from release_data_abc import ReleaseData
 class FileAdapter(ReleaseData):
   """Constructor takes two files: release data and task data"""
 
-  def __init__(self, releases_file, tasks_file):
+  def load_releases(self, releases_file):
     json_data = open(releases_file).read()
     self.releases = json.loads(json_data)
+
+  def load_tasks(self, tasks_file):
     json_data = open(tasks_file).read()
     self.tasks = json.loads(json_data)
 

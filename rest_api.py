@@ -1,16 +1,17 @@
 """REST API."""
 import json
-import sys
-sys.path.append('../')
-from file_adapter import FileAdapter   # pylint: disable=g-import-not-at-top
-from filter_releases import filter_releases   # pylint: disable=g-import-not-at-top
-from filter_releases import sort   # pylint: disable=g-import-not-at-top
-from flask_restful import reqparse   # pylint: disable=g-import-not-at-top
-from flask_restful import Resource   # pylint: disable=g-import-not-at-top
-from airflow_connector import query_airflow  # pylint: disable=g-bad-import-order
+from airflow_connector import AirflowDB
+from file_adapter import FileAdapter
+from filter_releases import filter_releases
+from filter_releases import sort
+from flask_restful import reqparse
+from flask_restful import Resource
 
-adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
+adapter = FileAdapter()
+adapter.load_releases('fake_release_data.json')
+adapter.load_tasks('fake_task_data.json')
 release_requests = {}
+airflow_db = AirflowDB()
 
 
 def in_cache(args):
@@ -103,13 +104,14 @@ class Tasks(Resource):
     return json.dumps(response)
 
 
-class AirflowDB(Resource):
+class RestAirflowDB(Resource):
+  """Allows for SQL queries to be sent to App Engine through an HTTP GET request."""  # pylint: disable=line-too-long
 
   def get(self):
     parser = reqparse.RequestParser()
     parser.add_argument('cm')
     args = parser.parse_args()
-    data = query_airflow(str(args['cm']))
+    data = airflow_db.query(str(args['cm']))
 
     return json.dumps(data)
 
@@ -121,4 +123,4 @@ class RestAPI(object):
     self.release = Release
     self.labels = Labels
     self.tasks = Tasks
-    self.airflowdb = AirflowDB
+    self.airflowdb = RestAirflowDB
