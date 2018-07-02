@@ -29,7 +29,6 @@ class Release(object):
       setattr(self, k, v)
 
   def to_dict(self):
-    print self.__dict__
     return self.__dict__
 
 

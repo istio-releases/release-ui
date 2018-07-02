@@ -12,16 +12,16 @@ class TestFileAdapter(unittest.TestCase):
   def test_get_releases(self):
     releases = self.adapter.get_releases()
     length = 0
-    for _, value in releases.iteritems():
-      print value
+    for key, value in releases.iteritems():
+      self.assertEqual(value, self.adapter.get_release(key))
       length += 1
     self.assertEqual(length, 5)
 
   def test_get_tasks(self):
     tasks = self.adapter.get_tasks()
     length = 0
-    for _, value in tasks.iteritems():
-      print value
+    for key, value in tasks.iteritems():
+      self.assertEqual(value, self.adapter.get_task(key))
       length += 1
     self.assertEqual(length, 3)
 

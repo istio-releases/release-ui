@@ -5,7 +5,7 @@ from flask_restful import Resource, reqparse
 from filter import filter_releases, sort
 from file_adapter import FileAdapter
 
-adapter = FileAdapter('fake_release_data.json', 'fake_task_data.json')
+adapter = FileAdapter('fake_data/fake_release_data.json', 'fake_data/fake_task_data.json')
 release_requests = {}
 
 
