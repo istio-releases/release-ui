@@ -1,4 +1,5 @@
 """REST API."""
+import datetime
 import json
 from airflow_connector import AirflowDB
 from file_adapter import FileAdapter
@@ -7,11 +8,17 @@ from filter_releases import sort
 from flask_restful import reqparse
 from flask_restful import Resource
 
+
 adapter = FileAdapter()
 adapter.load_releases('fake_release_data.json')
 adapter.load_tasks('fake_task_data.json')
 release_requests = {}
-airflow_db = AirflowDB()
+# initiate a connection with the airflow database
+airflow_db = AirflowDB(CLOUDSQL_CONNECTION_NAME='istio-release-ui:us-central1:prod-airflow-snapshot-sandbox',  # pylint: disable=line-too-long
+                       CLOUDSQL_USER='root',
+                       CLOUDSQL_PASSWORD='',
+                       CLOUDSQL_HOST='35.193.234.53',
+                       CLOUDSQL_DB='airflow-db')
 
 
 def in_cache(args):
@@ -104,16 +111,19 @@ class Tasks(Resource):
     return json.dumps(response)
 
 
-class RestAirflowDB(Resource):
-  """Allows for SQL queries to be sent to App Engine through an HTTP GET request."""  # pylint: disable=line-too-long
+class AirflowDBTesting(Resource):
+  """Allows for SQL queries to be sent to App Engine through an HTTP GET request. FOR TESTING ONLY, WILL BE DELETED."""  # pylint: disable=line-too-long
 
   def get(self):
     parser = reqparse.RequestParser()
     parser.add_argument('cm')
     args = parser.parse_args()
     data = airflow_db.query(str(args['cm']))
+    print type(data)
 
-    return json.dumps(data)
+    print airflow_db.query("SELECT execution_date FROM dag_run WHERE execution_date BETWEEN '" + str(datetime.datetime.fromtimestamp(0)) + "' AND '" + str(datetime.datetime.now()) + "';")
+
+    # return json.dumps(data)
 
 
 class RestAPI(object):
@@ -123,4 +133,4 @@ class RestAPI(object):
     self.release = Release
     self.labels = Labels
     self.tasks = Tasks
-    self.airflowdb = RestAirflowDB
+    self.airflowdb = AirflowDBTesting
