@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-var site = 'http://localhost:8080';
+var site = window.location.origin;
 var app = angular.module('ReleaseUI.controllers', ['ngStorage']);
 
 app.controller('MainController', ['$scope','$http','$location','$log', '$sessionStorage',

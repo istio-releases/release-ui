@@ -30,7 +30,7 @@ def in_cache(args):
     return False, key
 
 def to_json(objects):
-    """Turns list of objects (tasks or releases) to json."""
+  """Turns list of objects (tasks or releases) to json."""
   output = []
   for object in objects:
     output.append(object.to_dict())
@@ -73,7 +73,7 @@ class Releases(Resource):
       response = sort(response, args['sort_method'])
       release_requests[cache_results] = response
 
-      # returns a jsonified array with the determined start and end indices 
+      # returns a jsonified array with the determined start and end indices
       return to_json(response[array_from:array_to])
 
 
@@ -114,7 +114,6 @@ class Tasks(Resource):
 class Resources(object):
 
   def __init__(self):
-    self.adapter =
     self.releases = Releases
     self.release = Release
     self.labels = Labels
