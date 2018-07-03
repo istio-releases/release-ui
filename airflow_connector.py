@@ -2,27 +2,12 @@
 import os
 import MySQLdb
 
-# These environment variables are configured in app.yaml.
-CLOUDSQL_CONNECTION_NAME = os.environ.get('CLOUDSQL_CONNECTION_NAME')
-CLOUDSQL_USER = os.environ.get('CLOUDSQL_USER')
-CLOUDSQL_PASSWORD = os.environ.get('CLOUDSQL_PASSWORD')
-CLOUDSQL_HOST = os.environ.get('CLOUDSQL_HOST')
-CLOUDSQL_DB = os.environ.get('CLOUDSQL_DB')
-
-if CLOUDSQL_CONNECTION_NAME is None:
-  CLOUDSQL_CONNECTION_NAME = 'istio-release-ui:us-central1:prod-airflow-snapshot-sandbox'  # pylint: disable=line-too-long
-  CLOUDSQL_USER = 'root'
-  CLOUDSQL_PASSWORD = ''
-  CLOUDSQL_HOST = '35.193.234.53'
-  CLOUDSQL_DB = 'airflow-db'
-
 
 class AirflowDB(object):
   """"Provides the methods which allow interaction with the Airflow SQL database."""  # pylint: disable=line-too-long
 
-  def __init__(self):
+  def __init__(self, CLOUDSQL_CONNECTION_NAME, CLOUDSQL_USER, CLOUDSQL_PASSWORD, CLOUDSQL_HOST, CLOUDSQL_DB):
     """Connects to the Cloud SQL database."""
-
     # When deployed to App Engine, the `SERVER_SOFTWARE` environment variable
     # will be set to 'Google App Engine/version'.
     if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
