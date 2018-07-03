@@ -2,7 +2,7 @@
 import datetime
 
 
-def releases_to_sql(args):
+def to_sql_releases(args):
   """Converts a set of parameters contained in 'args' to a SQL query.
 
   Gets the releases(AKA dag runs) which fit the parameters.
@@ -17,7 +17,7 @@ def releases_to_sql(args):
   end_date = int(args['end_date'])
   datetype = str(args['datetype'])
   state = str(int(args['state']))
-  label = str(args['label'])
+  # label = str(args['label'])
   sort_method = int(args['sort_method'])
   sql_query = 'SELECT * FROM dag_run'
   # convert start and end date from unix to python datetime
@@ -26,17 +26,30 @@ def releases_to_sql(args):
   # append the date filter to the query based on:
   # datetype, start_date, and end_date
   if datetype == 0:
-    sql_query += 'WHERE execution_date BETWEEN"' + start_date + '" AND "' + end_date + '"'  # pylint: disable=line-too-long
+    sql_query += ' WHERE execution_date BETWEEN"%d" AND "%i"' %(start_date, end_date)  # pylint: disable=line-too-long
   else:
-    sql_query += 'WHERE execution_date BETWEEN"' + start_date + '" AND "' + end_date + '"'  # pylint: disable=line-too-long
+    sql_query += ' WHERE execution_date BETWEEN"%d" AND "%i"' %(start_date, end_date)  # pylint: disable=line-too-long
   # append a state filter, if there is one available -- '0' means all states
   if state != 0:
-    sql_query += 'AND state = ' + convert_state(state)
+    sql_query += ' AND state = %s' %(convert_state(state))
   # add sorting parameter
   sql_query = add_sorting(sql_query, sort_method)
   # TODO(dommarques) - add label filtering, probably just the dag_id
   sql_query += ';'   # put the finishing touch on it
+  return sql_query
 
+
+def to_sql_release(release_id):
+  sql_query = 'SELECT * FROM dag_run'
+  sql_query += ' WHERE run_id = ' + release_id
+  sql_query += ';'   # put the finishing touch on it
+  return sql_query
+
+
+def to_sql_tasks(execution_date):
+  sql_query = 'SELECT * FROM task_insance'
+  sql_query = ' WHERE execution_date = ' + execution_date
+  sql_query += ';'   # put the finishing touch on it
   return sql_query
 
 
@@ -44,10 +57,10 @@ def convert_state(state):
   """Converts the state enumeration into the format needed for the SQL query.
 
   Args:
-    state: the integer which enumerates the requested state
+    state: the integer which enumerates the requested state (int)
 
   Returns:
-    state: string format which follows the same format in the SQl db
+    state: string format which follows the same format in the SQl db (str)
   """
   if state == 0:
     return 'None'
@@ -65,11 +78,12 @@ def add_sorting(sql_query, sort_method):
   """Adds sorting parameter to SQL query.
 
   Args:
-    sql_query: the query so far, which will have sorting appended to end
+    sql_query: the query so far, which will have sorting appended to end (str)
+    sort_method: the sort method (int).
 
   Returns:
-    sql_query: now with sorting!
-    """
+    sql_query: now with sorting! (str)
+  """
   if sort_method == 1:
     sql_query += 'ORDER BY run_id ASC'
   elif sort_method == 2:
