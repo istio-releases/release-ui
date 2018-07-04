@@ -249,8 +249,13 @@ app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$r
      });
 }]);
 
-// Transforms json data to array
-var transform = function (input) {
+var transform =
+  /**
+  * Transforms json object to array
+  * @param {Object} input 
+  * @return {Array}
+  */
+  function (input) {
   input = angular.fromJson(input);
   var output = [];
 

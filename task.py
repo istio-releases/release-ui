@@ -18,10 +18,15 @@ class Task(object):
     Args:
       data: dictionary with all the task data (optional).
     """
-    if data is None:
-      self._task = {}
+    self._task = data or {}
+
+  def _validate(self, check, value, attribute):
+    """Helper function to validate setter values and set attributes."""
+    if isinstance(value, check):
+      self._task[attribute] = value
     else:
-      self._task = data
+      error_string = 'Invalid input for ' + attribute + ' not a ' + check
+      raise ValueError(error_string)
 
   @property
   def task_name(self):
@@ -30,25 +35,18 @@ class Task(object):
   @task_name.setter
   def task_name(self, value):
     """Sets name as string value."""
-    if isinstance(value, basestring):
-      self._task['task_name'] = value
-    else:
-      raise ValueError('Invalid input for task name: not a string')
+    self._validate(basestring, value, 'task_name')
 
   @property
   def dependent_on(self):
     return self._task['dependent_on']
 
-  @dependent_on.setter
-  def dependent_on(self, value):
-    """Sets dependencies as list of string unique identifiers."""
-    if isinstance(value, list):
-      for task in value:
-        if not isinstance(task, basestring):
-          raise ValueError('Invalid input for dependency task: not a string')
-      self._release['tasks'] = value
+  def add_dependency(self, value):
+    """Adds dependency to list of string unique identifiers."""
+    if isinstance(value, basestring):
+      self._task['dependent_on'].append(value)
     else:
-      raise ValueError('Invalid input for task dependencies: not an list')
+      raise ValueError('Invalid input for a dependency: not a string')
 
   @property
   def started(self):
@@ -57,10 +55,7 @@ class Task(object):
   @started.setter
   def started(self, value):
     """Sets started as an int unix datetime."""
-    if isinstance(value, int):
-      self._task['started'] = value
-    else:
-      raise ValueError('Invalid input for task start datetime: not an int')
+    self._validate(int, value, 'started')
 
   @property
   def status(self):
@@ -69,10 +64,7 @@ class Task(object):
   @status.setter
   def status(self, value):
     """Sets status as int representation of status."""
-    if isinstance(value, int):
-      self._task['status'] = value
-    else:
-      raise ValueError('Invalid input for task status: not an int')
+    self._validate(int, value, 'status')
 
   @property
   def last_modified(self):
@@ -81,10 +73,7 @@ class Task(object):
   @last_modified.setter
   def last_modified(self, value):
     """Sets last_modified as int unix datetime."""
-    if isinstance(value, int):
-      self._task['last_modified'] = value
-    else:
-      raise ValueError('Invalid input for last modified datetime: not an int')
+    self._validate(int, value, 'last_modified')
 
   @property
   def log_url(self):
@@ -93,10 +82,7 @@ class Task(object):
   @log_url.setter
   def log_url(self, value):
     """Sets log_url as string url."""
-    if isinstance(value, basestring):
-      self._task['log_url'] = value
-    else:
-      raise ValueError('Invalid input for task log url: not a string')
+    self._validate(basestring, value, 'log_url')
 
   @property
   def error(self):
@@ -105,10 +91,7 @@ class Task(object):
   @error.setter
   def error(self, value):
     """Sets error as string."""
-    if isinstance(value, basestring):
-      self._task['error'] = value
-    else:
-      raise ValueError('Invalid input for task error: not a string')
+    self._validate(basestring, value, 'error')
 
   def to_dict(self):
-    return self._task
+    return self._task.copy()

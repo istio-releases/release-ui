@@ -1,9 +1,9 @@
 """REST API."""
 
 import json
-from flask_restful import Resource, reqparse
-from filter import filter_releases, sort
 from file_adapter import FileAdapter
+from filter import filter_releases, sort
+from flask_restful import Resource, reqparse
 
 adapter = FileAdapter('fake_data/fake_release_data.json', 'fake_data/fake_task_data.json')
 release_requests = {}
@@ -29,11 +29,12 @@ def in_cache(args):
   else:
     return False, key
 
+
 def to_json(objects):
   """Turns list of objects (tasks or releases) to json."""
   output = []
-  for object in objects:
-    output.append(object.to_dict())
+  for item in objects:
+    output.append(item.to_dict())
   return json.dumps(output)
 
 
@@ -53,7 +54,7 @@ class Releases(Resource):
     parser.add_argument('offset')
     args = parser.parse_args()
 
-    # check if limit and offset exists, if not, provide the first 100 releases with offset 0
+    # check if limit and offset exist, if not provide defaults
     if not args['limit']:
       args['limit'] = 100
     if not args['offset']:
