@@ -25,8 +25,8 @@ class Task(object):
     if isinstance(value, check):
       self._task[attribute] = value
     else:
-      error_string = 'Invalid input for ' + attribute + ' not a ' + check
-      raise ValueError(error_string)
+      error = 'Invalid input for ' + attribute + ': not a ' + check.__name__
+      raise ValueError(error)
 
   @property
   def task_name(self):
@@ -44,6 +44,8 @@ class Task(object):
   def add_dependency(self, value):
     """Adds dependency to list of string unique identifiers."""
     if isinstance(value, basestring):
+      if not hasattr(self, 'dependent_on'):
+        self._task['dependent_on'] = []
       self._task['dependent_on'].append(value)
     else:
       raise ValueError('Invalid input for a dependency: not a string')

@@ -25,20 +25,20 @@ class Release(object):
     if isinstance(value, check):
       self._release[attribute] = value
     else:
-      error_string = 'Invalid input for ' + attribute + ' not a ' + check
-      raise ValueError(error_string)
+      error = 'Invalid input for ' + attribute + ': not a ' + check.__name__
+      raise ValueError(error)
 
   def _validate_array(self, check, value, attribute):
     """Helper function to validate setter list values and set attributes."""
     if isinstance(value, list):
       for item in value:
         if not isinstance(item, check):
-          error_string = 'Invalid input for ' + attribute + ' not a ' + check
-          raise ValueError(error_string)
+          error = 'Invalid input for ' + attribute + ': not a ' + check.__name__
+          raise ValueError(error)
       self._release[attribute] = value
     else:
-      error_string = 'Invalid input for ' + attribute + ' not a list'
-      raise ValueError(error_string)
+      error = 'Invalid input for ' + attribute + ': not a list'
+      raise ValueError(error)
 
   @property
   def name(self):
@@ -55,8 +55,8 @@ class Release(object):
 
   @tasks.setter
   def tasks(self, value):
-    """Sets tasks as list of string unique identifiers."""
-    self._validate_array(basestring, value, 'tasks')
+    """Sets tasks as list of int unique identifiers."""
+    self._validate_array(int, value, 'tasks')
 
   @property
   def links(self):

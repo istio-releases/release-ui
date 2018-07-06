@@ -9,7 +9,7 @@ class TestFileAdapter(unittest.TestCase):
   def setUp(self):
     self.adapter = FileAdapter('mini_release_data.json', 'mini_task_data.json')
 
-  def test_get_releases(self):
+  def test_releases(self):
     releases = self.adapter.get_releases()
     length = 0
     for key, value in releases.iteritems():
@@ -17,7 +17,7 @@ class TestFileAdapter(unittest.TestCase):
       length += 1
     self.assertEqual(length, 5)
 
-  def test_get_tasks(self):
+  def test_tasks(self):
     tasks = self.adapter.get_tasks()
     length = 0
     for key, value in tasks.iteritems():

@@ -1,0 +1,79 @@
+"""Unit Tests for Release."""
+
+import unittest
+from release import Release
+
+
+class TestRelease(unittest.TestCase):
+
+  def test_getters(self):
+    release1 = Release({
+        'tasks': [0, 2, 1, 2, 1],
+        'name': 'release-260',
+        'links': ['https://youtu.be/dQw4w9WgXcQ'],
+        'started': 1158781609,
+        'labels': ['label0', 'label1'],
+        'state': 4,
+        'last_modified': 341231047,
+        'last_active_task': 'task4_ID'})
+
+    self.assertEqual(release1.name, 'release-260')
+    self.assertEqual(release1.tasks, [0, 2, 1, 2, 1])
+    self.assertEqual(release1.links, ['https://youtu.be/dQw4w9WgXcQ'])
+    self.assertEqual(release1.started, 1158781609)
+    self.assertEqual(release1.labels, ['label0', 'label1'])
+    self.assertEqual(release1.state, 4)
+    self.assertEqual(release1.last_modified, 341231047)
+    self.assertEqual(release1.last_active_task, 'task4_ID')
+
+  def test_setters(self):
+    release2 = Release()
+
+    release2.name = 'new release'
+    self.assertEqual(release2.name, 'new release')
+    with self.assertRaises(ValueError):
+      release2.name = 0
+
+    release2.tasks = []
+    self.assertEqual(release2.tasks, [])
+    with self.assertRaises(ValueError):
+      release2.tasks = 0
+    with self.assertRaises(ValueError):
+      release2.tasks = ['task1', 'task2']
+
+    release2.links = []
+    self.assertEqual(release2.links, [])
+    with self.assertRaises(ValueError):
+      release2.links = 0
+    with self.assertRaises(ValueError):
+      release2.links = [0, 1]
+
+    release2.started = 0
+    self.assertEqual(release2.started, 0)
+    with self.assertRaises(ValueError):
+      release2.started = 'started'
+
+    release2.labels = []
+    self.assertEqual(release2.labels, [])
+    with self.assertRaises(ValueError):
+      release2.labels = 0
+    with self.assertRaises(ValueError):
+      release2.labels = [0, 1]
+
+    release2.state = 0
+    self.assertEqual(release2.state, 0)
+    with self.assertRaises(ValueError):
+      release2.state = 'state'
+
+    release2.last_modified = 0
+    self.assertEqual(release2.last_modified, 0)
+    with self.assertRaises(ValueError):
+      release2.last_modified = 'last_modified'
+
+    release2.last_active_task = 'last_active_task'
+    self.assertEqual(release2.last_active_task, 'last_active_task')
+    with self.assertRaises(ValueError):
+      release2.last_active_task = 0
+
+suite = unittest.TestLoader().loadTestsFromTestCase(TestRelease)
+unittest.TextTestRunner(verbosity=2).run(suite)

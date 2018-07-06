@@ -22,7 +22,7 @@ class Adapter(object):
     """Retrieve individual release information.
 
     Returns:
-      Single Release objects.
+      Single Release object.
     """
     pass
 
