@@ -1,12 +1,7 @@
 """Data format for Task."""
 
-
-class State(object):
-  UNUSED_STATUS = 0
-  PENDING = 1
-  FINISHED = 2
-  FAILED = 3
-  ABANDONED = 4
+from datetime import datetime
+from state import State
 
 
 class Task(object):
@@ -18,24 +13,45 @@ class Task(object):
     Args:
       data: dictionary with all the task data (optional).
     """
-    self._task = data or {}
+    self._task = {}
+    if data:
+      self.task_name = data['task_name']
+      self._task['dependent_on'] = []
+      for depend in data['dependent_on']:
+        self.add_dependency(depend)
+      self.started = data['started']
+      self.status = data['status']
+      self.last_modified = data['last_modified']
+      self.log_url = data['log_url']
+      self.error = data['error']
 
-  def _validate(self, check, value, attribute):
-    """Helper function to validate setter values and set attributes."""
+  def _validate_type(self, check, value, attribute):
+    """Helper function to validate setter value types."""
     if isinstance(value, check):
-      self._task[attribute] = value
+      return True
     else:
       error = 'Invalid input for ' + attribute + ': not a ' + check.__name__
       raise ValueError(error)
 
+  def _validate_datetime(self, value, attribute):
+    """Helper function to validate date types and set attribute."""
+    if self._validate_type(int, value, attribute):
+      time = datetime.fromtimestamp(value)
+      if time >= datetime.fromtimestamp(0) and time <= datetime.now():
+        self._task[attribute] = time
+      else:
+        error = 'Invalid input for ' + attribute + ': not within datetime range'
+        raise ValueError(error)
+
   @property
   def task_name(self):
-    return self._task['task_name']
+    return str(self._task['task_name'])
 
   @task_name.setter
   def task_name(self, value):
     """Sets name as string value."""
-    self._validate(basestring, value, 'task_name')
+    if self._validate_type(basestring, value, 'task_name'):
+      self._task['task_name'] = value
 
   @property
   def dependent_on(self):
@@ -56,17 +72,30 @@ class Task(object):
 
   @started.setter
   def started(self, value):
-    """Sets started as an int unix datetime."""
-    self._validate(int, value, 'started')
+    """Sets started as a datetime."""
+    self._validate_datetime(value, 'started')
 
   @property
   def status(self):
-    return self._task['status']
+    return int(self._task['status'])
 
   @status.setter
   def status(self, value):
-    """Sets status as int representation of status."""
-    self._validate(int, value, 'status')
+    """Sets status as State."""
+    if self._validate_type(int, value, 'status'):
+      if value == 0:
+        status = State.UNUSED_STATUS
+      elif value == 1:
+        status = State.PENDING
+      elif value == 2:
+        status = State.FINISHED
+      elif value == 3:
+        status = State.FAILED
+      elif value == 4:
+        status = State.ABANDONED
+      else:
+        raise ValueError('Invalid input for status')
+      self._task['status'] = status
 
   @property
   def last_modified(self):
@@ -74,26 +103,32 @@ class Task(object):
 
   @last_modified.setter
   def last_modified(self, value):
-    """Sets last_modified as int unix datetime."""
-    self._validate(int, value, 'last_modified')
+    """Sets last_modified as a datetime."""
+    self._validate_datetime(value, 'last_modified')
 
   @property
   def log_url(self):
-    return self._task['log_url']
+    return str(self._task['log_url'])
 
   @log_url.setter
   def log_url(self, value):
     """Sets log_url as string url."""
-    self._validate(basestring, value, 'log_url')
+    if self._validate_type(basestring, value, 'log_url'):
+      self._task['log_url'] = value
 
   @property
   def error(self):
-    return self._task['error']
+    return str(self._task['error'])
 
   @error.setter
   def error(self, value):
     """Sets error as string."""
-    self._validate(basestring, value, 'error')
+    if self._validate_type(basestring, value, 'error'):
+      self._task['error'] = value
 
-  def to_dict(self):
-    return self._task.copy()
+  def to_json(self):
+    returner = self._task.copy()
+    unix = datetime.fromtimestamp(0)
+    returner['started'] = (self.started - unix).total_seconds()
+    returner['last_modified'] = (self.last_modified - unix).total_seconds()
+    return returner

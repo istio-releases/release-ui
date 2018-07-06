@@ -1,5 +1,5 @@
 """Helper Functions to be used for sorting and filtering."""
-import datetime
+from datetime import datetime
 
 
 NAME_DECR = 1
@@ -33,13 +33,13 @@ def filter_releases(releases, state, label, start_date, end_date, datetype):
   if state < 0 or state > 4:
     state = 0
 
-  now = (datetime.datetime.now()-datetime.datetime(1970, 1, 1)).total_seconds()
-  start_date = int(start_date)
-  if start_date < 0 or start_date > now:
-    start_date = 0
+  now = datetime.now()
+  start_date = datetime.fromtimestamp(int(start_date))
+  if start_date < datetime.fromtimestamp(0) or start_date > now:
+    start_date = datetime.fromtimestamp(0)
 
-  end_date = int(end_date)
-  if end_date <= 0:
+  end_date = datetime.fromtimestamp(int(end_date))
+  if end_date <= datetime.fromtimestamp(0):
     end_date = now
 
   label = str(label)

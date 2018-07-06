@@ -1,12 +1,7 @@
 """Data format for Release."""
 
-
-class State(object):
-  UNUSED_STATUS = 0
-  PENDING = 1
-  FINISHED = 2
-  FAILED = 3
-  ABANDONED = 4
+from datetime import datetime
+from state import State
 
 
 class Release(object):
@@ -18,12 +13,21 @@ class Release(object):
     Args:
       data: dictionary with all the release data (optional).
     """
-    self._release = data or {}
+    self._release = {}
+    if data:
+      self.name = data['name']
+      self.tasks = data['tasks']
+      self.links = data['links']
+      self.started = data['started']
+      self.labels = data['labels']
+      self.state = data['state']
+      self.last_active_task = data['last_active_task']
+      self.last_modified = data['last_modified']
 
-  def _validate(self, check, value, attribute):
+  def _validate_type(self, check, value, attribute):
     """Helper function to validate setter values and set attributes."""
     if isinstance(value, check):
-      self._release[attribute] = value
+      return True
     else:
       error = 'Invalid input for ' + attribute + ': not a ' + check.__name__
       raise ValueError(error)
@@ -40,14 +44,25 @@ class Release(object):
       error = 'Invalid input for ' + attribute + ': not a list'
       raise ValueError(error)
 
+  def _validate_datetime(self, value, attribute):
+    """Helper function to validate date types and set attribute."""
+    if self._validate_type(int, value, attribute):
+      time = datetime.fromtimestamp(value)
+      if time >= datetime.fromtimestamp(0) and time <= datetime.now():
+        self._release[attribute] = time
+      else:
+        error = 'Invalid input for ' + attribute + ': not within datetime range'
+        raise ValueError(error)
+
   @property
   def name(self):
-    return self._release['name']
+    return str(self._release['name'])
 
   @name.setter
   def name(self, value):
     """Sets name as string value."""
-    self._validate(basestring, value, 'name')
+    if self._validate_type(basestring, value, 'name'):
+      self._release['name'] = value
 
   @property
   def tasks(self):
@@ -74,7 +89,7 @@ class Release(object):
   @started.setter
   def started(self, value):
     """Sets started as an int unix datetime."""
-    self._validate(int, value, 'started')
+    self._validate_datetime(value, 'started')
 
   @property
   def labels(self):
@@ -87,12 +102,25 @@ class Release(object):
 
   @property
   def state(self):
-    return self._release['state']
+    return int(self._release['state'])
 
   @state.setter
   def state(self, value):
-    """Sets state as int representation of state."""
-    self._validate(int, value, 'state')
+    """Sets state as State."""
+    if self._validate_type(int, value, 'state'):
+      if value == 0:
+        state = State.UNUSED_STATUS
+      elif value == 1:
+        state = State.PENDING
+      elif value == 2:
+        state = State.FINISHED
+      elif value == 3:
+        state = State.FAILED
+      elif value == 4:
+        state = State.ABANDONED
+      else:
+        raise ValueError('Invalid input for status')
+      self._release['state'] = state
 
   @property
   def last_modified(self):
@@ -101,16 +129,21 @@ class Release(object):
   @last_modified.setter
   def last_modified(self, value):
     """Sets last_modified as int unix datetime."""
-    self._validate(int, value, 'last_modified')
+    self._validate_datetime(value, 'last_modified')
 
   @property
   def last_active_task(self):
-    return self._release['last_active_task']
+    return str(self._release['last_active_task'])
 
   @last_active_task.setter
   def last_active_task(self, value):
     """Sets last_active_task as a string unique identifier for a task."""
-    self._validate(basestring, value, 'last_active_task')
+    if self._validate_type(basestring, value, 'last_active_task'):
+      self._release['last_active_task'] = value
 
-  def to_dict(self):
-    return self._release.copy()
+  def to_json(self):
+    returner = self._release.copy()
+    unix = datetime.fromtimestamp(0)
+    returner['started'] = (self.started - unix).total_seconds()
+    returner['last_modified'] = (self.last_modified - unix).total_seconds()
+    return returner

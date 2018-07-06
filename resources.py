@@ -34,7 +34,7 @@ def to_json(objects):
   """Turns list of objects (tasks or releases) to json."""
   output = []
   for item in objects:
-    output.append(item.to_dict())
+    output.append(item.to_json())
   return json.dumps(output)
 
 
@@ -86,7 +86,7 @@ class Release(Resource):
     parser.add_argument('release')
     args = parser.parse_args()
 
-    return json.dumps(adapter.get_release(str(args['release'])).to_dict())
+    return json.dumps(adapter.get_release(str(args['release'])).to_json())
 
 
 class Labels(Resource):

@@ -1,5 +1,6 @@
 """Unit Tests for Release."""
 
+from datetime import datetime
 import unittest
 from release import Release
 
@@ -20,10 +21,10 @@ class TestRelease(unittest.TestCase):
     self.assertEqual(release1.name, 'release-260')
     self.assertEqual(release1.tasks, [0, 2, 1, 2, 1])
     self.assertEqual(release1.links, ['https://youtu.be/dQw4w9WgXcQ'])
-    self.assertEqual(release1.started, 1158781609)
+    self.assertEqual(release1.started, datetime.fromtimestamp(1158781609))
     self.assertEqual(release1.labels, ['label0', 'label1'])
     self.assertEqual(release1.state, 4)
-    self.assertEqual(release1.last_modified, 341231047)
+    self.assertEqual(release1.last_modified, datetime.fromtimestamp(341231047))
     self.assertEqual(release1.last_active_task, 'task4_ID')
 
   def test_setters(self):
@@ -49,7 +50,7 @@ class TestRelease(unittest.TestCase):
       release2.links = [0, 1]
 
     release2.started = 0
-    self.assertEqual(release2.started, 0)
+    self.assertEqual(release2.started, datetime.fromtimestamp(0))
     with self.assertRaises(ValueError):
       release2.started = 'started'
 
@@ -66,7 +67,7 @@ class TestRelease(unittest.TestCase):
       release2.state = 'state'
 
     release2.last_modified = 0
-    self.assertEqual(release2.last_modified, 0)
+    self.assertEqual(release2.last_modified, datetime.fromtimestamp(0))
     with self.assertRaises(ValueError):
       release2.last_modified = 'last_modified'
 

@@ -1,6 +1,8 @@
 """Unit Tests for Task."""
 
+from datetime import datetime
 import unittest
+from state import State
 from task import Task
 
 
@@ -18,11 +20,11 @@ class TestTask(unittest.TestCase):
     })
 
     self.assertEqual(task.task_name, 'task-2')
-    self.assertEqual(task.status, 3)
+    self.assertEqual(task.status, State.FAILED)
     self.assertEqual(task.log_url, 'https://youtu.be/dQw4w9WgXcQ')
-    self.assertEqual(task.started, 47752289)
+    self.assertEqual(task.started, datetime.fromtimestamp(47752289))
     self.assertEqual(task.dependent_on, [])
-    self.assertEqual(task.last_modified, 637147117)
+    self.assertEqual(task.last_modified, datetime.fromtimestamp(637147117))
     self.assertEqual(task.error, 'error number 990')
 
   def test_setters(self):
@@ -34,7 +36,7 @@ class TestTask(unittest.TestCase):
       task.task_name = 0
 
     task.status = 0
-    self.assertEqual(task.status, 0)
+    self.assertEqual(task.status, State.UNUSED_STATUS)
     with self.assertRaises(ValueError):
       task.status = ['task1', 'task2']
 
@@ -44,7 +46,7 @@ class TestTask(unittest.TestCase):
       task.log_url = 0
 
     task.started = 0
-    self.assertEqual(task.started, 0)
+    self.assertEqual(task.started, datetime.fromtimestamp(0))
     with self.assertRaises(ValueError):
       task.started = 'started'
 
@@ -54,7 +56,7 @@ class TestTask(unittest.TestCase):
       task.add_dependency(0)
 
     task.last_modified = 0
-    self.assertEqual(task.last_modified, 0)
+    self.assertEqual(task.last_modified, datetime.fromtimestamp(0))
     with self.assertRaises(ValueError):
       task.last_modified = 'last_modified'
 
