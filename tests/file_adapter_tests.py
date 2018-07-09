@@ -1,7 +1,7 @@
 """Unit Tests for File Adapter."""
 
 import unittest
-from file_adapter import FileAdapter
+from ..data.file_adapter import FileAdapter
 
 
 class TestFileAdapter(unittest.TestCase):
