@@ -7,6 +7,7 @@ from filter_releases import filter_releases
 from filter_releases import sort
 from flask_restful import reqparse
 from flask_restful import Resource
+from airflow_adapter import AirflowAdapter
 
 
 adapter = FileAdapter()
@@ -117,13 +118,22 @@ class AirflowDBTesting(Resource):
   def get(self):
     parser = reqparse.RequestParser()
     parser.add_argument('cm')
+    parser.add_argument('start_date')
+    parser.add_argument('end_date')
+    parser.add_argument('datetype')
+    parser.add_argument('state')
+    parser.add_argument('label')
+    parser.add_argument('sort_method')
+    parser.add_argument('limit')
+    parser.add_argument('offset')
     args = parser.parse_args()
-    data = airflow_db.query(str(args['cm']))
-    print type(data)
+    # data = airflow_db.query(str(args['cm']))
+    # print type(data)
+    # print data
+    print ''
+    print AirflowAdapter().get_releases(args)
 
-    print airflow_db.query("SELECT execution_date FROM dag_run WHERE execution_date BETWEEN '" + str(datetime.datetime.fromtimestamp(0)) + "' AND '" + str(datetime.datetime.now()) + "';")
-
-    # return json.dumps(data)
+    #     return json.dumps(data)
 
 
 class RestAPI(object):

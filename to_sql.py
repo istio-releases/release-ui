@@ -26,12 +26,13 @@ def to_sql_releases(args):
   # append the date filter to the query based on:
   # datetype, start_date, and end_date
   if datetype == 0:
-    sql_query += ' WHERE execution_date BETWEEN"%d" AND "%i"' %(start_date, end_date)  # pylint: disable=line-too-long
+    sql_query += ' WHERE execution_date BETWEEN "' + str(start_date) + '" AND "'+ str(end_date) + '"'  # pylint: disable=line-too-long
   else:
-    sql_query += ' WHERE execution_date BETWEEN"%d" AND "%i"' %(start_date, end_date)  # pylint: disable=line-too-long
+    sql_query += ' WHERE execution_date BETWEEN "' + str(start_date) + '" AND "'+ str(end_date) + '"'  #pylint: disable=line-too-long
   # append a state filter, if there is one available -- '0' means all states
   if state != 0:
-    sql_query += ' AND state = %s' %(convert_state(state))
+    sql_query += ' AND state = "%s"' %(convert_state(state))
+    print convert_state(state)
   # add sorting parameter
   sql_query = add_sorting(sql_query, sort_method)
   # TODO(dommarques) - add label filtering, probably just the dag_id
@@ -62,8 +63,9 @@ def convert_state(state):
   Returns:
     state: string format which follows the same format in the SQl db (str)
   """
+  state = int(state)
   if state == 0:
-    return 'None'
+    return 'none'
   elif state == 1:
     return 'running'
   elif state == 2:
