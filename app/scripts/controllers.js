@@ -2,6 +2,7 @@
 
 /* Controllers */
 
+var site = window.location.origin;
 var app = angular.module('ReleaseUI.controllers', ['ngStorage']);
 
 app.controller('MainController', ['$scope','$http','$location','$log', '$sessionStorage',
@@ -21,7 +22,7 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
     var getLabels = function () {
       $http({
           method: 'GET',
-          url: 'http://localhost:8080/labels',
+          url: site + '/labels',
           cache: true
       }).then(function successCallback(response) {
           $scope.labels = angular.fromJson(response.data);
@@ -35,7 +36,7 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
       {"id":2, "status": "Finished"},
       {"id":3, "status": "Failed"},
       {"id":1, "status": "Pending"},
-      {"id":4, "status": "Suspended"},
+      {"id":4, "status": "Abandoned"},
     ];
 
     // Set default values for storage
@@ -107,7 +108,7 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
         $scope.$storage.currentPage = 1;
       }
 
-      var url_string = 'http://localhost:8080/releases?state=' + state +
+      var url_string = site + '/releases?state=' + state +
           '&label=' + $scope.$storage.labelValue + '&start_date=' + start +
           '&end_date=' + end + '&datetype=' + $scope.$storage.whichDate +
           '&sort_method='+ $scope.$storage.sortMethod + '&limit=' + $scope.numRequested +
@@ -228,7 +229,7 @@ app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$r
     // Request release details
     $http({
          method: 'GET',
-         url: 'http://localhost:8080/release?release=' + release_name,
+         url: site + '/release?release=' + release_name,
          cache: true
      }).then(function successCallback(response) {
          $scope.release = angular.fromJson(response.data);
@@ -239,7 +240,7 @@ app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$r
     // Request task details
     $http({
          method: 'GET',
-         url: 'http://localhost:8080/tasks?release=' + release_name,
+         url: site + '/tasks?release=' + release_name,
          cache: true
      }).then(function successCallback(response) {
           $scope.tasks = transform(response.data);
@@ -248,8 +249,13 @@ app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$r
      });
 }]);
 
-// Transforms json data to array
-var transform = function (input) {
+var transform =
+  /**
+  * Transforms json object to array
+  * @param {Object} input 
+  * @return {Array}
+  */
+  function (input) {
   input = angular.fromJson(input);
   var output = [];
 
