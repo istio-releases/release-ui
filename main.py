@@ -5,7 +5,7 @@ from file_adapter import FileAdapter
 from flask import Flask
 from flask import make_response
 from flask_restful import Api
-from resources.rest_api import RestAPI
+from resources.resources import Resources
 
 
 # creating the Flask application
