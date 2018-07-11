@@ -1,5 +1,4 @@
 import sys
-sys.path.insert(0, "/release-ui/data")
-
+sys.path.append("../")
 
 __all__ = ["file_adapter"]
