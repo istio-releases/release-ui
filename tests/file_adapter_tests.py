@@ -9,19 +9,19 @@ class TestFileAdapter(unittest.TestCase):
   def setUp(self):
     self.adapter = FileAdapter('mini_release_data.json', 'mini_task_data.json')
 
-  def test_get_releases(self):
+  def test_releases(self):
     releases = self.adapter.get_releases()
     length = 0
-    for _, value in releases.iteritems():
-      self.assertEqual(len(value), 10)
+    for key, value in releases.iteritems():
+      self.assertEqual(value, self.adapter.get_release(key))
       length += 1
     self.assertEqual(length, 5)
 
-  def test_get_tasks(self):
+  def test_tasks(self):
     tasks = self.adapter.get_tasks()
     length = 0
-    for _, value in tasks.iteritems():
-      self.assertEqual(len(value), 7)
+    for key, value in tasks.iteritems():
+      self.assertEqual(value, self.adapter.get_task(key))
       length += 1
     self.assertEqual(length, 3)
 
