@@ -2,16 +2,6 @@
 from datetime import datetime
 
 
-NAME_DECR = 1
-NAME_INCR = 2
-CREATION_DECR = 3
-CREATION_INCR = 4
-LAST_MOD_DECR = 5
-LAST_MOD_INCR = 6
-LAST_ACTIVE_DECR = 7
-LAST_ACTIVE_INCR = 8
-
-
 def filter_releases(releases, state, label, start_date, end_date, datetype):
   """Filters by all of the criteria.
 
@@ -58,39 +48,39 @@ def filter_releases(releases, state, label, start_date, end_date, datetype):
       if release.state == state or state == 0:
         if label:
           if label in release.labels:
-              filtered.append(release)
+            filtered.append(release)
         else:
           filtered.append(release)
 
   return filtered
 
 
-def sort(releases, sort_method):
+class Sorting(object):
+  BY_NAME = 1
+  BY_CREATION = 2
+  BY_LAST_MODIFIED = 3
+  BY_LAST_ACTIVE = 4
+
+
+def sort(releases, sort_method, descending):
   """Sorts 'releases' according to 'sort_method'.
 
   Args:
     releases: array of release objects
-    sort_method: int representation of a sort sort_method
+    sort_method: int representation of a sort_method
+    descending: int representing bool descending
 
   Returns:
     Array 'releases' in a sorted order.
   """
-
   sort_method = int(sort_method)
-  if sort_method == NAME_DECR:
-    result = sorted(releases, key=lambda k: k.name, reverse=True)
-  elif sort_method == NAME_INCR:
-    result = sorted(releases, key=lambda k: k.name)
-  elif sort_method == CREATION_DECR:
-    result = sorted(releases, key=lambda k: k.started, reverse=True)
-  elif sort_method == CREATION_INCR:
-    result = sorted(releases, key=lambda k: k.started)
-  elif sort_method == LAST_MOD_DECR:
-    result = sorted(releases, key=lambda k: k.last_modified, reverse=True)
-  elif sort_method == LAST_MOD_INCR:
-    result = sorted(releases, key=lambda k: k.last_modified)
-  elif sort_method == LAST_ACTIVE_DECR:
-    result = sorted(releases, key=lambda k: k.last_active_task, reverse=True)
-  elif sort_method == LAST_ACTIVE_INCR:
-    result = sorted(releases, key=lambda k: k.last_active_task)
+  descending = bool(int(descending))
+  if sort_method == Sorting.BY_NAME:
+    result = sorted(releases, key=lambda k: k.name, reverse=descending)
+  elif sort_method == Sorting.BY_CREATION:
+    result = sorted(releases, key=lambda k: k.started, reverse=descending)
+  elif sort_method == Sorting.BY_LAST_MODIFIED:
+    result = sorted(releases, key=lambda k: k.last_modified, reverse=descending)
+  elif sort_method == Sorting.BY_LAST_ACTIVE:
+    result = sorted(releases, key=lambda k: k.last_active_task, reverse=descending)
   return result

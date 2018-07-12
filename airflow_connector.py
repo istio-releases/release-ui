@@ -1,35 +1,17 @@
 """Connects to the Cloud SQL database."""
-import os
-import MySQLdb
 
 
 class AirflowDB(object):
   """"Provides the methods which allow interaction with the Airflow SQL database."""  # pylint: disable=line-too-long
 
-  def __init__(self, CLOUDSQL_CONNECTION_NAME, CLOUDSQL_USER, CLOUDSQL_PASSWORD, CLOUDSQL_HOST, CLOUDSQL_DB):
+  def __init__(self, db_connection):
     """Connects to the Cloud SQL database."""
-    # When deployed to App Engine, the `SERVER_SOFTWARE` environment variable
-    # will be set to 'Google App Engine/version'.
-    if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
-      # Connect using the unix socket located at
-      # /cloudsql/cloudsql-connection-name.
-      cloudsql_unix_socket = os.path.join(
-          '/cloudsql', CLOUDSQL_CONNECTION_NAME)
+    # If I try to put this in main.py, then I get a circular import error when
+    # I try to import the connection/AiflowDB object into resources.py
+    # I could put it somewhere else, but for now it's here. It also seems that
+    # App Engine simply let me delete the env vars and everything is working finished
 
-      db = MySQLdb.connect(
-          unix_socket=cloudsql_unix_socket,
-          user=CLOUDSQL_USER,
-          passwd=CLOUDSQL_PASSWORD,
-          db=CLOUDSQL_DB)
-
-    else:
-      db = MySQLdb.connect(
-          host=CLOUDSQL_HOST,
-          user=CLOUDSQL_USER,
-          passwd=CLOUDSQL_PASSWORD,
-          db=CLOUDSQL_DB)
-
-    self.db = db
+    self._db = db_connection
 
   def query(self, request):
     """Sends an SQL query to the airflow database.
@@ -41,7 +23,8 @@ class AirflowDB(object):
         The database result (tuple)
     """
     # db = connect_to_cloudsql()
-    cursor = self.db.cursor()
+    print request
+    cursor = self._db.cursor()
     cursor.execute(request)
     response = cursor.fetchall()
     cursor.close()
@@ -49,7 +32,7 @@ class AirflowDB(object):
     return response
 
 # TODO(dommarques):
-#   - get the data into something usable (currently a tuple, possibly shunt to adapter portion)
+#   - get the data into something usable (currently a tuple, possibly shunt to adapter portion)  pylint: disable=line-too-long
 #   - implement the Adapter
 #   - make the connection secure
 #   - switch to production airflow server

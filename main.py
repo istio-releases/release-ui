@@ -1,5 +1,4 @@
 """UI Server, Connects all Components."""
-
 from flask import Flask
 from flask import make_response
 from flask_restful import Api
@@ -21,6 +20,7 @@ API.add_resource(REST.airflowdb, '/airflowdb')
 
 if __name__ == '__main__':
   APP.run(port='8080', debug=True)
+
 
 # route to the first page
 @APP.route('/')
