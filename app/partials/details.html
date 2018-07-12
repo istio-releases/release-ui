@@ -46,8 +46,8 @@
     <th>
       Links:
     </th>
-    <td ng-repeat="link in release.links">
-      <a href="{{link.url}}" target="_blank">{{ link.name }}</a>
+    <td ng-repeat="link in release.links track by $index">
+      <a href="{{link}}" target="_blank">Link {{$index}}</a>
     </td>
   </table>
 
