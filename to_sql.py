@@ -2,23 +2,23 @@
 import datetime
 
 
-def to_sql_releases(args):
+def to_sql_releases(start_date, end_date, datetype, state,
+                    sort_method, descending):
   """Converts a set of parameters contained in 'args' to a SQL query.
 
   Gets the releases(AKA dag runs) which fit the parameters.
 
   Args:
-    args: a dict of values which contains all of the required filter params
+    start_date: unix timestamp format
+    end_date: unix timestamp format
+    datetype: what to filter by - created or last last_modified
+    state: state enumeration
+    sort_method: sort method enumeration
+    descending: boolean
 
   Returns:
     sql_query: a string which is dynamically constructed using all of the params
   """
-  start_date = int(args['start_date'])
-  end_date = int(args['end_date'])
-  datetype = str(args['datetype'])
-  state = str(int(args['state']))
-  # label = str(args['label'])
-  sort_method = int(args['sort_method'])
   sql_query = 'SELECT * FROM dag_run'
   # convert start and end date from unix to python datetime
   start_date = datetime.datetime.fromtimestamp(start_date)
@@ -28,13 +28,13 @@ def to_sql_releases(args):
   if datetype == 0:
     sql_query += ' WHERE execution_date BETWEEN "' + str(start_date) + '" AND "'+ str(end_date) + '"'  # pylint: disable=line-too-long
   else:
-    sql_query += ' WHERE execution_date BETWEEN "' + str(start_date) + '" AND "'+ str(end_date) + '"'  #pylint: disable=line-too-long
+    sql_query += ' WHERE execution_date BETWEEN "' + str(start_date) + '" AND "'+ str(end_date) + '"'  # pylint: disable=line-too-long
   # append a state filter, if there is one available -- '0' means all states
   if state != 0:
     sql_query += ' AND state = "%s"' %(convert_state(state))
     print convert_state(state)
   # add sorting parameter
-  sql_query = add_sorting(sql_query, sort_method)
+  sql_query = add_sorting(sql_query, sort_method, descending)
   # TODO(dommarques) - add label filtering, probably just the dag_id
   sql_query += ';'   # put the finishing touch on it
   return sql_query
@@ -48,8 +48,18 @@ def to_sql_release(release_id):
 
 
 def to_sql_tasks(execution_date):
-  sql_query = 'SELECT * FROM task_insance'
-  sql_query = ' WHERE execution_date = ' + execution_date
+  sql_query = 'SELECT * FROM task_instance'
+  sql_query += ' WHERE execution_date = "' + str(datetime.datetime.fromtimestamp(execution_date)) + '"'
+  sql_query += ' ORDER BY execution_date'
+  sql_query += ';'   # put the finishing touch on it
+  return sql_query
+
+
+def to_sql_task(task_name, execution_date):
+  sql_query = 'SELECT * FROM task_instance'
+  sql_query += ' WHERE execution_date = ' + datetime.datetime.fromtimestamp(execution_date)
+  sql_query += ' AND task_id = ' + task_name
+  sql_query += ' ORDER BY execution_date'
   sql_query += ';'   # put the finishing touch on it
   return sql_query
 
@@ -76,23 +86,26 @@ def convert_state(state):
     return 'shutdown'
 
 
-def add_sorting(sql_query, sort_method):
+def add_sorting(sql_query, sort_method, descending):
   """Adds sorting parameter to SQL query.
 
   Args:
     sql_query: the query so far, which will have sorting appended to end (str)
     sort_method: the sort method (int).
+    descending: boolean
 
   Returns:
     sql_query: now with sorting! (str)
   """
   if sort_method == 1:
-    sql_query += 'ORDER BY run_id ASC'
+    sql_query += ' ORDER BY run_id'
   elif sort_method == 2:
-    sql_query += 'ORDER BY run_id DESC'
-  elif sort_method == 3:
-    sql_query += 'ORDER BY execution_date DESC'
-  elif sort_method == 4:
-    sql_query += 'ORDER BY execution_date ASC'
+    sql_query += ' ORDER BY execution_date'
+  elif sort_method > 2:
+    return sql_query
+  if descending:
+    sql_query += ' DESC'
+  else:
+    sql_query += ' ASC'
   # TODO(dommarques) - finish adding sort methods 5,6,7,8
   return sql_query

@@ -6,30 +6,10 @@ import MySQLdb
 class AirflowDB(object):
   """"Provides the methods which allow interaction with the Airflow SQL database."""  # pylint: disable=line-too-long
 
-  def __init__(self, CLOUDSQL_CONNECTION_NAME, CLOUDSQL_USER, CLOUDSQL_PASSWORD, CLOUDSQL_HOST, CLOUDSQL_DB):
+  def __init__(self, db_connection):
     """Connects to the Cloud SQL database."""
-    # When deployed to App Engine, the `SERVER_SOFTWARE` environment variable
-    # will be set to 'Google App Engine/version'.
-    if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
-      # Connect using the unix socket located at
-      # /cloudsql/cloudsql-connection-name.
-      cloudsql_unix_socket = os.path.join(
-          '/cloudsql', CLOUDSQL_CONNECTION_NAME)
 
-      db = MySQLdb.connect(
-          unix_socket=cloudsql_unix_socket,
-          user=CLOUDSQL_USER,
-          passwd=CLOUDSQL_PASSWORD,
-          db=CLOUDSQL_DB)
-
-    else:
-      db = MySQLdb.connect(
-          host=CLOUDSQL_HOST,
-          user=CLOUDSQL_USER,
-          passwd=CLOUDSQL_PASSWORD,
-          db=CLOUDSQL_DB)
-
-    self.db = db
+    self._db = db_connection
 
   def query(self, request):
     """Sends an SQL query to the airflow database.
@@ -42,7 +22,7 @@ class AirflowDB(object):
     """
     # db = connect_to_cloudsql()
     print request
-    cursor = self.db.cursor()
+    cursor = self._db.cursor()
     cursor.execute(request)
     response = cursor.fetchall()
     cursor.close()

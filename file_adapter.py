@@ -32,7 +32,7 @@ class FileAdapter(Adapter):
         labels.add(label)
     self._labels = list(labels)
 
-  def get_releases(self):
+  def get_all_releases(self):
     return self._releases
 
   def get_release(self, release_name):
