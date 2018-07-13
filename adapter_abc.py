@@ -45,10 +45,19 @@ class Adapter(object):
     pass
 
   @abc.abstractmethod
-  def get_labels(self):
-    """Retrieve all possible labels for UI.
+  def get_branches(self):
+    """Retrieve all possible branches for UI.
 
     Returns:
-      Array of labels as strings.
+      Array of branches as strings.
+    """
+    pass
+
+  @abc.abstractmethod
+  def get_types(self):
+    """Retrieve all possible types for UI.
+
+    Returns:
+      Array of types as strings.
     """
     pass
