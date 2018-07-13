@@ -8,29 +8,34 @@ var app = angular.module('ReleaseUI.controllers', ['ngStorage']);
 app.controller('MainController', ['$scope','$http','$location','$log', '$sessionStorage',
   function($scope, $http, $location, $log, $sessionStorage) {
 
-    //authentication
-    //$scope.githubSignIn = function () {
-    //  authService.login();
-    //};
-    //$scope.githubSignOut = function () {
-
-    //};
-
     // Set static variables
     $scope.numPerPage = 15;
     $scope.numRequested = 45;
-    var getLabels = function () {
+    var getBranches = function () {
       $http({
           method: 'GET',
-          url: site + '/labels',
+          url: site + '/branches',
           cache: true
       }).then(function successCallback(response) {
-          $scope.labels = angular.fromJson(response.data);
+          $scope.branches = angular.fromJson(response.data);
       }, function errorCallback(response) {
           $log.log(response);
       });
     };
-    getLabels();
+    getBranches();
+
+    var getTypes = function () {
+      $http({
+          method: 'GET',
+          url: site + '/types',
+          cache: true
+      }).then(function successCallback(response) {
+          $scope.types = angular.fromJson(response.data);
+      }, function errorCallback(response) {
+          $log.log(response);
+      });
+    };
+    getTypes();
 
     $scope.stateValues = [
       {"id":2, "status": "Finished"},
@@ -51,7 +56,8 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
       startDate: null,
       endDate: null,
       whichDate: 'started',
-      labelValue: null,
+      branchValue: null,
+      typeValue: null,
       sortMethod: 3,
       releases: []
     };
@@ -74,7 +80,8 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
       }
 
       $scope.selectedValue = $scope.$storage.stateValue;
-      $scope.selectedLabel = $scope.$storage.labelValue;
+      $scope.selectedBranch = $scope.$storage.branchValue;
+      $scope.selectedType = $scope.$storage.typeValue;
     };
 
     // Set Scope when loading page
@@ -109,7 +116,8 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
       }
 
       var url_string = site + '/releases?state=' + state +
-          '&label=' + $scope.$storage.labelValue + '&start_date=' + start +
+          '&branch=' + $scope.$storage.branchValue +
+          '&type=' + $scope.$storage.typeValue + '&start_date=' + start +
           '&end_date=' + end + '&datetype=' + $scope.$storage.whichDate +
           '&sort_method='+ $scope.$storage.sortMethod + '&limit=' + $scope.numRequested +
           '&offset=' + offset;
@@ -163,14 +171,18 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
       getReleases('onDateTypeChange');
     };
 
-    $scope.filterChange = function (status, input) {
-      if (status) {
+    $scope.filterChange = function (type, input) {
+      if (type == 0) {
         $scope.$storage.stateValue = input;
         $scope.$storage.selectedValue = input;
       }
+      else if (type == 1) {
+        $scope.$storage.branchValue = input;
+        $scope.$storage.selectedBranch = input;
+      }
       else {
-        $scope.$storage.labelValue = input;
-        $scope.$storage.selectedLabel = input;
+        $scope.$storage.typeValue = input;
+        $scope.$storage.selectedType = input;
       }
       setScope();
       getReleases('onFilterChange');
@@ -207,7 +219,8 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
 
       // Reset dropdowns in UI
       $scope.defaultStatus = true;
-      $scope.defaultLabel = true;
+      $scope.defaultBranch = true;
+      $scope.defaultType = true;
       $scope.startDate = null;
       $scope.endDate = null;
 
@@ -252,7 +265,7 @@ app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$r
 var transform =
   /**
   * Transforms json object to array
-  * @param {Object} input 
+  * @param {Object} input
   * @return {Array}
   */
   function (input) {

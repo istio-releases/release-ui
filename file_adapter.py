@@ -26,11 +26,15 @@ class FileAdapter(Adapter):
       task = Task(tasks_dict[key])
       self._tasks[key] = task
 
-    labels = set()
+    branches = set()
     for release in self._releases:
-      for label in self._releases[release].labels:
-        labels.add(label)
-    self._labels = list(labels)
+      branches.add(self._releases[release].branch)
+    self._branches = list(branches)
+
+    types = set()
+    for release in self._releases:
+      types.add(self._releases[release].type)
+    self._types = list(types)
 
   def get_all_releases(self):
     return self._releases
@@ -44,5 +48,8 @@ class FileAdapter(Adapter):
   def get_task(self, task_name):
     return self._tasks[task_name]
 
-  def get_labels(self):
-    return self._labels
+  def get_branches(self):
+    return self._branches
+
+  def get_types(self):
+    return self._types

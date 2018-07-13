@@ -62,9 +62,9 @@ html
     color: white;
 }
 
-.btn-sm
+.btn
 {
-    margin: 2px;
+    margin-left: 1px;
 }
 
 .btn-danger
