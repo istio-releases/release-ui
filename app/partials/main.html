@@ -42,18 +42,29 @@
       <th>
         <div>
           <select class="form-control dropdown" ng-model="selectedValue"
-            ng-change="filterChange(true,selectedValue)"
+            ng-change="filterChange(0,selectedValue)"
             ng-options="state.id as state.status for state in stateValues">
             <option ng-selected="defaultStatus" value="">Status</option>
           </select>
         </div>
       </th>
       <th>
-        <button class="btn table-header" type="button" ng-click="sortChange(1)">
-          Name
-          <span ng-show="$storage.sortMethod == 1" class="caret">&#9660;</span>
-          <span ng-show="$storage.sortMethod == 2" class="caret">&#9650;</span>
-        </button>
+        <div>
+          <select class="form-control dropdown" ng-model="selectedBranch"
+            ng-change="filterChange(1,selectedBranch)"
+            ng-options="branch as branch for branch in branches">
+            <option ng-selected="defaultBranch" value="">Branch</option>
+          </select>
+        </div>
+      </th>
+      <th>
+        <div>
+          <select class="form-control dropdown" ng-model="selectedType"
+            ng-change="filterChange(2,selectedType)"
+            ng-options="type as type for type in types">
+            <option ng-selected="defaultType" value="">Type</option>
+          </select>
+        </div>
       </th>
       <th>
         <button class="btn table-header" type="button" ng-click="sortChange(3)">
@@ -76,15 +87,6 @@
           <span ng-show="$storage.sortMethod == 8" class="caret">&#9650;</span>
         </button>
       </th>
-      <th>
-        <div>
-          <select class="form-control dropdown" ng-model="selectedLabel"
-            ng-options="label as label for label in labels"
-            ng-change="filterChange(false,selectedLabel)">
-            <option ng-selected="defaultLabel" value="">All Tags</option>
-          </select>
-        </div>
-      </th>
     </thead>
     <tbody id="dashboard">
       <tr ng-repeat="release in $storage.releases | limitTo:numPerPage:numPerPage*($storage.currentPage-1)"
@@ -96,7 +98,14 @@
           <img ng-if="release.state == 4" src="/app/assets/images/suspended.png">
         </td>
         <td>
-          {{release.name}}
+          <button type="button" class="btn btn-secondary">
+            {{release.branch}}
+          </button>
+        </td>
+        <td>
+          <button type="button" class="btn btn-secondary">
+            {{release.type}}
+          </button>
         </td>
         <td>
           {{release.started * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
@@ -106,11 +115,6 @@
         </td>
         <td>
           {{release.last_active_task}}
-        </td>
-        <td>
-          <button ng-repeat="tag in release.labels "type="button" class="btn btn-secondary btn-sm">
-            {{tag}}
-          </button>
         </td>
       </tr>
     </tbody>
