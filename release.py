@@ -19,10 +19,11 @@ class Release(object):
       self.tasks = data['tasks']
       self.links = data['links']
       self.started = data['started']
-      self.labels = data['labels']
       self.state = data['state']
       self.last_active_task = data['last_active_task']
       self.last_modified = data['last_modified']
+      self.branch = data['branch']
+      self.type = data['type']
 
   def _validate_type(self, check, value, attribute):
     """Helper function to validate setter values and set attributes."""
@@ -140,6 +141,26 @@ class Release(object):
     """Sets last_active_task as a string unique identifier for a task."""
     if self._validate_type(basestring, value, 'last_active_task'):
       self._release['last_active_task'] = value
+
+  @property
+  def branch(self):
+    return str(self._release['branch'])
+
+  @branch.setter
+  def branch(self, value):
+    """Sets branch as a string branch name."""
+    if self._validate_type(basestring, value, 'branch'):
+      self._release['branch'] = value
+
+  @property
+  def type(self):
+    return str(self._release['type'])
+
+  @type.setter
+  def type(self, value):
+    """Sets type as a string type name."""
+    if self._validate_type(basestring, value, 'type'):
+      self._release['type'] = value
 
   def to_json(self):
     returner = self._release.copy()

@@ -15,7 +15,8 @@ REST = Resources()
 # adding resource endpoints to different urls
 API.add_resource(REST.releases, '/releases')
 API.add_resource(REST.release, '/release')
-API.add_resource(REST.labels, '/labels')
+API.add_resource(REST.branches, '/branches')
+API.add_resource(REST.types, '/types')
 API.add_resource(REST.tasks, '/tasks')
 API.add_resource(REST.airflowdb, '/airflowdb')
 

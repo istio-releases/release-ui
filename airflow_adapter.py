@@ -57,3 +57,19 @@ class AirflowAdapter(Adapter):
       Array of labels as strings.
     """
     pass
+
+  def get_branches(self):
+    """Retrieve all possible branches for UI.
+
+    Returns:
+      Array of branches as strings.
+    """
+    pass
+
+  def get_types(self):
+    """Retrieve all possible types for UI.
+
+    Returns:
+      Array of types as strings.
+    """
+    pass
