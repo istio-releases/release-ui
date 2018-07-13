@@ -22,7 +22,7 @@ class AirflowAdapter(Adapter):
     return task_objects
 
   def get_releases(self, start_date, end_date, datetype, state,
-                   label, sort_method, descending):
+                   branch, type, sort_method, descending):
     # build the SQL query
     release_query = to_sql_releases(start_date=start_date,
                                     end_date=end_date,
