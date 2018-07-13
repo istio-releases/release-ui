@@ -1,22 +1,15 @@
 """Helper Functions to be used for sorting and filtering."""
 from datetime import datetime
 
-CREATION_DECR = 3
-CREATION_INCR = 4
-LAST_MOD_DECR = 5
-LAST_MOD_INCR = 6
-LAST_ACTIVE_DECR = 7
-LAST_ACTIVE_INCR = 8
 
-
-def filter_releases(releases, state, branch, type, start_date, end_date, datetype):
+def filter_releases(releases, state, branch, release_type, start_date, end_date, datetype):
   """Filters by all of the criteria.
 
   Args:
     releases: dictionary of release objects
     state: int representation of a state
     branch: string branch
-    type: string type
+    release_type: string release_type
     start_date: unix datetime of the beginning of a time period
     end_date: unix datetime of the end of a time period
     datetype: string determing which date (creation or last_modified) is
@@ -44,9 +37,9 @@ def filter_releases(releases, state, branch, type, start_date, end_date, datetyp
   if branch == 'null':
     branch = None
 
-  type = str(type)
-  if type == 'null':
-    type = None
+  release_type = str(release_type)
+  if release_type == 'null':
+    release_type = None
 
   filtered = []
   for release in releases.values():
@@ -62,36 +55,40 @@ def filter_releases(releases, state, branch, type, start_date, end_date, datetyp
         should_append = True
       if branch and should_append:
         should_append = (release.branch == branch)
-      if type and should_append:
-        should_append = (release.type == type)
+      if release_type and should_append:
+        should_append = (release.release_type == release_type)
       if should_append:
         filtered.append(release)
 
   return filtered
 
 
-def sort(releases, sort_method):
+class Sorting(object):
+  BY_NAME = 1
+  BY_CREATION = 2
+  BY_LAST_MODIFIED = 3
+  BY_LAST_ACTIVE = 4
+
+
+def sort(releases, sort_method, reverse):
   """Sorts 'releases' according to 'sort_method'.
 
   Args:
     releases: array of release objects
-    sort_method: int representation of a sort sort_method
+    sort_method: int representation of a sort_method
+    reverse: int representing bool descending
 
   Returns:
     Array 'releases' in a sorted order.
   """
-
   sort_method = int(sort_method)
-  if sort_method == CREATION_DECR:
-    result = sorted(releases, key=lambda k: k.started, reverse=True)
-  elif sort_method == CREATION_INCR:
-    result = sorted(releases, key=lambda k: k.started)
-  elif sort_method == LAST_MOD_DECR:
-    result = sorted(releases, key=lambda k: k.last_modified, reverse=True)
-  elif sort_method == LAST_MOD_INCR:
-    result = sorted(releases, key=lambda k: k.last_modified)
-  elif sort_method == LAST_ACTIVE_DECR:
-    result = sorted(releases, key=lambda k: k.last_active_task, reverse=True)
-  elif sort_method == LAST_ACTIVE_INCR:
-    result = sorted(releases, key=lambda k: k.last_active_task)
+  reverse = bool(int(reverse))
+  if sort_method == Sorting.BY_NAME:
+    result = sorted(releases, key=lambda k: k.name, reverse=reverse)
+  elif sort_method == Sorting.BY_CREATION:
+    result = sorted(releases, key=lambda k: k.started, reverse=reverse)
+  elif sort_method == Sorting.BY_LAST_MODIFIED:
+    result = sorted(releases, key=lambda k: k.last_modified, reverse=reverse)
+  elif sort_method == Sorting.BY_LAST_ACTIVE:
+    result = sorted(releases, key=lambda k: k.last_active_task, reverse=reverse)
   return result

@@ -117,7 +117,7 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
 
       var url_string = site + '/releases?state=' + state +
           '&branch=' + $scope.$storage.branchValue +
-          '&type=' + $scope.$storage.typeValue + '&start_date=' + start +
+          '&release_type=' + $scope.$storage.typeValue + '&start_date=' + start +
           '&end_date=' + end + '&datetype=' + $scope.$storage.whichDate +
           '&sort_method='+ $scope.$storage.sortMethod + '&limit=' + $scope.numRequested +
           '&offset=' + offset;
@@ -171,12 +171,12 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
       getReleases('onDateTypeChange');
     };
 
-    $scope.filterChange = function (type, input) {
-      if (type == 0) {
+    $scope.filterChange = function (release_type, input) {
+      if (release_type == 0) {
         $scope.$storage.stateValue = input;
         $scope.$storage.selectedValue = input;
       }
-      else if (type == 1) {
+      else if (release_type == 1) {
         $scope.$storage.branchValue = input;
         $scope.$storage.selectedBranch = input;
       }

@@ -3,7 +3,6 @@ from release import Release
 from task import Task
 from to_sql import to_sql_tasks
 from to_timestamp import to_timestamp
-from datetime import datetime
 
 
 def read_releases(release_data, airflow_db):
@@ -16,7 +15,7 @@ def read_releases(release_data, airflow_db):
   Returns:
     release_objects
   """
-  release_objects = []
+  release_objects = {}
   for item in release_data:  # iterate through each release in release_data
     release = Release()  # initialize the release object
     started = to_timestamp(item[2])
@@ -27,12 +26,13 @@ def read_releases(release_data, airflow_db):
     release.links = ['https://youtu.be/dQw4w9WgXcQ']  # TODO(dommarques) these need to be implemented into airflow first pylint: disable=line-too-long
     release.labels = [item[1]]
     release.state = state
+    release.branch, release.release_type = parse_dag_id(item[1])
     if most_recent_task:
       release.last_modified = to_timestamp(most_recent_task.last_modified)
       release.last_active_task = most_recent_task.task_name
     else:
       release.last_modified = to_timestamp(item[2])
-    release_objects.append(release)
+    release_objects[release.name] = release
 
   return release_objects
 
@@ -112,6 +112,14 @@ def from_sql_tasks(task_data):
 
 
 def state_from_string(state):
+  """Transforms the state from a string format to an enumerated version.
+
+  Args:
+    state: string
+
+  Returns:
+    int
+  """
   if state == 'none':
     return 0
   elif state == 'running':
@@ -124,6 +132,30 @@ def state_from_string(state):
     return 4
   elif state == 'upstream_failed':  # here for the tasks
     return 1
+
+
+def parse_dag_id(dag_id):
+  """Parses the dag_id for the release branch and type.
+
+  Args:
+    dag_id: string
+
+  Returns:
+    branch: string
+    release_type: string
+  """
+  underscore_count = 0
+  last_underscore = False
+  for i, char in enumerate(dag_id):
+    if char == '_':
+      underscore_count += 1
+    if underscore_count == 1 and not last_underscore:
+      last_underscore = i
+    elif underscore_count == 2:
+      last_underscore += 1
+      release_type = dag_id[last_underscore:i]
+      branch = dag_id[i+1:len(dag_id)]
+      return branch, release_type
 
 
 # TODO(dommarques): The data adapter should be able to:

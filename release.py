@@ -23,7 +23,7 @@ class Release(object):
       self.last_active_task = data['last_active_task']
       self.last_modified = data['last_modified']
       self.branch = data['branch']
-      self.type = data['type']
+      self.release_type = data['release_type']
 
   def _validate_type(self, check, value, attribute):
     """Helper function to validate setter values and set attributes."""
@@ -153,14 +153,14 @@ class Release(object):
       self._release['branch'] = value
 
   @property
-  def type(self):
-    return str(self._release['type'])
+  def release_type(self):
+    return str(self._release['release_type'])
 
-  @type.setter
-  def type(self, value):
-    """Sets type as a string type name."""
-    if self._validate_type(basestring, value, 'type'):
-      self._release['type'] = value
+  @release_type.setter
+  def release_type(self, value):
+    """Sets release_type as a string release_type name."""
+    if self._validate_type(basestring, value, 'release_type'):
+      self._release['release_type'] = value
 
   def to_json(self):
     returner = self._release.copy()

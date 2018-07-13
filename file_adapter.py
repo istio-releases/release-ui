@@ -33,7 +33,7 @@ class FileAdapter(Adapter):
 
     types = set()
     for release in self._releases:
-      types.add(self._releases[release].type)
+      types.add(self._releases[release].release_type)
     self._types = list(types)
 
   def get_all_releases(self):

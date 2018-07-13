@@ -1,5 +1,7 @@
 """The Airflow Adapter."""
 from adapter_abc import Adapter
+from filter_releases import filter_releases
+from filter_releases import sort
 from from_sql import read_releases
 from from_sql import read_tasks
 from to_sql import to_sql_release
@@ -14,6 +16,19 @@ class AirflowAdapter(Adapter):
   def __init__(self, airflow_db):
     self._airflow_db = airflow_db
 
+    self._releases = self._airflow_db.query('SELECT * FROM dag_run;')
+    self._releases = read_releases(self._releases, self._airflow_db)
+
+    branches = set()
+    for release in self._releases:
+      branches.add(self._releases[release].branch)
+    self._branches = list(branches)
+
+    types = set()
+    for release in self._releases:
+      types.add(self._releases[release].release_type)
+    self._types = list(types)
+
   def get_tasks(self, execution_date):
     task_query = to_sql_tasks(execution_date)
     task_data = self._airflow_db.query(task_query)
@@ -22,7 +37,7 @@ class AirflowAdapter(Adapter):
     return task_objects
 
   def get_releases(self, start_date, end_date, datetype, state,
-                   label, sort_method, descending):
+                   branch, release_type, sort_method, descending):
     # build the SQL query
     release_query = to_sql_releases(start_date=start_date,
                                     end_date=end_date,
@@ -33,6 +48,16 @@ class AirflowAdapter(Adapter):
 
     release_data = self._airflow_db.query(release_query)
     releases_data = read_releases(release_data, self._airflow_db)
+    releases_data = filter_releases(releases=releases_data,
+                                    state=state,
+                                    branch=branch,
+                                    release_type=release_type,
+                                    start_date=start_date,
+                                    end_date=end_date,
+                                    datetype=datetype)
+    releases_data = sort(releases=releases_data,
+                         sort_method=sort_method,
+                         reverse=descending)
 
     return releases_data
 
@@ -64,7 +89,7 @@ class AirflowAdapter(Adapter):
     Returns:
       Array of branches as strings.
     """
-    pass
+    return self._branches
 
   def get_types(self):
     """Retrieve all possible types for UI.
@@ -72,4 +97,4 @@ class AirflowAdapter(Adapter):
     Returns:
       Array of types as strings.
     """
-    pass
+    return self._types
