@@ -62,25 +62,25 @@ class Sorting(object):
   BY_LAST_ACTIVE = 4
 
 
-def sort(releases, sort_method, descending):
+def sort(releases, sort_method, reverse):
   """Sorts 'releases' according to 'sort_method'.
 
   Args:
     releases: array of release objects
     sort_method: int representation of a sort_method
-    descending: int representing bool descending
+    reverse: int representing bool descending
 
   Returns:
     Array 'releases' in a sorted order.
   """
   sort_method = int(sort_method)
-  descending = bool(int(descending))
+  reverse = bool(int(reverse))
   if sort_method == Sorting.BY_NAME:
-    result = sorted(releases, key=lambda k: k.name, reverse=descending)
+    result = sorted(releases, key=lambda k: k.name, reverse=reverse)
   elif sort_method == Sorting.BY_CREATION:
-    result = sorted(releases, key=lambda k: k.started, reverse=descending)
+    result = sorted(releases, key=lambda k: k.started, reverse=reverse)
   elif sort_method == Sorting.BY_LAST_MODIFIED:
-    result = sorted(releases, key=lambda k: k.last_modified, reverse=descending)
+    result = sorted(releases, key=lambda k: k.last_modified, reverse=reverse)
   elif sort_method == Sorting.BY_LAST_ACTIVE:
-    result = sorted(releases, key=lambda k: k.last_active_task, reverse=descending)
+    result = sorted(releases, key=lambda k: k.last_active_task, reverse=reverse)
   return result

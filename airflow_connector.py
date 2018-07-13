@@ -22,8 +22,6 @@ class AirflowDB(object):
     Returns:
         The database result (tuple)
     """
-    # db = connect_to_cloudsql()
-    print request
     cursor = self._db.cursor()
     cursor.execute(request)
     response = cursor.fetchall()

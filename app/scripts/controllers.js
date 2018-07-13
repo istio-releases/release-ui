@@ -107,7 +107,8 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
         offset = 0;
         $scope.$storage.currentPage = 1;
       }
-      // put the sorting into an enum and bool based format
+      // put the sorting into an enum and bool based format, as opposed to a
+      // stricly enum format
       var sortMethodDescending;
       if (($scope.$storage.sortMethod % 2) == 1) {
         sortMethodDescending = 1;

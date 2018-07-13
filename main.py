@@ -16,7 +16,7 @@ API.add_resource(REST.releases, '/releases')
 API.add_resource(REST.release, '/release')
 API.add_resource(REST.labels, '/labels')
 API.add_resource(REST.tasks, '/tasks')
-API.add_resource(REST.airflowdb, '/airflowdb')
+API.add_resource(REST.airflowdb, '/airflowdb')  # TODO(dommarques): Delete when done
 
 if __name__ == '__main__':
   APP.run(port='8080', debug=True)
