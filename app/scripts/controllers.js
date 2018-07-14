@@ -171,12 +171,12 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
       getReleases('onDateTypeChange');
     };
 
-    $scope.filterChange = function (release_type, input) {
-      if (release_type == 0) {
+    $scope.filterChange = function (type, input) {
+      if (type == 0) {
         $scope.$storage.stateValue = input;
         $scope.$storage.selectedValue = input;
       }
-      else if (release_type == 1) {
+      else if (type == 1) {
         $scope.$storage.branchValue = input;
         $scope.$storage.selectedBranch = input;
       }

@@ -2,13 +2,13 @@
 import json
 import os
 import MySQLdb
+from airflow_adapter import AirflowAdapter
 from airflow_connector import AirflowDB
 from file_adapter import FileAdapter
 from filter_releases import filter_releases
 from filter_releases import sort
 from flask_restful import reqparse
 from flask_restful import Resource
-from airflow_adapter import AirflowAdapter
 # from main import airflow_db
 # from main import db_connection
 
@@ -74,7 +74,6 @@ class Releases(Resource):
     parser.add_argument('offset')
     parser.add_argument('descending')
     args = parser.parse_args()
-    print args
     if not bool(args['descending']):
       args['descending'] = 1
 
@@ -108,7 +107,6 @@ class Releases(Resource):
                                     release_type=str(args['release_type']),
                                     sort_method=int(args['sort_method']),
                                     descending=int(args['descending']))
-    print response
     return to_json(response[array_from:array_to])
 
 
@@ -169,8 +167,6 @@ class AirflowDBTesting(Resource):
     parser.add_argument('offset')
     args = parser.parse_args()
     data = airflow_db.query(str(args['cm']))
-    print type(data)
-    print data[1]
 
 
 class Resources(object):

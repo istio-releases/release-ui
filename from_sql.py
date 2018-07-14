@@ -32,6 +32,7 @@ def read_releases(release_data, airflow_db):
       release.last_active_task = most_recent_task.task_name
     else:
       release.last_modified = to_timestamp(item[2])
+      release.last_active_task = ''
     release_objects[release.name] = release
 
   return release_objects
@@ -49,6 +50,7 @@ def read_tasks(task_data):
   task_objects = []
   for item in task_data:
     task = Task()
+
     task.task_name = item[0]
     task.add_dependency = None  # TODO(dommarques): figure out how to get this - dag info?
     task.started = to_timestamp(item[3])
@@ -77,7 +79,7 @@ def get_task_info(execution_date, airflow_db):
   state = 0
   task_ids = []
   if task_objects:
-    most_recent_task = task_objects[-1]
+    most_recent_task = task_objects[len(task_objects) - 1]
   else:
     most_recent_task = None
   for task in task_objects:
