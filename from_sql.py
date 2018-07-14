@@ -59,6 +59,8 @@ def read_tasks(task_data):
     task.log_url = "https://youtu.be/dQw4w9WgXcQ"  # TODO(dommarques): figure out how to get the log in here
     task.error = item[6]
     task_objects.append(task)
+    print '********** OBJECTS IN READ'
+    print task_objects
   return task_objects
 
 
@@ -75,9 +77,12 @@ def get_task_info(execution_date, airflow_db):
   """
   task_query = to_sql_tasks(execution_date)
   task_data = airflow_db.query(task_query)
+  print task_data
   task_objects = read_tasks(task_data)
   state = 0
   task_ids = []
+  print '***** OBJECTS IN GET_INFO'
+  print task_objects
   if task_objects:
     most_recent_task = task_objects[len(task_objects) - 1]
   else:
