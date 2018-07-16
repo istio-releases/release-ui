@@ -1,28 +1,21 @@
 """REST API."""
 import json
-import logging
 import os
 import MySQLdb
 from airflow_connector import AirflowDB
-from file_adapter import FileAdapter
 from filter_releases import filter_releases
 from filter_releases import sort
 from flask_restful import reqparse
 from flask_restful import Resource
+from file_adapter import FileAdapter
+
+
 # from main import airflow_db
 # from main import db_connection
 
 adapter = FileAdapter('fake_data/fake_release_data.json', 'fake_data/fake_task_data.json')
 release_requests = {}
 # initiate a connection with the airflow database
-cloudsql_unix_socket = os.path.join('/cloudsql', 'istio-release-ui:us-central1:prod-airflow-snapshot-sandbox')
-db_connection = MySQLdb.connect(
-    unix_socket=cloudsql_unix_socket,
-    host='35.193.234.53',
-    user='root',
-    passwd='',
-    db='airflow-db')
-airflow_db = AirflowDB(db_connection=db_connection)
 
 
 def in_cache(args):
@@ -59,6 +52,9 @@ def to_json(objects):
 class Releases(Resource):
   """"Resource for all releases GET request."""
 
+  def __init__(self, adapter):
+    self._adapter = adapter
+
   def get(self):
     # parse the post request for the requisite info
     parser = reqparse.RequestParser()
@@ -90,7 +86,7 @@ class Releases(Resource):
       return to_json(cache_results[array_from:array_to])
     else:
       # filter and sort all releases with given parsed arguments
-      response = filter_releases(adapter.get_releases(), args['state'], args['branch'], args['type'], args['start_date'], args['end_date'], args['datetype'])
+      response = filter_releases(self._adapter.get_releases(), args['state'], args['branch'], args['type'], args['start_date'], args['end_date'], args['datetype'])
       response = sort(response, args['sort_method'], args['descending'])
       release_requests[cache_results] = response
 
@@ -101,46 +97,61 @@ class Releases(Resource):
 class Release(Resource):
   """"Resource for single release GET request."""
 
+  def __init__(self, adapter):
+    self._adapter = adapter
+
   def get(self):
     parser = reqparse.RequestParser()
     parser.add_argument('release')
     args = parser.parse_args()
 
-    return json.dumps(adapter.get_release(str(args['release'])).to_json())
+    return json.dumps(self._adapter.get_release(str(args['release'])).to_json())
 
 
 class Branches(Resource):
   """"Resource for Branches GET request."""
 
+  def __init__(self, adapter):
+    self._adapter = adapter
+
   def get(self):
-    return json.dumps(adapter.get_branches())
+    return json.dumps(self._adapter.get_branches())
 
 
 class Types(Resource):
   """"Resource for types GET request."""
 
+  def __init__(self, adapter):
+    self._adapter = adapter
+
   def get(self):
-    return json.dumps(adapter.get_types())
+    return json.dumps(self._adapter.get_types())
 
 
 class Tasks(Resource):
   """"Resource for tasks GET request."""
+
+  def __init__(self, adapter):
+    self._adapter = adapter
 
   def get(self):
     parser = reqparse.RequestParser()
     parser.add_argument('release')
     args = parser.parse_args()
 
-    release_tasks = adapter.get_release(str(args['release'])).tasks
+    release_tasks = self._adapter.get_release(str(args['release'])).tasks
     response = []
     for task in release_tasks:
-      response.append(adapter.get_task('task-' + str(task)))
+      response.append(self._adapter.get_task('task-' + str(task)))
 
     return to_json(response)
 
 
 class AirflowDBTesting(Resource):  # TODO(dommarques): delete when done with it
   """Allows for SQL queries to be sent to App Engine through an HTTP GET request. FOR TESTING ONLY, WILL BE DELETED."""  # pylint: disable=line-too-long
+
+  def __init__(self, airflow_db):
+    self._airflow_db = airflow_db
 
   def get(self):
     parser = reqparse.RequestParser()
@@ -154,7 +165,7 @@ class AirflowDBTesting(Resource):  # TODO(dommarques): delete when done with it
     parser.add_argument('limit')
     parser.add_argument('offset')
     args = parser.parse_args()
-    data = airflow_db.query(str(args['cm']))
+    data = self._airflow_db.query(str(args['cm']))
 
 
 class Resources(object):
