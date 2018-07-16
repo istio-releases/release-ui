@@ -45,13 +45,13 @@ for i in range(number_of_releases):
     new_data[release_id]['branch'] = '0.8'
   if branch == 2:
     new_data[release_id]['branch'] = '1.0'
-  type = random.randint(0,2)
-  if type == 0:
-    new_data[release_id]['type'] = 'daily'
-  if type == 1:
-    new_data[release_id]['type'] = 'weekly'
-  if type == 2:
-    new_data[release_id]['type'] = 'monthly'
+  release_type = random.randint(0,2)
+  if release_type == 0:
+    new_data[release_id]['release_type'] = 'daily'
+  if release_type == 1:
+    new_data[release_id]['release_type'] = 'weekly'
+  if release_type == 2:
+    new_data[release_id]['release_type'] = 'monthly'
   print  release_id + ' created'
 
 # ---Puts the JSON into a file called fake_data.json--- #

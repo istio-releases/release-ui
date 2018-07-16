@@ -114,18 +114,36 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
         offset = 0;
         $scope.$storage.currentPage = 1;
       }
+      // put the sorting into an enum and bool based format, as opposed to a
+      // stricly enum format
+      var sortMethodDescending;
+      if (($scope.$storage.sortMethod % 2) == 1) {
+        sortMethodDescending = 1;
+      } else {
+        sortMethodDescending = 0;
+      }
+      var sortMethodNum;
+      if ($scope.$storage.sortMethod <= 2) {
+        sortMethodNum = 1;
+      } else if ($scope.$storage.sortMethod <= 4) {
+        sortMethodNum = 2;
+      } else if ($scope.$storage.sortMethod <= 6) {
+        sortMethodNum = 3;
+      } else if ($scope.$storage.sortMethod <= 8) {
+        sortMethodNum = 4;
+      }
 
       var url_string = site + '/releases?state=' + state +
           '&branch=' + $scope.$storage.branchValue +
-          '&type=' + $scope.$storage.typeValue + '&start_date=' + start +
+          '&release_type=' + $scope.$storage.typeValue + '&start_date=' + start +
           '&end_date=' + end + '&datetype=' + $scope.$storage.whichDate +
-          '&sort_method='+ $scope.$storage.sortMethod + '&limit=' + $scope.numRequested +
-          '&offset=' + offset;
+          '&sort_method='+ sortMethodNum + '&limit=' + $scope.numRequested +
+          '&offset=' + offset + '&descending=' + sortMethodDescending;
 
       $http({
            method: 'GET',
            url: url_string,
-           cache: true
+           cache: false
        }).then(function successCallback(response) {
           var data = transform(response.data);
           if (method == 'page') {
