@@ -155,14 +155,3 @@ class AirflowDBTesting(Resource):  # TODO(dommarques): delete when done with it
     parser.add_argument('offset')
     args = parser.parse_args()
     data = self._airflow_db.query(str(args['cm']))
-
-
-class Resources(object):
-
-  def __init__(self):
-    self.releases = Releases
-    self.release = Release
-    self.branches = Branches
-    self.types = Types
-    self.tasks = Tasks
-    self.airflowdb = AirflowDBTesting  # TODO(dommarques): delete when finished with testing pylint: disable=line-too-long
