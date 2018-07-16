@@ -3,7 +3,6 @@ threadsafe: true
 api_version: 1
 
 env_variables:
-  CLOUDSQL_UNIX_SOCKET: os.path.join('/cloudsql', 'istio-release-ui:us-central1:prod-airflow-snapshot-sandbox')
   CLOUDSQL_HOST: '35.193.234.53'
   CLOUDSQL_USER: 'root'
   CLOUDSQL_PASSWORD: ''

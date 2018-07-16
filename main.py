@@ -1,11 +1,11 @@
 """UI Server, Connects all Components."""
 import os
-from airflow_connector import AirflowDB
-from file_adapter import FileAdapter
+from adapters.airflow_connector import AirflowDB
+from adapters.file_adapter import FileAdapter
 from flask import Flask
 from flask import make_response
 from flask_restful import Api
-from resources.resources import Resources
+import resources.resources as resources
 
 
 # creating the Flask application
@@ -17,7 +17,7 @@ adapter = FileAdapter('fake_data/fake_release_data.json', 'fake_data/fake_task_d
 
 # creating the connection in the object allows for reconnection in event of
 # a lost connection
-airflow_db = AirflowDB(unix_socket=os.environ.get('CLOUDSQL_UNIX_SOCKET'),
+airflow_db = AirflowDB(unix_socket=os.path.join('/cloudsql', 'istio-release-ui:us-central1:prod-airflow-snapshot-sandbox'),
                        host=os.environ.get('CLOUDSQL_HOST'),
                        user=os.environ.get('CLOUDSQL_USER'),
                        password=os.environ.get('CLOUDSQL_PASSWORD'),
