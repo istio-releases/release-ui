@@ -6,6 +6,8 @@ class AirflowDB(object):
   """"Provides the methods which allow interaction with the Airflow SQL database."""  # pylint: disable=line-too-long
 
   def __init__(self, unix_socket, host, user, password, db):
+    # creating the connection in the object allows for reconnection in event of
+    # a lost connection
     self._unix_socket = unix_socket
     self._host = host
     self._user = user

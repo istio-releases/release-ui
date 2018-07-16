@@ -2,14 +2,14 @@
 from datetime import datetime
 
 
-def filter_releases(releases, state, branch, type, start_date, end_date, datetype):
+def filter_releases(releases, state, branch, release_type, start_date, end_date, datetype):
   """Filters by all of the criteria.
 
   Args:
     releases: dictionary of release objects
     state: int representation of a state
     branch: string branch
-    type: string type
+    release_type: string release_type
     start_date: unix datetime of the beginning of a time period
     end_date: unix datetime of the end of a time period
     datetype: string determing which date (creation or last_modified) is
@@ -37,9 +37,9 @@ def filter_releases(releases, state, branch, type, start_date, end_date, datetyp
   if branch == 'null':
     branch = None
 
-  type = str(type)
-  if type == 'null':
-    type = None
+  release_type = str(release_type)
+  if release_type == 'null':
+    release_type = None
 
   filtered = []
   for release in releases.values():
@@ -55,8 +55,8 @@ def filter_releases(releases, state, branch, type, start_date, end_date, datetyp
         should_append = True
       if branch and should_append:
         should_append = (release.branch == branch)
-      if type and should_append:
-        should_append = (release.type == type)
+      if release_type and should_append:
+        should_append = (release.release_type == release_type)
       if should_append:
         filtered.append(release)
 
@@ -76,7 +76,7 @@ def sort(releases, sort_method, reverse):
   Args:
     releases: array of release objects
     sort_method: int representation of a sort_method
-    reverse: int representing bool descending
+    reverse: int representing bool
 
   Returns:
     Array 'releases' in a sorted order.

@@ -1,13 +1,12 @@
 """UI Server, Connects all Components."""
 import os
+from airflow_connector import AirflowDB
 from file_adapter import FileAdapter
 from flask import Flask
 from flask import make_response
 from flask_restful import Api
 import resources
-from resources import Releases
 from resources import Resources
-from airflow_connector import AirflowDB
 
 # creating the Flask application
 APP = Flask(__name__)
@@ -16,19 +15,14 @@ resources = Resources()
 
 
 adapter = FileAdapter('fake_data/fake_release_data.json', 'fake_data/fake_task_data.json')
-cloudsql_unix_socket = os.path.join('/cloudsql', 'istio-release-ui:us-central1:prod-airflow-snapshot-sandbox')
-cloudsql_host = '35.193.234.53'
-cloudsql_user = 'root'
-cloudsql_password = ''
-cloudsql_db = 'airflow-db'
-airflow_db = AirflowDB(unix_socket=cloudsql_unix_socket,
-                       host=cloudsql_host,
-                       user=cloudsql_user,
-                       password=cloudsql_password,
-                       db=cloudsql_db)
 
-
-my_resources = Releases(adapter)
+# creating the connection in the object allows for reconnection in event of
+# a lost connection
+airflow_db = AirflowDB(unix_socket=os.environ.get('CLOUDSQL_UNIX_SOCKET'),
+                       host=os.environ.get('CLOUDSQL_HOST'),
+                       user=os.environ.get('CLOUDSQL_USER'),
+                       password=os.environ.get('CLOUDSQL_PASSWORD'),
+                       db=os.environ.get('CLOUDSQL_DB'))
 
 # adding resource endpoints to different urls
 API.add_resource(resources.releases, '/releases', resource_class_kwargs={'adapter': adapter})
