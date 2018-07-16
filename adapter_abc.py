@@ -9,18 +9,8 @@ class Adapter(object):
   __metaclass__ = abc.ABCMeta
 
   @abc.abstractmethod
-  def get_releases(self, start_date, end_date, datetype, state,
-                   label, sort_method, descending):
+  def get_releases(self):
     """Retrieves filtered release information.
-
-    Args:
-      start_date: unix timestamp format
-      end_date: unix timestamp format
-      datetype: what to filter by - created or last last_modified
-      state: state enumeration
-      label: filtering labels
-      sort_method: sort method enumeration
-      descending: boolean
 
     Returns:
       Dictionary of Release objects.

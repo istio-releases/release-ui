@@ -76,7 +76,7 @@ def sort(releases, sort_method, reverse):
   Args:
     releases: array of release objects
     sort_method: int representation of a sort_method
-    reverse: int representing bool descending
+    reverse: int representing bool
 
   Returns:
     Array 'releases' in a sorted order.

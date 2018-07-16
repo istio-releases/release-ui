@@ -2,7 +2,7 @@
 
 import sys
 import unittest
-sys.path.append('../')   # pylint diable=g-import-not-at-top
+sys.path.append('../')   # allows for importing of files not in the same directory | pylint: disable=line-too-long
 import rest_api   # pylint: disable=g-import-not-at-top
 
 
