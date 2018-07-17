@@ -247,7 +247,7 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
 
     // Redirect to Details function onclick of table row
     $scope.redirectToDetails = function (input) {
-      var newRoute = '/' + input.name;
+      var newRoute = '/' + input.release_id;
       $location.path(newRoute);
     };
 }]);
@@ -255,7 +255,7 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
 app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$routeParams',
   function ($scope, $location, $log, $http, $routeParams) {
 
-    var release_name = $routeParams.releasename;
+    var release_name = $routeParams.release_id;
 
     // Request release details
     $http({

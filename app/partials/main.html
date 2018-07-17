@@ -49,22 +49,9 @@
         </div>
       </th>
       <th>
-        <div>
-          <select class="form-control dropdown" ng-model="selectedBranch"
-            ng-change="filterChange(1,selectedBranch)"
-            ng-options="branch as branch for branch in branches">
-            <option ng-selected="defaultBranch" value="">Branch</option>
-          </select>
-        </div>
-      </th>
-      <th>
-        <div>
-          <select class="form-control dropdown" ng-model="selectedType"
-            ng-change="filterChange(2,selectedType)"
-            ng-options="type as type for type in types">
-            <option ng-selected="defaultType" value="">Type</option>
-          </select>
-        </div>
+        <button class="btn table-header" type="button">
+          Version
+        </button>
       </th>
       <th>
         <button class="btn table-header" type="button" ng-click="sortChange(3)">
@@ -87,6 +74,24 @@
           <span ng-show="$storage.sortMethod == 8" class="caret">&#9650;</span>
         </button>
       </th>
+      <th>
+        <div>
+          <select class="form-control dropdown" ng-model="selectedBranch"
+            ng-change="filterChange(1,selectedBranch)"
+            ng-options="branch as branch for branch in branches">
+            <option ng-selected="defaultBranch" value="">Branch</option>
+          </select>
+        </div>
+      </th>
+      <th>
+        <div>
+          <select class="form-control dropdown" ng-model="selectedType"
+            ng-change="filterChange(2,selectedType)"
+            ng-options="type as type for type in types">
+            <option ng-selected="defaultType" value="">Type</option>
+          </select>
+        </div>
+      </th>
     </thead>
     <tbody id="dashboard">
       <tr ng-repeat="release in $storage.releases | limitTo:numPerPage:numPerPage*($storage.currentPage-1)"
@@ -98,14 +103,7 @@
           <img ng-if="release.state == 4" src="/app/assets/images/suspended.png">
         </td>
         <td>
-          <button type="button" class="btn btn-secondary">
-            {{release.branch}}
-          </button>
-        </td>
-        <td>
-          <button type="button" class="btn btn-secondary">
-            {{release.release_type}}
-          </button>
+          {{release.name}}
         </td>
         <td>
           {{release.started * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
@@ -115,6 +113,16 @@
         </td>
         <td>
           {{release.last_active_task}}
+        </td>
+        <td>
+          <button type="button" class="btn btn-secondary">
+            {{release.branch}}
+          </button>
+        </td>
+        <td>
+          <button type="button" class="btn btn-secondary">
+            {{release.release_type}}
+          </button>
         </td>
       </tr>
     </tbody>
