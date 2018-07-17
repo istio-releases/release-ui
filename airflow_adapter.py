@@ -29,12 +29,6 @@ class AirflowAdapter(Adapter):
       types.add(self._releases[release].release_type)
     self._types = list(types)
 
-  def get_tasks(self, execution_date):
-    task_query = to_sql_tasks(execution_date)
-    task_data = self._airflow_db.query(task_query)
-    task_objects = read_tasks(task_data)
-
-    return task_objects
 
   def get_releases(self, start_date, end_date, datetype, state,
                    branch, release_type, sort_method, descending):
@@ -63,10 +57,26 @@ class AirflowAdapter(Adapter):
 
   def get_release(self, release_name):
     release_query = to_sql_release(release_name)
+    print release_query
     release_data = self._airflow_db.query(release_query)
     release_data = read_releases(release_data, self._airflow_db)
 
     return release_data
+
+  def get_tasks(self, execution_date):
+    """Retrieve all task information.
+
+    Args:
+      execution_date: unix format
+
+    Returns:
+      Dictionary of Task objects.
+    """
+    task_query = to_sql_tasks(execution_date)
+    task_data = self._airflow_db.query(task_query)
+    task_objects = read_tasks(task_data)
+
+    return task_objects
 
   def get_task(self, task_name, execution_date):
     task_query = to_sql_task(task_name, execution_date)

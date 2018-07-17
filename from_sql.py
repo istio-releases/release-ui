@@ -20,7 +20,7 @@ def read_releases(release_data, airflow_db):
     release = Release()  # initialize the release object
     started = to_timestamp(item[2])
     task_ids, most_recent_task, state = get_task_info(started, airflow_db)
-    release.name = item[4]
+    release.name = item[1] + '@' + str(item[2])
     release.tasks = task_ids
     release.started = to_timestamp(item[2])
     release.links = ['https://youtu.be/dQw4w9WgXcQ']  # TODO(dommarques) these need to be implemented into airflow first pylint: disable=line-too-long
