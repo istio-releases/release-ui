@@ -12,14 +12,21 @@ APP = Flask(__name__)
 API = Api(APP)
 
 
-
-# creating the connection in the object allows for reconnection in event of
-# a lost connection
-airflow_db = AirflowDB(unix_socket=os.environ.get('CLOUDSQL_UNIX_SOCKET'),
-                       host=os.environ.get('CLOUDSQL_HOST'),
-                       user=os.environ.get('CLOUDSQL_USER'),
-                       password=os.environ.get('CLOUDSQL_PASSWORD'),
-                       db=os.environ.get('CLOUDSQL_DB'))
+if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
+  # Connect using the unix socket located at
+  # /cloudsql/cloudsql-connection-name.
+  cloudsql_unix_socket = os.path.join(
+    '/cloudsql', os.environ.get('CLOUDSQL_INSTANCE_CONNECTION_NAME'))
+  airflow_db = AirflowDB(unix_socket=cloudsql_unix_socket,
+                         host=os.environ.get('CLOUDSQL_HOST'),
+                         user=os.environ.get('CLOUDSQL_USER'),
+                         password=os.environ.get('CLOUDSQL_PASSWORD'),
+                         db=os.environ.get('CLOUDSQL_DB'))
+else:
+  airflow_db = AirflowDB(host=os.environ.get('CLOUDSQL_HOST'),
+                         user=os.environ.get('CLOUDSQL_USER'),
+                         password=os.environ.get('CLOUDSQL_PASSWORD'),
+                         db=os.environ.get('CLOUDSQL_DB'))
 adapter = AirflowAdapter(airflow_db)
 
 # adding resource endpoints to different urls
