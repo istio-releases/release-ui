@@ -15,7 +15,7 @@ class TestFileAdapter(unittest.TestCase):
     for key, value in releases.iteritems():
       self.assertEqual(value, self.adapter.get_release(key))
       length += 1
-    self.assertEqual(length, 5)
+    self.assertEqual(length, 10)
 
   def test_tasks(self):
     tasks = self.adapter.get_tasks()
@@ -23,12 +23,17 @@ class TestFileAdapter(unittest.TestCase):
     for key, value in tasks.iteritems():
       self.assertEqual(value, self.adapter.get_task(key))
       length += 1
-    self.assertEqual(length, 3)
+    self.assertEqual(length, 4)
 
-  def test_get_labels(self):
-    labels = self.adapter.get_labels()
-    check_labels = ['label0', 'label1', 'label2', 'label3']
-    self.assertEqual(labels, check_labels)
+  def test_get_branches(self):
+    branches = self.adapter.get_branches()
+    check_branches = ['0.8', '1.0', 'master']
+    self.assertEqual(branches, check_branches)
+
+  def test_get_types(self):
+    release_types = self.adapter.get_types()
+    check_types = ['monthly', 'daily', 'weekly']
+    self.assertEqual(release_types, check_types)
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestFileAdapter)
 unittest.TextTestRunner(verbosity=2).run(suite)

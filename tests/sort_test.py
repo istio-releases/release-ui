@@ -9,56 +9,8 @@ class TestSort(unittest.TestCase):
   """Tests the sorting function from filter.py"""
 
   def setUp(self):
-    self.unsorted = FileAdapter('../fake_data/fake_release_data.json', '../fake_data/fake_task_data.json')
+    self.unsorted = FileAdapter('fake_data/fake_release_data.json', 'fake_data/fake_task_data.json')
     self.unsorted = self.unsorted.get_releases().values()
-
-  def test_sort_method_name_descending(self):
-    sorted_releases = sort(self.unsorted, 1, 1)
-    previous_name = None
-    for item in sorted_releases:
-      if previous_name is None:
-        previous_name = item.name
-      for i, char in enumerate(item.name):
-        if char.isalpha():
-          if previous_name:
-            if len(previous_name) > i:
-              self.assertGreaterEqual(char, previous_name[i])
-            else:
-              break
-            if char > previous_name[i]:
-              break
-        if char.isdigit():
-          if len(previous_name) > i:
-            self.assertLessEqual(char, previous_name[i])
-          else:
-            break
-          if char < previous_name[i]:
-            break
-      previous_name = item.name
-
-  def test_sort_method_name_ascending(self):
-    sorted_releases = sort(self.unsorted, 1, 0)
-    previous_name = None
-    for item in sorted_releases:
-      if previous_name is None:
-        previous_name = item.name
-      for i, char in enumerate(item.name):
-        if char.isalpha():
-          if previous_name:
-            if len(previous_name) > i:
-              self.assertLessEqual(char, previous_name[i])
-            else:
-              break
-            if char < previous_name[i]:
-              break
-        if char.isdigit():
-          if len(previous_name) > i:
-            self.assertGreaterEqual(char, previous_name[i])
-          else:
-            break
-          if char > previous_name[i]:
-            break
-      previous_name = item.name
 
   def test_sort_method_created_descending(self):
     sorted_releases = sort(self.unsorted, 2, 1)
