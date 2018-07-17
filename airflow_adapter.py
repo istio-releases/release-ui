@@ -12,6 +12,7 @@ from to_sql import to_sql_task
 from to_sql import to_sql_tasks
 
 
+
 class AirflowAdapter(Adapter):
   """It's the mythical Airflow Adapter!"""
 
