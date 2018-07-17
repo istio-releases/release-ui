@@ -1,13 +1,13 @@
 """Unit Tests for File Adapter."""
 
 import unittest
-from file_adapter import FileAdapter
+from adapters.file_adapter import FileAdapter
 
 
 class TestFileAdapter(unittest.TestCase):
 
   def setUp(self):
-    self.adapter = FileAdapter('mini_release_data.json', 'mini_task_data.json')
+    self.adapter = FileAdapter('tests/mini_release_data.json', 'tests/mini_task_data.json')
 
   def test_releases(self):
     releases = self.adapter.get_releases()

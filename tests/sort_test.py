@@ -1,9 +1,8 @@
 import datetime
 import sys
 import unittest
-sys.path.append('../')  # this is fixed in Emilia's PR #32
-from file_adapter import FileAdapter
-from filter_releases import sort  # pylint: disable=g-import-not-at-top
+from adapters.file_adapter import FileAdapter
+from resources.filter_releases import sort  # pylint: disable=g-import-not-at-top
 
 
 class TestSort(unittest.TestCase):

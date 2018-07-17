@@ -2,7 +2,7 @@
 
 from datetime import datetime
 import unittest
-from release import Release
+from data.release import Release
 
 
 class TestRelease(unittest.TestCase):
