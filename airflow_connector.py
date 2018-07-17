@@ -5,7 +5,7 @@ import MySQLdb
 class AirflowDB(object):
   """"Provides the methods which allow interaction with the Airflow SQL database."""  # pylint: disable=line-too-long
 
-  def __init__(self, unix_socket, host, user, password, db):
+  def __init__(self, host, user, password, db, unix_socket=None):
     # creating the connection in the object allows for reconnection in event of
     # a lost connection
     self._unix_socket = unix_socket
@@ -32,7 +32,7 @@ class AirflowDB(object):
       cursor.execute(request)
       response = cursor.fetchall()
     except MySQLdb.OperationalError, e:
-      print "*****************ERROR TRIGGERED WITH MYSQLDB*********"
+      print '*****************ERROR TRIGGERED WITH MYSQLDB*********'
       print 'Error: '
       print e
       print ''
@@ -43,11 +43,15 @@ class AirflowDB(object):
         cursor = self._airflow_db.cursor()
         cursor.execute(request)
         response = cursor.fetchall()
+        if response:
+          print '**************SUCCESSFULLY RECONNECTED************'
       if e[0] == 2013:
-        airflow_db = create_connection()
+        airflow_db = self.create_connection()
         cursor = airflow_db.cursor()
         cursor.execute(request)
         response = cursor.fetchall()
+        if response:
+          print '*************SUCCESSFULLY RECONNECTED************'
 
     cursor.close()
 
@@ -63,11 +67,13 @@ class AirflowDB(object):
         db=self._db)
     return db
 
-  def check_conncetion(self):
+  def check_conncection(self):
+    passing = False
     try:
       cursor = self._airflow_db.cursor()
       cursor.execute('show tables;')
       response = cursor.fetchall()
+      passing = True
     except MySQLdb.OperationalError, e:
       print "*****************ERROR TRIGGERED WITH MYSQLDB*********"
       print 'Error: '
@@ -76,9 +82,10 @@ class AirflowDB(object):
       if e[0] == 2006:
         self._airflow_db = self.create_connection()
         cursor = self._airflow_db.cursor()
-
+      passing = False
     cursor.close()
 
+    return passing
 
 # TODO(dommarques):
 #   - get the data into something usable (currently a tuple, possibly shunt to adapter portion)  pylint: disable=line-too-long

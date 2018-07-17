@@ -1,5 +1,7 @@
 """The Airflow Adapter."""
+import os
 from adapter_abc import Adapter
+from airflow_connector import AirflowDB
 from filter_releases import filter_releases
 from filter_releases import sort
 from from_sql import read_releases
@@ -8,8 +10,7 @@ from to_sql import to_sql_release
 from to_sql import to_sql_releases
 from to_sql import to_sql_task
 from to_sql import to_sql_tasks
-from airflow_connector import AirflowDB
-import os
+
 
 class AirflowAdapter(Adapter):
   """It's the mythical Airflow Adapter!"""
@@ -58,7 +59,7 @@ class AirflowAdapter(Adapter):
 
   def get_release(self, release_name):
     release_query = to_sql_release(release_name)
-    self._airflow_db.check_conncetion()
+    self._airflow_db.check_conncection()
     release_data = self._airflow_db.query(release_query)
     release_data = read_releases(release_data, self._airflow_db)
 
