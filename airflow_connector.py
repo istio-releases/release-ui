@@ -24,16 +24,28 @@ class AirflowDB(object):
     Returns:
         The database result (tuple)
     """
-    cursor = self._airflow_db.cursor()
     # The following ensures that the query executes and returns,
     # even if the db connection has been lost
+    print request
     try:
+      cursor = self._airflow_db.cursor()
       cursor.execute(request)
       response = cursor.fetchall()
     except MySQLdb.OperationalError, e:
+      print "*****************ERROR TRIGGERED WITH MYSQLDB*********"
+      print 'Error: '
+      print e
+      print ''
       if e[0] == 2006:
+        if cursor:
+          cursor.close()
         self._airflow_db = self.create_connection()
         cursor = self._airflow_db.cursor()
+        cursor.execute(request)
+        response = cursor.fetchall()
+      if e[0] == 2013:
+        airflow_db = create_connection()
+        cursor = airflow_db.cursor()
         cursor.execute(request)
         response = cursor.fetchall()
 
@@ -44,12 +56,28 @@ class AirflowDB(object):
   def create_connection(self):
     """Connects to the Cloud SQL database."""
     db = MySQLdb.connect(
-        unix_socket=self._unix_socket,
+        # unix_socket=self._unix_socket,
         host=self._host,
         user=self._user,
         passwd=self._password,
         db=self._db)
     return db
+
+  def check_conncetion(self):
+    try:
+      cursor = self._airflow_db.cursor()
+      cursor.execute('show tables;')
+      response = cursor.fetchall()
+    except MySQLdb.OperationalError, e:
+      print "*****************ERROR TRIGGERED WITH MYSQLDB*********"
+      print 'Error: '
+      print e
+      print ''
+      if e[0] == 2006:
+        self._airflow_db = self.create_connection()
+        cursor = self._airflow_db.cursor()
+
+    cursor.close()
 
 
 # TODO(dommarques):

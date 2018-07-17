@@ -1,5 +1,6 @@
 """Converts the request arguments to a SQL query."""
 import datetime
+from dag_name_parser import dag_name_parser
 
 
 def to_sql_releases(start_date, end_date, datetype, state,
@@ -32,7 +33,6 @@ def to_sql_releases(start_date, end_date, datetype, state,
   # append a state filter, if there is one available -- '0' means all states
   if state != 0:
     sql_query += ' AND state = "%s"' %(convert_state(state))
-    print convert_state(state)
   # add sorting parameter
   sql_query = add_sorting(sql_query, sort_method, descending)
   # TODO(dommarques) - add label filtering, probably just the dag_id
@@ -41,8 +41,10 @@ def to_sql_releases(start_date, end_date, datetype, state,
 
 
 def to_sql_release(release_id):
+  dag_id, execution_date = dag_name_parser(release_id)
   sql_query = 'SELECT * FROM dag_run'
-  sql_query += ' WHERE run_id = ' + release_id
+  sql_query += ' WHERE dag_id = "' + dag_id + '"'
+  sql_query += ' AND execution_date = "' + str(execution_date) + '"'
   sql_query += ';'   # put the finishing touch on it
   return sql_query
 
@@ -50,16 +52,16 @@ def to_sql_release(release_id):
 def to_sql_tasks(execution_date):
   sql_query = 'SELECT * FROM task_instance'
   sql_query += ' WHERE execution_date = "' + str(datetime.datetime.fromtimestamp(execution_date)) + '"'
-  sql_query += ' ORDER BY execution_date'
+  sql_query += ' ORDER BY execution_date DESC'
   sql_query += ';'   # put the finishing touch on it
   return sql_query
 
 
 def to_sql_task(task_name, execution_date):
   sql_query = 'SELECT * FROM task_instance'
-  sql_query += ' WHERE execution_date = ' + datetime.datetime.fromtimestamp(execution_date)
-  sql_query += ' AND task_id = ' + task_name
-  sql_query += ' ORDER BY execution_date'
+  sql_query += ' WHERE execution_date = "' + str(datetime.datetime.fromtimestamp(execution_date)) + '"'
+  sql_query += ' AND task_id = "' + task_name + '"'
+  sql_query += ' ORDER BY execution_date DESC'
   sql_query += ';'   # put the finishing touch on it
   return sql_query
 

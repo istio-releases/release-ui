@@ -8,7 +8,8 @@ from to_sql import to_sql_release
 from to_sql import to_sql_releases
 from to_sql import to_sql_task
 from to_sql import to_sql_tasks
-
+from airflow_connector import AirflowDB
+import os
 
 class AirflowAdapter(Adapter):
   """It's the mythical Airflow Adapter!"""
@@ -57,7 +58,7 @@ class AirflowAdapter(Adapter):
 
   def get_release(self, release_name):
     release_query = to_sql_release(release_name)
-    print release_query
+    self._airflow_db.check_conncetion()
     release_data = self._airflow_db.query(release_query)
     release_data = read_releases(release_data, self._airflow_db)
 
@@ -72,6 +73,11 @@ class AirflowAdapter(Adapter):
     Returns:
       Dictionary of Task objects.
     """
+    airflow_db = AirflowDB(unix_socket=os.environ.get('CLOUDSQL_UNIX_SOCKET'),
+                           host=os.environ.get('CLOUDSQL_HOST'),
+                           user=os.environ.get('CLOUDSQL_USER'),
+                           password=os.environ.get('CLOUDSQL_PASSWORD'),
+                           db=os.environ.get('CLOUDSQL_DB'))
     task_query = to_sql_tasks(execution_date)
     task_data = self._airflow_db.query(task_query)
     task_objects = read_tasks(task_data)

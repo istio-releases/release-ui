@@ -4,6 +4,7 @@ from filter_releases import filter_releases
 from filter_releases import sort
 from flask_restful import reqparse
 from flask_restful import Resource
+from to_timestamp import to_timestamp
 release_requests = {}
 
 
@@ -88,7 +89,6 @@ class Releases(Resource):
                                     sort_method=int(args['sort_method']),
                                     descending=int(args['descending']))
 
-
       # returns a jsonified array with the determined start and end indices
     return to_json(response[array_from:array_to])
 
@@ -103,8 +103,9 @@ class Release(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('release')
     args = parser.parse_args()
-
-    return json.dumps(self._adapter.get_release(str(args['release'])).to_json())
+    response = self._adapter.get_release(str(args['release']))
+    response = to_json([response[str(args['release'])]])
+    return response
 
 
 class Branches(Resource):
@@ -138,12 +139,17 @@ class Tasks(Resource):
     parser.add_argument('release')
     args = parser.parse_args()
 
-    release_tasks = self._adapter.get_release(str(args['release'])).tasks
-    response = []
-    for task in release_tasks:
-      response.append(self._adapter.get_task('task-' + str(task)))
-
-    return to_json(response)
+    release = self._adapter.get_release(str(args['release']))
+    release_tasks = release[str(args['release'])].tasks
+    execution_date = to_timestamp(release[str(args['release'])].started)
+    task_objects = []
+    for task_id in release_tasks:
+      task_object = self._adapter.get_task(task_id, execution_date)
+      # if type(task_object) == 'list':
+      task_object = task_object[0]
+      task_objects.append(task_object)
+    response = to_json(task_objects)
+    return response
 
 
 class AirflowDBTesting(Resource):  # TODO(dommarques): delete when done with it

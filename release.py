@@ -71,8 +71,8 @@ class Release(object):
 
   @tasks.setter
   def tasks(self, value):
-    """Sets tasks as list of int unique identifiers."""
-    self._validate_array(int, value, 'tasks')
+    """Sets tasks as list of string unique identifiers, when combined with execution_date."""
+    self._validate_array(basestring, value, 'tasks')
 
   @property
   def links(self):
