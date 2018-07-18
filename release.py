@@ -15,6 +15,7 @@ class Release(object):
     """
     self._release = {}
     if data:
+      self.release_id = data['id']
       self.name = data['name']
       self.tasks = data['tasks']
       self.links = data['links']
@@ -54,6 +55,16 @@ class Release(object):
       else:
         error = 'Invalid input for ' + attribute + ': not within datetime range'
         raise ValueError(error)
+
+  @property
+  def release_id(self):
+    return str(self._release['release_id'])
+
+  @release_id.setter
+  def release_id(self, value):
+    """Sets name as string value."""
+    if self._validate_type(basestring, value, 'release_id'):
+      self._release['release_id'] = value
 
   @property
   def name(self):

@@ -36,22 +36,14 @@ class AirflowDB(object):
       print 'Error: '
       print e
       print ''
-      if e[0] == 2006:
+      if e[0] in [2006, 2013]:
         if cursor:
           cursor.close()
         self._airflow_db = self.create_connection()
         cursor = self._airflow_db.cursor()
         cursor.execute(request)
         response = cursor.fetchall()
-        if response:
-          print '**************SUCCESSFULLY RECONNECTED************'
-      if e[0] == 2013:
-        airflow_db = self.create_connection()
-        cursor = airflow_db.cursor()
-        cursor.execute(request)
-        response = cursor.fetchall()
-        if response:
-          print '*************SUCCESSFULLY RECONNECTED************'
+        print '**************CONNECTION RESTORED**************'
 
     cursor.close()
 
@@ -86,7 +78,7 @@ class AirflowDB(object):
       print 'Error: '
       print e
       print ''
-      if e[0] == 2006:
+      if e[0] in [2006, 2013]:
         self._airflow_db = self.create_connection()
         cursor = self._airflow_db.cursor()
       passing = False

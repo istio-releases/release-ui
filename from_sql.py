@@ -42,7 +42,7 @@ def read_releases(release_data, airflow_db):
     else:
       release.last_modified = to_timestamp(item[2])
       release.last_active_task = ''
-    release_objects[release.name] = release
+    release_objects[release.release_id] = release
 
   return release_objects
 

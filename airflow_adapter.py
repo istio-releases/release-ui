@@ -110,7 +110,7 @@ class AirflowAdapter(Adapter):
     """
     return self._branches
 
-  def get_types(self):
+  def get_release_types(self):
     """Retrieve all possible types for UI.
 
     Returns:

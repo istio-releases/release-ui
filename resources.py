@@ -97,8 +97,6 @@ class Release(Resource):
 
     response = self._adapter.get_release(str(args['release']))
     response = response[str(args['release'])].to_json()
-    print "##########"
-    print json.dumps(response)
     return json.dumps(response)
 
 
@@ -119,7 +117,7 @@ class Types(Resource):
     self._adapter = adapter
 
   def get(self):
-    return json.dumps(self._adapter.get_types())
+    return json.dumps(self._adapter.get_release_types())
 
 
 class Tasks(Resource):

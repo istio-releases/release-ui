@@ -15,6 +15,7 @@ class FileAdapter(Adapter):
     releases_dict = json.loads(json_releases)
     self._releases = {}
     for key in releases_dict:
+      releases_dict[key]['id'] = releases_dict[key]['name']
       release = Release(releases_dict[key])
       self._releases[key] = release
 
@@ -31,16 +32,16 @@ class FileAdapter(Adapter):
       branches.add(self._releases[release].branch)
     self._branches = list(branches)
 
-    types = set()
+    release_types = set()
     for release in self._releases:
-      types.add(self._releases[release].release_type)
-    self._types = list(types)
+      release_types.add(self._releases[release].release_type)
+    self._release_types = list(release_types)
 
   def get_releases(self):
     return self._releases
 
-  def get_release(self, release_name):
-    return self._releases[release_name]
+  def get_release(self, release_id):
+    return self._releases[release_id]
 
   def get_tasks(self):
     return self._tasks
@@ -51,5 +52,5 @@ class FileAdapter(Adapter):
   def get_branches(self):
     return self._branches
 
-  def get_types(self):
-    return self._types
+  def get_release_types(self):
+    return self._release_types

@@ -8,7 +8,7 @@ App.config(['$routeProvider', function($routeProvider) {
     templateUrl: 'app/partials/main.html',
     controller: 'MainController'
   })
-  .when('/:releasename', {
+  .when('/:release_id', {
     templateUrl: 'app/partials/details.html',
     controller: 'DetailsController'
   })
