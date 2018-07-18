@@ -54,10 +54,10 @@ class Adapter(object):
     pass
 
   @abc.abstractmethod
-  def get_types(self):
-    """Retrieve all possible types for UI.
+  def get_release_types(self):
+    """Retrieve all possible release_types for UI.
 
     Returns:
-      Array of types as strings.
+      Array of release_types as strings.
     """
     pass

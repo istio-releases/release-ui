@@ -32,10 +32,10 @@ class FileAdapter(Adapter):
       branches.add(self._releases[release].branch)
     self._branches = list(branches)
 
-    types = set()
+    release_types = set()
     for release in self._releases:
-      types.add(self._releases[release].release_type)
-    self._types = list(types)
+      release_types.add(self._releases[release].release_type)
+    self._release_types = list(release_types)
 
   def get_releases(self):
     return self._releases
@@ -52,5 +52,5 @@ class FileAdapter(Adapter):
   def get_branches(self):
     return self._branches
 
-  def get_types(self):
-    return self._types
+  def get_release_types(self):
+    return self._release_types
