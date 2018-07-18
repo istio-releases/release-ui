@@ -18,7 +18,7 @@ class Adapter(object):
     pass
 
   @abc.abstractmethod
-  def get_release(self, release_name):
+  def get_release(self, release_id):
     """Retrieve individual release information.
 
     Returns:

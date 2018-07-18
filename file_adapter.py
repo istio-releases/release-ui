@@ -40,8 +40,8 @@ class FileAdapter(Adapter):
   def get_releases(self):
     return self._releases
 
-  def get_release(self, release_name):
-    return self._releases[release_name]
+  def get_release(self, release_id):
+    return self._releases[release_id]
 
   def get_tasks(self):
     return self._tasks
