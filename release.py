@@ -15,7 +15,7 @@ class Release(object):
     """
     self._release = {}
     if data:
-      self.release_id = data['name']
+      self.release_id = data['id']
       self.name = data['name']
       self.tasks = data['tasks']
       self.links = data['links']

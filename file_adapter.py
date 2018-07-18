@@ -15,6 +15,7 @@ class FileAdapter(Adapter):
     releases_dict = json.loads(json_releases)
     self._releases = {}
     for key in releases_dict:
+      releases_dict[key]['id'] = releases_dict[key]['name']
       release = Release(releases_dict[key])
       self._releases[key] = release
 
