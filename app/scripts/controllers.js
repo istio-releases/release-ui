@@ -58,7 +58,7 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
       whichDate: 'started',
       branchValue: null,
       typeValue: null,
-      sortMethod: 3,
+      sortMethod: 5,
       releases: []
     };
     $scope.$storage = $sessionStorage.$default(defaultStorage);

@@ -114,7 +114,7 @@ class Types(Resource):
     self._adapter = adapter
 
   def get(self):
-    return json.dumps(self._adapter.get_types())
+    return json.dumps(self._adapter.get_release_types())
 
 
 class Tasks(Resource):
