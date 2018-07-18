@@ -32,7 +32,6 @@ class AirflowAdapter(Adapter):
       types.add(self._releases[release].release_type)
     self._types = list(types)
 
-
   def get_releases(self, start_date, end_date, datetype, state,
                    branch, release_type, sort_method, descending):
     # build the SQL query
@@ -60,7 +59,7 @@ class AirflowAdapter(Adapter):
 
   def get_release(self, release_name):
     release_query = to_sql_release(release_name)
-    self._airflow_db.check_conncection()
+    self._airflow_db.check_connection()
     release_data = self._airflow_db.query(release_query)
     release_data = read_releases(release_data, self._airflow_db)
 
@@ -75,11 +74,6 @@ class AirflowAdapter(Adapter):
     Returns:
       Dictionary of Task objects.
     """
-    airflow_db = AirflowDB(unix_socket=os.environ.get('CLOUDSQL_UNIX_SOCKET'),
-                           host=os.environ.get('CLOUDSQL_HOST'),
-                           user=os.environ.get('CLOUDSQL_USER'),
-                           password=os.environ.get('CLOUDSQL_PASSWORD'),
-                           db=os.environ.get('CLOUDSQL_DB'))
     task_query = to_sql_tasks(execution_date)
     task_data = self._airflow_db.query(task_query)
     task_objects = read_tasks(task_data)

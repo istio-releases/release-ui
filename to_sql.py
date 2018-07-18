@@ -66,6 +66,14 @@ def to_sql_task(task_name, execution_date):
   return sql_query
 
 
+def to_sql_xcom(dag_id, execution_date):
+  sql_query = 'SELECT * FROM xcom'
+  sql_query += ' WHERE execution_date = "' + str(datetime.datetime.fromtimestamp(execution_date)) + '"'
+  sql_query += ' AND dag_id = "' + dag_id + '"'
+  sql_query += ';'
+  return sql_query
+
+
 def convert_state(state):
   """Converts the state enumeration into the format needed for the SQL query.
 

@@ -1,7 +1,9 @@
 """Converts the data from SQL to expected format."""
+import json
 from release import Release
 from task import Task
 from to_sql import to_sql_tasks
+from to_sql import to_sql_xcom
 from to_timestamp import to_timestamp
 
 
@@ -20,13 +22,21 @@ def read_releases(release_data, airflow_db):
     release = Release()  # initialize the release object
     started = to_timestamp(item[2])
     task_ids, most_recent_task, state = get_task_info(started, airflow_db)
-    release.name = item[1] + '@' + str(item[2])
+    xcom_dict, green_sha = get_xcom(started, item[1], airflow_db)
+    release.release_id = item[1] + '@' + str(item[2])
     release.tasks = task_ids
-    release.started = to_timestamp(item[2])
-    release.links = ['https://youtu.be/dQw4w9WgXcQ']  # TODO(dommarques) these need to be implemented into airflow first pylint: disable=line-too-long
+    release.started = started
+    release.links = construct_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first pylint: disable=line-too-long
     release.labels = [item[1]]
     release.state = state
     release.branch, release.release_type = parse_dag_id(item[1])
+    print ''
+    print 'SHA:'
+    print green_sha
+    if xcom_dict is None:
+      release.name = release.release_id
+    else:
+      release.name = xcom_dict['VERSION']
     if most_recent_task:
       release.last_modified = to_timestamp(most_recent_task.last_modified)
       release.last_active_task = most_recent_task.task_name
@@ -89,28 +99,23 @@ def get_task_info(execution_date, airflow_db):
   return task_ids, most_recent_task, state
 
 
-def from_sql_releases(release_data, airflow_db):
-  """Assembles complete release objects given release data from SQL.
+def read_xcom_vars(xcom_data):
+  """Reads the xcom data to get the dict of vars and the green build SHA."""
+  print '&&&&&&&&&&&&'
+  print xcom_data
+  try:
+    xcom_dict = json.loads(xcom_data[0][2])
+    green_sha = xcom_data[1][2]
+    return xcom_dict, green_sha
+  except IndexError:
+    return None, None
 
-  Args:
-    release_data: a tuple of tuples with info from dag_run
-    airflow_db: the airflow database connection/object
 
-  Returns:
-    release_objects
-  """
-  releases = read_releases(release_data, airflow_db)
-
-
-def from_sql_tasks(task_data):
-  """Assembles complete task objects given task data from SQL.
-
-  Args:
-    task_data: a tuple of tuples with info from task_instance
-
-  Returns:
-    task_objects
-  """
+def get_xcom(execution_date, dag_id, airflow_db):
+  xcom_query = to_sql_xcom(dag_id, execution_date)
+  xcom_data = airflow_db.query(xcom_query)
+  xcom_dict, green_sha = read_xcom_vars(xcom_data)
+  return xcom_dict, green_sha
 
 
 def state_from_string(state):
@@ -134,6 +139,11 @@ def state_from_string(state):
     return 4
   elif state == 'upstream_failed':  # here for the tasks
     return 1
+
+
+def construct_links(green_sha):
+  """Takes the green build sha and derives the repo links from that."""
+  return ['https://youtu.be/dQw4w9WgXcQ']
 
 
 def parse_dag_id(dag_id):

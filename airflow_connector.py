@@ -5,7 +5,7 @@ import MySQLdb
 class AirflowDB(object):
   """"Provides the methods which allow interaction with the Airflow SQL database."""  # pylint: disable=line-too-long
 
-  def __init__(self, host, user, password, db, unix_socket=None):
+  def __init__(self, user, password, db, host=None, unix_socket=None):
     # creating the connection in the object allows for reconnection in event of
     # a lost connection
     self._unix_socket = unix_socket
@@ -59,15 +59,22 @@ class AirflowDB(object):
 
   def create_connection(self):
     """Connects to the Cloud SQL database."""
-    db = MySQLdb.connect(
-        # unix_socket=self._unix_socket,
-        host=self._host,
-        user=self._user,
-        passwd=self._password,
-        db=self._db)
+    if self._host:
+      db = MySQLdb.connect(
+          # unix_socket=self._unix_socket,
+          host=self._host,
+          user=self._user,
+          passwd=self._password,
+          db=self._db)
+    else:
+      db = MySQLdb.connect(
+          unix_socket=self._unix_socket,
+          user=self._user,
+          passwd=self._password,
+          db=self._db)
     return db
 
-  def check_conncection(self):
+  def check_connection(self):
     passing = False
     try:
       cursor = self._airflow_db.cursor()

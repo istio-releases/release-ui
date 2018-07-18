@@ -70,24 +70,15 @@ class Releases(Resource):
     array_from = int(args['offset'])
     array_to = int(args['limit'])+int(args['offset'])
 
-    # # checks if the filtered, sorted data is already in memcache
-    # cache_exists, cache_results = in_cache(args)
-    # if cache_exists:
-    #   return to_json(cache_results[array_from:array_to])
-    # else:
-    #   # filter and sort all releases with given parsed arguments
-    #   response = filter_releases(self._adapter.get_releases(), args['state'], args['branch'], args['release_type'], args['start_date'], args['end_date'], args['datetype'])
-    #   response = sort(response, args['sort_method'], args['descending'])
-    #   release_requests[cache_results] = response
 
     response = self._adapter.get_releases(start_date=float(args['start_date']),
-                                    end_date=float(args['end_date']),
-                                    datetype=str(args['datetype']),
-                                    state=int(args['state']),
-                                    branch=str(args['branch']),
-                                    release_type=str(args['release_type']),
-                                    sort_method=int(args['sort_method']),
-                                    descending=int(args['descending']))
+                                          end_date=float(args['end_date']),
+                                          datetype=str(args['datetype']),
+                                          state=int(args['state']),
+                                          branch=str(args['branch']),
+                                          release_type=str(args['release_type']),
+                                          sort_method=int(args['sort_method']),
+                                          descending=int(args['descending']))
 
       # returns a jsonified array with the determined start and end indices
     return to_json(response[array_from:array_to])
@@ -103,9 +94,12 @@ class Release(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('release')
     args = parser.parse_args()
+
     response = self._adapter.get_release(str(args['release']))
-    response = to_json([response[str(args['release'])]])
-    return response
+    response = response[str(args['release'])].to_json()
+    print "##########"
+    print json.dumps(response)
+    return json.dumps(response)
 
 
 class Branches(Resource):

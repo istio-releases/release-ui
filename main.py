@@ -1,5 +1,6 @@
 """UI Server, Connects all Components."""
 import os
+import logging
 from airflow_connector import AirflowDB
 from airflow_adapter import AirflowAdapter
 from flask import Flask
@@ -11,19 +12,18 @@ import resources
 APP = Flask(__name__)
 API = Api(APP)
 
-
-if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
-  # Connect using the unix socket located at
-  # /cloudsql/cloudsql-connection-name.
-  cloudsql_unix_socket = os.path.join(
-    '/cloudsql', os.environ.get('CLOUDSQL_INSTANCE_CONNECTION_NAME'))
-  airflow_db = AirflowDB(unix_socket=cloudsql_unix_socket,
-                         host=os.environ.get('CLOUDSQL_HOST'),
+print os.getenv('SERVER_SOFTWARE', '')
+if os.getenv('SERVER_SOFTWARE', '').startswith('Development/'):
+  airflow_db = AirflowDB(host=os.environ.get('CLOUDSQL_HOST'),
                          user=os.environ.get('CLOUDSQL_USER'),
                          password=os.environ.get('CLOUDSQL_PASSWORD'),
                          db=os.environ.get('CLOUDSQL_DB'))
 else:
-  airflow_db = AirflowDB(host=os.environ.get('CLOUDSQL_HOST'),
+  # Connect using the unix socket located at
+  # /cloudsql/cloudsql-connection-name.
+  cloudsql_connection_name = os.environ.get('CLOUDSQL_CONNECTION_NAME')
+  cloudsql_unix_socket = os.path.join('/cloudsql', cloudsql_connection_name )
+  airflow_db = AirflowDB(unix_socket='/cloudsql/istio-release-ui:us-central1:prod-airflow-snapshot-sandbox',
                          user=os.environ.get('CLOUDSQL_USER'),
                          password=os.environ.get('CLOUDSQL_PASSWORD'),
                          db=os.environ.get('CLOUDSQL_DB'))
