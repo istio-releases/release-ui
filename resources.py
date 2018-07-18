@@ -144,24 +144,3 @@ class Tasks(Resource):
       task_objects.append(task_object)
     response = to_json(task_objects)
     return response
-
-
-class AirflowDBTesting(Resource):  # TODO(dommarques): delete when done with it
-  """Allows for SQL queries to be sent to App Engine through an HTTP GET request. FOR TESTING ONLY, WILL BE DELETED."""  # pylint: disable=line-too-long
-
-  def __init__(self, airflow_db):
-    self._airflow_db = airflow_db
-
-  def get(self):
-    parser = reqparse.RequestParser()
-    parser.add_argument('cm')
-    parser.add_argument('start_date')
-    parser.add_argument('end_date')
-    parser.add_argument('datetype')
-    parser.add_argument('state')
-    parser.add_argument('label')
-    parser.add_argument('sort_method')
-    parser.add_argument('limit')
-    parser.add_argument('offset')
-    args = parser.parse_args()
-    data = self._airflow_db.query(str(args['cm']))

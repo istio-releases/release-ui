@@ -1,3 +1,4 @@
+"""Parses the release_id for dag_id and execution_date."""
 from datetime import datetime
 from to_timestamp import to_timestamp
 

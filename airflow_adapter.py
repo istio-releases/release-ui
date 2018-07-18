@@ -1,7 +1,5 @@
 """The Airflow Adapter."""
-import os
 from adapter_abc import Adapter
-from airflow_connector import AirflowDB
 from filter_releases import filter_releases
 from filter_releases import sort
 from from_sql import read_releases
@@ -12,9 +10,8 @@ from to_sql import to_sql_task
 from to_sql import to_sql_tasks
 
 
-
 class AirflowAdapter(Adapter):
-  """It's the mythical Airflow Adapter!"""
+  """Provides a way to interact with the Airflow Database, and get data from it."""
 
   def __init__(self, airflow_db):
     self._airflow_db = airflow_db
@@ -37,13 +34,16 @@ class AirflowAdapter(Adapter):
     # build the SQL query
     release_query = to_sql_releases(start_date=start_date,
                                     end_date=end_date,
-                                    datetype=datetype,  # TODO(dommarques): Integrate this!
+                                    datetype=datetype,
                                     state=state,
                                     sort_method=sort_method,
                                     descending=descending)
-
+    # get the data from SQL
     release_data = self._airflow_db.query(release_query)
+    # package the data into release objects with all neccessary info
     releases_data = read_releases(release_data, self._airflow_db)
+    # filter for the stuff that SQL can't natively filter for,
+    # due to some data being based on a tasks
     releases_data = filter_releases(releases=releases_data,
                                     state=state,
                                     branch=branch,
@@ -51,6 +51,8 @@ class AirflowAdapter(Adapter):
                                     start_date=start_date,
                                     end_date=end_date,
                                     datetype=datetype)
+    # sort with the stuff that SQL can't natively sort according to,
+    # due to some data being based on tasks
     releases_data = sort(releases=releases_data,
                          sort_method=sort_method,
                          reverse=descending)
@@ -58,9 +60,11 @@ class AirflowAdapter(Adapter):
     return releases_data
 
   def get_release(self, release_name):
+    # construct SQL query
     release_query = to_sql_release(release_name)
-    self._airflow_db.check_connection()
+    # get data from SQL
     release_data = self._airflow_db.query(release_query)
+    # package data into a release object
     release_data = read_releases(release_data, self._airflow_db)
 
     return release_data
@@ -74,8 +78,11 @@ class AirflowAdapter(Adapter):
     Returns:
       Dictionary of Task objects.
     """
+    # build SQl query
     task_query = to_sql_tasks(execution_date)
+    # get data from SQL
     task_data = self._airflow_db.query(task_query)
+    # package data into task objects
     task_objects = read_tasks(task_data)
 
     return task_objects

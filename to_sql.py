@@ -41,7 +41,9 @@ def to_sql_releases(start_date, end_date, datetype, state,
 
 
 def to_sql_release(release_id):
+  # get id and execution date from release id
   dag_id, execution_date = dag_name_parser(release_id)
+  # construct query
   sql_query = 'SELECT * FROM dag_run'
   sql_query += ' WHERE dag_id = "' + dag_id + '"'
   sql_query += ' AND execution_date = "' + str(execution_date) + '"'
@@ -112,10 +114,10 @@ def add_sorting(sql_query, sort_method, descending):
   elif sort_method == 2:
     sql_query += ' ORDER BY execution_date'
   elif sort_method > 2:
+    # ensure that the non-relevant sort methods don't cause errors
     return sql_query
   if descending:
     sql_query += ' DESC'
   else:
     sql_query += ' ASC'
-  # TODO(dommarques) - finish adding sort methods 5,6,7,8
   return sql_query

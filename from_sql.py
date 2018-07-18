@@ -17,7 +17,7 @@ def read_releases(release_data, airflow_db):
   Returns:
     release_objects
   """
-  release_objects = {}
+  release_objects = {}  # resources.py expects a dict of objects
   for item in release_data:  # iterate through each release in release_data
     release = Release()  # initialize the release object
     started = to_timestamp(item[2])
@@ -26,18 +26,17 @@ def read_releases(release_data, airflow_db):
     release.release_id = item[1] + '@' + str(item[2])
     release.tasks = task_ids
     release.started = started
-    release.links = construct_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first pylint: disable=line-too-long
+    release.links = construct_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first, or we make our own way to get the links pylint: disable=line-too-long
     release.labels = [item[1]]
     release.state = state
     release.branch, release.release_type = parse_dag_id(item[1])
-    print ''
-    print 'SHA:'
-    print green_sha
     if xcom_dict is None:
+      # allows for continuation, even if xcom has not been generated yet
       release.name = release.release_id
     else:
       release.name = xcom_dict['VERSION']
     if most_recent_task:
+      # allows for continuation even if tasks have not begun/been generated yet
       release.last_modified = to_timestamp(most_recent_task.last_modified)
       release.last_active_task = most_recent_task.task_name
     else:
@@ -66,7 +65,7 @@ def read_tasks(task_data):
     task.started = to_timestamp(item[3])
     task.status = state_from_string(item[6])
     task.last_modified = to_timestamp(item[4])
-    task.log_url = "https://youtu.be/dQw4w9WgXcQ"  # TODO(dommarques): figure out how to get the log in here
+    task.log_url = 'https://youtu.be/dQw4w9WgXcQ'  # TODO(dommarques): figure out how to get the log in here
     task.error = item[6]
     task_objects.append(task)
   return task_objects
@@ -101,8 +100,7 @@ def get_task_info(execution_date, airflow_db):
 
 def read_xcom_vars(xcom_data):
   """Reads the xcom data to get the dict of vars and the green build SHA."""
-  print '&&&&&&&&&&&&'
-  print xcom_data
+  # occasionally, the xcom data doesn't exist yet. This is a workaround
   try:
     xcom_dict = json.loads(xcom_data[0][2])
     green_sha = xcom_data[1][2]
@@ -112,6 +110,17 @@ def read_xcom_vars(xcom_data):
 
 
 def get_xcom(execution_date, dag_id, airflow_db):
+  """Gets relevant xcom data from SQL.
+
+    Args:
+      execution_date: int or float
+      dag_id: str
+      airflow_db: airflow database connection object
+
+    Returns:
+      xcom_dict: the dictionary of xcom information
+      green_sha: the green build SHA
+  """
   xcom_query = to_sql_xcom(dag_id, execution_date)
   xcom_data = airflow_db.query(xcom_query)
   xcom_dict, green_sha = read_xcom_vars(xcom_data)
@@ -143,6 +152,8 @@ def state_from_string(state):
 
 def construct_links(green_sha):
   """Takes the green build sha and derives the repo links from that."""
+  # this does nothing right now, but in the future it will get the links for
+  # each release
   return ['https://youtu.be/dQw4w9WgXcQ']
 
 
