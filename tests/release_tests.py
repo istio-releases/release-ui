@@ -2,7 +2,7 @@
 
 from datetime import datetime
 import unittest
-from release import Release
+from data.release import Release
 
 
 class TestRelease(unittest.TestCase):
@@ -13,7 +13,8 @@ class TestRelease(unittest.TestCase):
         'name': 'release-260',
         'links': ['https://youtu.be/dQw4w9WgXcQ'],
         'started': 1158781609,
-        'labels': ['label0', 'label1'],
+        'branch': 'master',
+        'release_type' : 'daily',
         'state': 4,
         'last_modified': 341231047,
         'last_active_task': 'task4_ID'})
@@ -22,7 +23,8 @@ class TestRelease(unittest.TestCase):
     self.assertEqual(release1.tasks, [0, 2, 1, 2, 1])
     self.assertEqual(release1.links, ['https://youtu.be/dQw4w9WgXcQ'])
     self.assertEqual(release1.started, datetime.fromtimestamp(1158781609))
-    self.assertEqual(release1.labels, ['label0', 'label1'])
+    self.assertEqual(release1.branch, 'master')
+    self.assertEqual(release1.release_type, 'daily')
     self.assertEqual(release1.state, 4)
     self.assertEqual(release1.last_modified, datetime.fromtimestamp(341231047))
     self.assertEqual(release1.last_active_task, 'task4_ID')
@@ -54,12 +56,15 @@ class TestRelease(unittest.TestCase):
     with self.assertRaises(ValueError):
       release2.started = 'started'
 
-    release2.labels = []
-    self.assertEqual(release2.labels, [])
+    release2.branch = '0.8'
+    self.assertEqual(release2.branch, '0.8')
     with self.assertRaises(ValueError):
-      release2.labels = 0
+      release2.branch = 0
+
+    release2.release_type = 'monthly'
+    self.assertEqual(release2.release_type, 'monthly')
     with self.assertRaises(ValueError):
-      release2.labels = [0, 1]
+      release2.release_type = []
 
     release2.state = 0
     self.assertEqual(release2.state, 0)

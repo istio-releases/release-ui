@@ -1,9 +1,10 @@
 """REST API."""
 import json
-from filter_releases import filter_releases
-from filter_releases import sort
-from flask_restful import reqparse
-from flask_restful import Resource
+from adapters.file_adapter import FileAdapter
+from filter_releases import filter_releases, sort
+from flask_restful import Resource, reqparse
+
+adapter = FileAdapter('fake_data/fake_release_data.json', 'fake_data/fake_task_data.json')
 release_requests = {}
 
 
