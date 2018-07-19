@@ -1,8 +1,8 @@
 """The Airflow Adapter."""
 from datetime import datetime
 from adapter_abc import Adapter
-from filter_releases import filter_releases
-from filter_releases import sort
+from resources.filter_releases import filter_releases
+from resources.filter_releases import sort
 from from_sql import read_releases
 from from_sql import read_tasks
 from to_sql import to_sql_release

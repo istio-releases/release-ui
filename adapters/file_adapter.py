@@ -2,8 +2,8 @@
 
 import json
 from adapter_abc import Adapter
-from release import Release
-from task import Task
+from data.release import Release
+from data.task import Task
 
 
 class FileAdapter(Adapter):

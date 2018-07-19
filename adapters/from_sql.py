@@ -1,10 +1,10 @@
 """Converts the data from SQL to expected format."""
 import json
-from release import Release
-from task import Task
-from to_sql import to_sql_tasks
-from to_sql import to_sql_xcom
-from to_timestamp import to_timestamp
+from data.release import Release
+from data.task import Task
+from adapters.to_sql import to_sql_tasks
+from adapters.to_sql import to_sql_xcom
+from resources.to_timestamp import to_timestamp
 
 
 def read_releases(release_data, airflow_db):

@@ -1,6 +1,6 @@
 """Converts the request arguments to a SQL query."""
 import datetime
-from dag_name_parser import dag_name_parser
+from resources.dag_name_parser import dag_name_parser
 
 
 def to_sql_releases(filter_options):

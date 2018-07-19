@@ -2,8 +2,8 @@
 
 from datetime import datetime
 import unittest
-from state import State
-from task import Task
+from data.state import State
+from data.task import Task
 
 
 class TestTask(unittest.TestCase):

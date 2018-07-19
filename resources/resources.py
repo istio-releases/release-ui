@@ -5,7 +5,7 @@ from filter_releases import sort
 from flask_restful import reqparse
 from flask_restful import Resource
 from to_timestamp import to_timestamp
-from filter_options import FilterOptions
+from data.filter_options import FilterOptions
 release_requests = {}
 
 
