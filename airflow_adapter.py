@@ -1,4 +1,5 @@
 """The Airflow Adapter."""
+from datetime import datetime
 from adapter_abc import Adapter
 from filter_releases import filter_releases
 from filter_releases import sort
@@ -16,8 +17,8 @@ class AirflowAdapter(Adapter):
   def __init__(self, airflow_db):
     self._airflow_db = airflow_db
 
-    self._releases = self._airflow_db.query('SELECT * FROM dag_run;')
-    self._releases = read_releases(self._releases, self._airflow_db)
+    raw_release_data = self._airflow_db.query('SELECT * FROM dag_run;')
+    self._releases = read_releases(raw_release_data, self._airflow_db)
 
     branches = set()
     for release in self._releases:
@@ -29,33 +30,19 @@ class AirflowAdapter(Adapter):
       types.add(self._releases[release].release_type)
     self._types = list(types)
 
-  def get_releases(self, start_date, end_date, datetype, state,
-                   branch, release_type, sort_method, descending):
+  def get_releases(self, filter_options):
     # build the SQL query
-    release_query = to_sql_releases(start_date=start_date,
-                                    end_date=end_date,
-                                    datetype=datetype,
-                                    state=state,
-                                    sort_method=sort_method,
-                                    descending=descending)
+    release_query = to_sql_releases(filter_options)
     # get the data from SQL
     release_data = self._airflow_db.query(release_query)
     # package the data into release objects with all neccessary info
     releases_data = read_releases(release_data, self._airflow_db)
     # filter for the stuff that SQL can't natively filter for,
     # due to some data being based on a tasks
-    releases_data = filter_releases(releases=releases_data,
-                                    state=state,
-                                    branch=branch,
-                                    release_type=release_type,
-                                    start_date=start_date,
-                                    end_date=end_date,
-                                    datetype=datetype)
+    releases_data = filter_releases(releases_data, filter_options)
     # sort with the stuff that SQL can't natively sort according to,
     # due to some data being based on tasks
-    releases_data = sort(releases=releases_data,
-                         sort_method=sort_method,
-                         reverse=descending)
+    releases_data = sort(releases_data, filter_options)
 
     return releases_data
 
@@ -108,6 +95,9 @@ class AirflowAdapter(Adapter):
     Returns:
       Array of branches as strings.
     """
+    # check if cache is older than 30 mins. If true, then update cache
+    if (self._cache_last_updated - datetime.now()).total_seconds() > 1800:
+      self.update_cache()
     return self._branches
 
   def get_release_types(self):
@@ -117,3 +107,19 @@ class AirflowAdapter(Adapter):
       Array of types as strings.
     """
     return self._types
+
+  def update_cache(self):
+    raw_release_data = self._airflow_db.query('SELECT * FROM dag_run;')
+    self._releases = read_releases(raw_release_data, self._airflow_db)
+
+    branches = set()
+    for release in self._releases:
+      branches.add(self._releases[release].branch)
+    self._branches = list(branches)
+
+    types = set()
+    for release in self._releases:
+      types.add(self._releases[release].release_type)
+    self._types = list(types)
+
+    self._cache_last_updated = datetime.now()

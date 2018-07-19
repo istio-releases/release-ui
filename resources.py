@@ -5,6 +5,7 @@ from filter_releases import sort
 from flask_restful import reqparse
 from flask_restful import Resource
 from to_timestamp import to_timestamp
+from filter_options import FilterOptions
 release_requests = {}
 
 
@@ -70,15 +71,9 @@ class Releases(Resource):
     array_from = int(args['offset'])
     array_to = int(args['limit'])+int(args['offset'])
 
+    filter_options = FilterOptions(args)
 
-    response = self._adapter.get_releases(start_date=float(args['start_date']),
-                                          end_date=float(args['end_date']),
-                                          datetype=str(args['datetype']),
-                                          state=int(args['state']),
-                                          branch=str(args['branch']),
-                                          release_type=str(args['release_type']),
-                                          sort_method=int(args['sort_method']),
-                                          descending=int(args['descending']))
+    response = self._adapter.get_releases(filter_options)
 
       # returns a jsonified array with the determined start and end indices
     return to_json(response[array_from:array_to])

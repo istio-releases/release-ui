@@ -1,5 +1,6 @@
 """Connects to the Cloud SQL database."""
 import MySQLdb
+import logging
 
 
 class AirflowDB(object):
@@ -26,16 +27,13 @@ class AirflowDB(object):
     """
     # The following ensures that the query executes and returns,
     # even if the db connection has been lost
-    print request
+    logging.info(request)
     try:
       cursor = self._airflow_db.cursor()
       cursor.execute(request)
       response = cursor.fetchall()
     except MySQLdb.OperationalError, e:
-      print '*****************ERROR TRIGGERED WITH MYSQLDB*********'
-      print 'Error: '
-      print e
-      print ''
+      logging.error('Error %i triggered with MySQLdb: %s'  % (e[0], e[1]))
       if e[0] in [2006, 2013]:
         if cursor:
           cursor.close()
@@ -43,7 +41,7 @@ class AirflowDB(object):
         cursor = self._airflow_db.cursor()
         cursor.execute(request)
         response = cursor.fetchall()
-        print '**************CONNECTION RESTORED**************'
+        logging.info('MySQLdb connection restored.')
 
     cursor.close()
 
@@ -74,13 +72,9 @@ class AirflowDB(object):
       response = cursor.fetchall()
       passing = True
     except MySQLdb.OperationalError, e:
-      print "*****************ERROR TRIGGERED WITH MYSQLDB*********"
-      print 'Error: '
-      print e
-      print ''
+      logging.error('Error %i triggered with MySQLdb: %s'  % (e[0], e[1]))
       if e[0] in [2006, 2013]:
         self._airflow_db = self.create_connection()
-        cursor = self._airflow_db.cursor()
       passing = False
     cursor.close()
 

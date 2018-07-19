@@ -2,6 +2,7 @@
 from datetime import datetime
 from to_timestamp import to_timestamp
 
+
 def dag_name_parser(dag_name):
   for i, char in enumerate(dag_name):
     if char == '@':
