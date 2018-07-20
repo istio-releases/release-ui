@@ -1,12 +1,22 @@
 """Connects to the Cloud SQL database."""
-import MySQLdb
 import logging
+import MySQLdb
+from mysql.connector import errorcode
 
 
 class AirflowDB(object):
-  """"Provides the methods which allow interaction with the Airflow SQL database."""  # pylint: disable=line-too-long
+  """Provides the methods which allow interaction with the Airflow SQL database."""  # pylint: disable=line-too-long
 
   def __init__(self, user, password, db, host=None, unix_socket=None):
+    """Initializes the connection vars and db connection.
+
+    Args:
+      user: str
+      password: str
+      db: str
+      host: str
+      unix_socket: str
+    """
     # creating the connection in the object allows for reconnection in event of
     # a lost connection
     self._unix_socket = unix_socket
@@ -14,7 +24,7 @@ class AirflowDB(object):
     self._user = user
     self._password = password
     self._db = db
-    self._airflow_db = self.create_connection()
+    self._airflow_db = self._create_connection()
 
   def query(self, request):
     """Sends an SQL query to the airflow database.
@@ -27,17 +37,17 @@ class AirflowDB(object):
     """
     # The following ensures that the query executes and returns,
     # even if the db connection has been lost
-    logging.info(request)
+    logging.info('Running query "%s" against Airflow DB' % request)
     try:
       cursor = self._airflow_db.cursor()
       cursor.execute(request)
       response = cursor.fetchall()
     except MySQLdb.OperationalError, e:
       logging.error('Error %i triggered with MySQLdb: %s'  % (e[0], e[1]))
-      if e[0] in [2006, 2013]:
+      if e[0] in [errorcode.CR_SERVER_GONE_ERROR, errorcode.CR_SERVER_LOST]:
         if cursor:
           cursor.close()
-        self._airflow_db = self.create_connection()
+        self._airflow_db = self._create_connection()
         cursor = self._airflow_db.cursor()
         cursor.execute(request)
         response = cursor.fetchall()
@@ -47,7 +57,7 @@ class AirflowDB(object):
 
     return response
 
-  def create_connection(self):
+  def _create_connection(self):
     """Connects to the Cloud SQL database."""
     if self._host:
       db = MySQLdb.connect(
@@ -63,22 +73,6 @@ class AirflowDB(object):
           passwd=self._password,
           db=self._db)
     return db
-
-  def check_connection(self):
-    passing = False
-    try:
-      cursor = self._airflow_db.cursor()
-      cursor.execute('show tables;')
-      response = cursor.fetchall()
-      passing = True
-    except MySQLdb.OperationalError, e:
-      logging.error('Error %i triggered with MySQLdb: %s'  % (e[0], e[1]))
-      if e[0] in [2006, 2013]:
-        self._airflow_db = self.create_connection()
-      passing = False
-    cursor.close()
-
-    return passing
 
 # TODO(dommarques):
 #   - get the data into something usable (currently a tuple, possibly shunt to adapter portion)  pylint: disable=line-too-long

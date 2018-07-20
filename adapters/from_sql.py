@@ -5,7 +5,16 @@ from data.task import Task
 from adapters.to_sql import to_sql_tasks
 from adapters.to_sql import to_sql_xcom
 from resources.to_timestamp import to_timestamp
+from data.state import State
+from collections import namedtuple
+import logging
 
+STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
+                     'running': State.PENDING,
+                     'success': State.FINISHED,
+                     'failed': State.FAILED,
+                     'shutdown': State.ABANDONED,
+                     'upstream_failed': State.PENDING}
 
 def read_releases(release_data, airflow_db):
   """Reads in releases in the SQL tuple format, transforms them into objects.
@@ -17,19 +26,21 @@ def read_releases(release_data, airflow_db):
   Returns:
     release_objects
   """
+  release_named_tuple = namedtuple('Row', ['dag_id', 'execution_date'])
   release_objects = {}  # resources.py expects a dict of objects
   for item in release_data:  # iterate through each release in release_data
+    item = release_named_tuple._make(item)
     release = Release()  # initialize the release object
-    started = to_timestamp(item[2])
+    started = to_timestamp(item.execution_date)
     task_ids, most_recent_task, state = get_task_info(started, airflow_db)
-    xcom_dict, green_sha = get_xcom(started, item[1], airflow_db)
-    release.release_id = item[1] + '@' + str(item[2])
+    xcom_dict, green_sha = get_xcom(started, item.dag_id, airflow_db)
+    release.release_id = item.dag_id + '@' + str(item.execution_date)
     release.tasks = task_ids
     release.started = started
     release.links = construct_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first, or we make our own way to get the links pylint: disable=line-too-long
-    release.labels = [item[1]]
+    release.labels = [item.dag_id]
     release.state = state
-    release.branch, release.release_type = parse_dag_id(item[1])
+    release.branch, release.release_type = parse_dag_id(item.dag_id)
     if xcom_dict is None:
       # allows for continuation, even if xcom has not been generated yet
       release.name = release.release_id
@@ -40,7 +51,7 @@ def read_releases(release_data, airflow_db):
       release.last_modified = to_timestamp(most_recent_task.last_modified)
       release.last_active_task = most_recent_task.task_name
     else:
-      release.last_modified = to_timestamp(item[2])
+      release.last_modified = to_timestamp(item.execution_date)
       release.last_active_task = ''
     release_objects[release.release_id] = release
 
@@ -56,17 +67,31 @@ def read_tasks(task_data):
   Returns:
     task_objects
   """
+  task_named_tuple = namedtuple('Row', ['task_id', 'dag_id', 'execution_date', 'start_date', 'end_date', 'state'])
   task_objects = []
   for item in task_data:
     task = Task()
-
-    task.task_name = item[0]
+    logging.debug(item)
+    item = task_named_tuple._make(item)
+    task.task_name = item.task_id
     task.add_dependency = None  # TODO(dommarques): figure out how to get this - dag info?
-    task.started = to_timestamp(item[3])
-    task.status = state_from_string(item[6])
-    task.last_modified = to_timestamp(item[4])
+    if item.start_date == None:
+      task.started = to_timestamp(item.execution_date)
+    else:
+      task.started = to_timestamp(item.start_date)
+    if item.state == None:
+      task.status = STATE_FROM_STRING.get('none')
+    else:
+      task.status = STATE_FROM_STRING.get(item.state)
+    if item.end_date == None:
+      task.last_modified = to_timestamp(item.execution_date)
+    else:
+      task.last_modified = to_timestamp(item.end_date)
     task.log_url = 'https://youtu.be/dQw4w9WgXcQ'  # TODO(dommarques): figure out how to get the log in here
-    task.error = item[6]
+    if item.state == None:
+      item.state == 'none'
+    else:
+      task.error = item.state
     task_objects.append(task)
   return task_objects
 
@@ -101,11 +126,16 @@ def get_task_info(execution_date, airflow_db):
 def read_xcom_vars(xcom_data):
   """Reads the xcom data to get the dict of vars and the green build SHA."""
   # occasionally, the xcom data doesn't exist yet. This is a workaround
+  xcom_named_tuple = namedtuple('Row', ['xcom_dict', 'green_sha'])
   try:
-    xcom_dict = json.loads(xcom_data[0][2])
-    green_sha = xcom_data[1][2]
+    xcom_data = xcom_named_tuple._make(xcom_data)
+    # The index 0 is here because the data returns in a tuple
+    xcom_dict = json.loads(xcom_data.xcom_dict[0])
+    green_sha = xcom_data.green_sha[0]
     return xcom_dict, green_sha
   except IndexError:
+    return None, None
+  except TypeError:
     return None, None
 
 

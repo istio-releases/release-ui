@@ -1,6 +1,7 @@
 """Converts the request arguments to a SQL query."""
 import datetime
 from resources.dag_name_parser import dag_name_parser
+from data.state import State
 
 
 def to_sql_releases(filter_options):
@@ -9,17 +10,12 @@ def to_sql_releases(filter_options):
   Gets the releases(AKA dag runs) which fit the parameters.
 
   Args:
-    start_date: unix timestamp format
-    end_date: unix timestamp format
-    datetype: what to filter by - created or last last_modified
-    state: state enumeration
-    sort_method: sort method enumeration
-    reverse: boolean
+    filter_options: object with filtering parameters
 
   Returns:
     sql_query: a string which is dynamically constructed using all of the params
   """
-  sql_query = 'SELECT * FROM dag_run'
+  sql_query = 'SELECT dag_id, execution_date FROM dag_run'
   # convert start and end date from unix to python datetime
   start_date = datetime.datetime.fromtimestamp(filter_options.start_date)
   end_date = datetime.datetime.fromtimestamp(filter_options.end_date)
@@ -43,7 +39,7 @@ def to_sql_release(release_id):
   # get id and execution date from release id
   dag_id, execution_date = dag_name_parser(release_id)
   # construct query
-  sql_query = 'SELECT * FROM dag_run'
+  sql_query = 'SELECT dag_id, execution_date FROM dag_run'
   sql_query += ' WHERE dag_id = "' + dag_id + '"'
   sql_query += ' AND execution_date = "' + str(execution_date) + '"'
   sql_query += ';'   # put the finishing touch on it
@@ -51,7 +47,7 @@ def to_sql_release(release_id):
 
 
 def to_sql_tasks(execution_date):
-  sql_query = 'SELECT * FROM task_instance'
+  sql_query = 'SELECT task_id, dag_id, execution_date, start_date, end_date, state FROM task_instance'
   sql_query += ' WHERE execution_date = "' + str(datetime.datetime.fromtimestamp(execution_date)) + '"'
   sql_query += ' ORDER BY execution_date DESC'
   sql_query += ';'   # put the finishing touch on it
@@ -59,7 +55,7 @@ def to_sql_tasks(execution_date):
 
 
 def to_sql_task(task_name, execution_date):
-  sql_query = 'SELECT * FROM task_instance'
+  sql_query = 'SELECT task_id, dag_id, execution_date, start_date, end_date, state FROM task_instance'
   sql_query += ' WHERE execution_date = "' + str(datetime.datetime.fromtimestamp(execution_date)) + '"'
   sql_query += ' AND task_id = "' + task_name + '"'
   sql_query += ' ORDER BY execution_date DESC'
@@ -68,7 +64,7 @@ def to_sql_task(task_name, execution_date):
 
 
 def to_sql_xcom(dag_id, execution_date):
-  sql_query = 'SELECT * FROM xcom'
+  sql_query = 'SELECT value FROM xcom'
   sql_query += ' WHERE execution_date = "' + str(datetime.datetime.fromtimestamp(execution_date)) + '"'
   sql_query += ' AND dag_id = "' + dag_id + '"'
   sql_query += ';'
@@ -85,15 +81,15 @@ def convert_state(state):
     state: string format which follows the same format in the SQl db (str)
   """
   state = int(state)
-  if state == 0:
+  if state == State.UNUSED_STATUS:
     return 'none'
-  elif state == 1:
+  elif state == State.PENDING:
     return 'running'
-  elif state == 2:
+  elif state == State.FINISHED:
     return 'success'
-  elif state == 3:
+  elif state == State.FAILED:
     return 'failed'
-  elif state == 4:
+  elif state == State.ABANDONED:
     return 'shutdown'
 
 

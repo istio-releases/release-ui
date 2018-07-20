@@ -9,8 +9,11 @@ class Adapter(object):
   __metaclass__ = abc.ABCMeta
 
   @abc.abstractmethod
-  def get_releases(self):
+  def get_releases(self, filter_options):
     """Retrieves filtered release information.
+
+    Args:
+      filter_options: An object containing filter/sort parameters
 
     Returns:
       Dictionary of Release objects.
@@ -20,6 +23,9 @@ class Adapter(object):
   @abc.abstractmethod
   def get_release(self, release_id):
     """Retrieve individual release information.
+
+    Args:
+      release_id: unique release identifier (str)
 
     Returns:
       Single Release object.
@@ -36,8 +42,12 @@ class Adapter(object):
     pass
 
   @abc.abstractmethod
-  def get_task(self, task_name):
+  def get_task(self, task_name, execution_date):
     """Retrieve individual task information.
+
+    Args:
+      task_name: str name of the task
+      execution_date: int
 
     Returns:
       Single Task object.

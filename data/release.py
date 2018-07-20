@@ -32,6 +32,7 @@ class Release(object):
       return True
     else:
       error = 'Invalid input for ' + attribute + ': not a ' + check.__name__
+      error += ', instead got a ' + str(type(value))
       raise ValueError(error)
 
   def _validate_array(self, check, value, attribute):

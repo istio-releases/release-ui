@@ -15,7 +15,7 @@ API = Api(APP)
 # creates the proper database connection depending on whether the app is
 # deployed locally or on App Engine
 if os.getenv('SERVER_SOFTWARE', '').startswith('Development/'):
-  airflow_db = AirflowDB(host=os.environ.get('CLOUDSQL_HOST'),
+  airflow_db = AirflowDB(host='35.193.234.53',
                          user=os.environ.get('CLOUDSQL_USER'),
                          password=os.environ.get('CLOUDSQL_PASSWORD'),
                          db=os.environ.get('CLOUDSQL_DB'))
