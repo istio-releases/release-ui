@@ -5,7 +5,9 @@ from filter_releases import sort
 from flask_restful import reqparse
 from flask_restful import Resource
 from to_timestamp import to_timestamp
+from dag_name_parser import dag_name_parser
 from data.filter_options import FilterOptions
+
 release_requests = {}
 
 
@@ -105,11 +107,11 @@ class Tasks(Resource):
 
     release = self._adapter.get_release(str(args['release']))
     release_tasks = release[str(args['release'])].tasks
-    execution_date = to_timestamp(release[str(args['release'])].started)
+    dag_id, execution_date = dag_name_parser(str(args['release']))
+    execution_date = to_timestamp(execution_date)
     task_objects = []
     for task_id in release_tasks:
-      task_object = self._adapter.get_task(task_id, execution_date)
-      # if type(task_object) == 'list':
+      task_object = self._adapter.get_task(dag_id, task_id, execution_date)
       task_object = task_object[0]
       task_objects.append(task_object)
     response = to_json(task_objects)

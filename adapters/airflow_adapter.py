@@ -53,7 +53,7 @@ class AirflowAdapter(Adapter):
 
     return release_data
 
-  def get_tasks(self, execution_date):
+  def get_tasks(self, dag_id, execution_date):
     """Retrieve all task information.
 
     Args:
@@ -71,8 +71,8 @@ class AirflowAdapter(Adapter):
 
     return task_objects
 
-  def get_task(self, task_name, execution_date):
-    task_query = to_sql_task(task_name, execution_date)
+  def get_task(self, dag_id, task_name, execution_date):
+    task_query = to_sql_task(dag_id, task_name, execution_date)
     task_data = self._airflow_db.query(task_query)
     task_data = read_tasks(task_data)
 

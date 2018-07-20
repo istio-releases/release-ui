@@ -32,7 +32,7 @@ def read_releases(release_data, airflow_db):
     item = release_named_tuple._make(item)
     release = Release()  # initialize the release object
     started = to_timestamp(item.execution_date)
-    task_ids, most_recent_task, state = get_task_info(started, airflow_db)
+    task_ids, most_recent_task, state = get_task_info(item.dag_id, started, airflow_db)
     xcom_dict, green_sha = get_xcom(started, item.dag_id, airflow_db)
     release.release_id = item.dag_id + '@' + str(item.execution_date)
     release.tasks = task_ids
@@ -96,7 +96,7 @@ def read_tasks(task_data):
   return task_objects
 
 
-def get_task_info(execution_date, airflow_db):
+def get_task_info(dag_id, execution_date, airflow_db):
   """Gets task-related info to fill in missing release object info.
 
   Args:
@@ -107,7 +107,7 @@ def get_task_info(execution_date, airflow_db):
     most_recent_task: the most recent active task
     state: the state of the release based on the task states
   """
-  task_query = to_sql_tasks(execution_date)
+  task_query = to_sql_tasks(dag_id, execution_date)
   task_data = airflow_db.query(task_query)
   task_objects = read_tasks(task_data)
   state = 0
