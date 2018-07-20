@@ -157,29 +157,6 @@ def get_xcom(execution_date, dag_id, airflow_db):
   return xcom_dict, green_sha
 
 
-def state_from_string(state):
-  """Transforms the state from a string format to an enumerated version.
-
-  Args:
-    state: string
-
-  Returns:
-    int
-  """
-  if state == 'none':
-    return 0
-  elif state == 'running':
-    return 1
-  elif state == 'success':
-    return 2
-  elif state == 'failed':
-    return 3
-  elif state == 'shutdown':
-    return 4
-  elif state == 'upstream_failed':  # here for the tasks
-    return 1
-
-
 def construct_links(green_sha):
   """Takes the green build sha and derives the repo links from that."""
   # this does nothing right now, but in the future it will get the links for
