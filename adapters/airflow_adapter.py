@@ -94,7 +94,7 @@ class AirflowAdapter(Adapter):
     Returns:
       Array of branches as strings.
     """
-    # check if cache is older than 30 mins. If true, then update cache
+    # check if cache is older than CACHE_TTL secs. If true, then update cache
     if (self._cache_last_updated - datetime.now()).total_seconds() > CACHE_TTL:
       self.update_cache()
     with self._lock:
