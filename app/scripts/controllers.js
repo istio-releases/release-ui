@@ -9,11 +9,13 @@ var app = angular.module('ReleaseUI.controllers', ['ngStorage', 'ReleaseUI.filte
 app.controller('MainController', ['$scope','$http','$location', '$sessionStorage',
   function($scope, $http, $location, $sessionStorage) {
 
-    $scope.githubSignOut = function () {
+    $scope.logout = function () {
+      localStorage.removeItem('loggedIn');
       $location.path('/login');
     };
 
     // Set static variables
+    $scope.user = localStorage.getItem('user');
     $scope.numPerPage = 15;
     $scope.numRequested = 45;
     var getBranches = function () {
@@ -260,10 +262,13 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
 app.controller('DetailsController', ['$scope', '$location', '$http', '$routeParams', '$sessionStorage',
   function ($scope, $location, $http, $routeParams, $sessionStorage) {
 
-    $scope.githubSignOut = function () {
-      $sessionStorage.trigger = true;
+    $scope.user = localStorage.getItem('user');
+
+    $scope.logout = function () {
+      localStorage.removeItem('loggedIn');
       $location.path('/login');
     };
+
 
     $scope.redirect = function () {
       $location.path('/dashboard');
@@ -304,37 +309,57 @@ app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStor
     var provider = new firebase.auth.GithubAuthProvider();
     provider.addScope('repo');
 
-    firebase.auth().getRedirectResult().then(function(result) {
-      var token = result.credential.accessToken;
+    if (localStorage.getItem('loggedIn')) {
+      $scope.message = 'Go to Dashboard';
+    }
+    else if (localStorage.getItem('user') === null) {
+      $scope.message = 'Log In with GitHub';
+      firebase.auth().getRedirectResult().then(function(result) {
+        var token = result.credential.accessToken;
+        console.log(result);
+        $http({
+            method: 'GET',
+            url: 'https://api.github.com/user/teams',
+            headers: {'Authorization': 'token ' + token}
+        }).then(function successCallback(response) {
+            var teams = response.data;
+            for (var key in teams) {
+             if (teams.hasOwnProperty(key)){
+               var name = teams[key].name;
+               var org = teams[key].organization.login;
 
-      $http({
-          method: 'GET',
-          url: 'https://api.github.com/user/teams',
-          headers: {'Authorization': 'token ' + token}
-      }).then(function successCallback(response) {
-          var teams = response.data;
-          for (var key in teams) {
-           if (teams.hasOwnProperty(key)){
-             var name = teams[key].name;
-             var org = teams[key].organization.login;
-
-             if (name == 'release-ui' && org == 'istio-releases'){
-               console.log('loggedin')
-               localStorage.setItem('loggedIn', true);
-               $location.path('/dashboard');
+               if (name == 'release-ui' && org == 'istio-releases'){
+                 console.log('loggedin')
+                 localStorage.setItem('loggedIn', true);
+                 localStorage.setItem('user', result.user.displayName);
+                 $location.path('/dashboard');
+               }
              }
-           }
-          }
-      }, function errorCallback(response) {
-          console.log(response);
+            }
+        }, function errorCallback(response) {
+            console.log(response);
+        });
+      }).catch(function(error) {
+        console.log(error);
       });
-    }).catch(function(error) {
-      console.log(error);
-    });
-
+    }
+    else {
+      $scope.message = 'Log In with GitHub';
+      localStorage.removeItem('user');
+      firebase.auth().signOut().then(function() {
+        console.log('Sign out successful');
+      }).catch(function(error) {
+        console.log(error);
+      });
+    }
 
     $scope.login = function () {
-      firebase.auth().signInWithRedirect(provider);
+      if (localStorage.getItem('loggedIn')){
+        $location.path('/dashboard');
+      }
+      else {
+        firebase.auth().signInWithRedirect(provider);
+      }
     };
 }]);
 
