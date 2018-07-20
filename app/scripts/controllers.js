@@ -3,10 +3,15 @@
 /* Controllers */
 
 var site = window.location.origin;
-var app = angular.module('ReleaseUI.controllers', ['ngStorage']);
+var app = angular.module('ReleaseUI.controllers', ['ngStorage', 'ReleaseUI.filters']);
 
-app.controller('MainController', ['$scope','$http','$location','$log', '$sessionStorage',
-  function($scope, $http, $location, $log, $sessionStorage) {
+
+app.controller('MainController', ['$scope','$http','$location', '$sessionStorage',
+  function($scope, $http, $location, $sessionStorage) {
+
+    $scope.githubSignOut = function () {
+      $location.path('/login');
+    };
 
     // Set static variables
     $scope.numPerPage = 15;
@@ -19,7 +24,7 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
       }).then(function successCallback(response) {
           $scope.branches = angular.fromJson(response.data);
       }, function errorCallback(response) {
-          $log.log(response);
+          console.log(response);
       });
     };
     getBranches();
@@ -32,7 +37,7 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
       }).then(function successCallback(response) {
           $scope.types = angular.fromJson(response.data);
       }, function errorCallback(response) {
-          $log.log(response);
+          console.log(response);
       });
     };
     getTypes();
@@ -153,9 +158,9 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
             $scope.$storage.releases = data;
           }
            $scope.totalPages = Math.ceil($scope.$storage.releases.length / $scope.numPerPage);
-           $log.log('request successful');
+           console.log('request successful');
        }, function errorCallback(response) {
-           $log.log(response);
+           console.log(response);
        });
     };
     getReleases('onload');
@@ -252,8 +257,17 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
     };
 }]);
 
-app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$routeParams',
-  function ($scope, $location, $log, $http, $routeParams) {
+app.controller('DetailsController', ['$scope', '$location', '$http', '$routeParams', '$sessionStorage',
+  function ($scope, $location, $http, $routeParams, $sessionStorage) {
+
+    $scope.githubSignOut = function () {
+      $sessionStorage.trigger = true;
+      $location.path('/login');
+    };
+
+    $scope.redirect = function () {
+      $location.path('/dashboard');
+    };
 
     var release_name = $routeParams.release_id;
 
@@ -265,7 +279,7 @@ app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$r
      }).then(function successCallback(response) {
          $scope.release = angular.fromJson(response.data);
      }, function errorCallback(response) {
-         $log.log(response);
+         console.log(response);
      });
 
     // Request task details
@@ -276,8 +290,52 @@ app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$r
      }).then(function successCallback(response) {
           $scope.tasks = transform(response.data);
      }, function errorCallback(response) {
-         $log.log(response);
+         console.log(response);
      });
+
+     $scope.redirect = function () {
+       $location.path('/dashboard');
+     };
+}]);
+
+app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStorage',
+  function($scope, $location, $http){
+
+    var provider = new firebase.auth.GithubAuthProvider();
+    provider.addScope('repo');
+
+    firebase.auth().getRedirectResult().then(function(result) {
+      var token = result.credential.accessToken;
+
+      $http({
+          method: 'GET',
+          url: 'https://api.github.com/user/teams',
+          headers: {'Authorization': 'token ' + token}
+      }).then(function successCallback(response) {
+          var teams = response.data;
+          for (var key in teams) {
+           if (teams.hasOwnProperty(key)){
+             var name = teams[key].name;
+             var org = teams[key].organization.login;
+
+             if (name == 'release-ui' && org == 'istio-releases'){
+               console.log('loggedin')
+               localStorage.setItem('loggedIn', true);
+               $location.path('/dashboard');
+             }
+           }
+          }
+      }, function errorCallback(response) {
+          console.log(response);
+      });
+    }).catch(function(error) {
+      console.log(error);
+    });
+
+
+    $scope.login = function () {
+      firebase.auth().signInWithRedirect(provider);
+    };
 }]);
 
 var transform =

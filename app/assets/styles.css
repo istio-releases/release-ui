@@ -23,7 +23,7 @@
     float: left;
 }
 
-.login
+.logout
 {
     float: right;
     display: inline-block;
@@ -42,8 +42,29 @@ html
     height: 100%;
     background-color: white;
     font-size: 0.9rem;
+    min-width: 883px;
 }
 
+/* -------------------------- */
+/* login.html styling */
+
+.welcome
+{
+    background-color: #2C6AC4;
+    width:100%;
+    height: 100%;
+    position: absolute;
+}
+
+.animation
+{
+     animation-duration: 0.5s;
+}
+
+.login
+{
+    margin-top: 10px;
+}
 
 /* -------------------------- */
 /* main.html styling */
@@ -60,6 +81,11 @@ html
 {
     background-color: #2C6AC4;
     color: white;
+}
+
+.form-control
+{
+    font-weight: normal;
 }
 
 .btn
