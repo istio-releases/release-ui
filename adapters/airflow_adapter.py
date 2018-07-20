@@ -1,15 +1,17 @@
 """The Airflow Adapter."""
 from datetime import datetime
+import threading
 from adapter_abc import Adapter
 from from_sql import read_releases
 from from_sql import read_tasks
 from resources.filter_releases import filter_releases
 from resources.filter_releases import sort
-from to_sql import to_sql_release
 from to_sql import to_sql_releases
+from to_sql import to_sql_release
 from to_sql import to_sql_task
 from to_sql import to_sql_tasks
-import threading
+
+CACHE_TTL = 1800
 
 class AirflowAdapter(Adapter):
   """Provides a way to interact with the Airflow Database, and get data from it."""
@@ -93,7 +95,7 @@ class AirflowAdapter(Adapter):
       Array of branches as strings.
     """
     # check if cache is older than 30 mins. If true, then update cache
-    if (self._cache_last_updated - datetime.now()).total_seconds() > 1800:
+    if (self._cache_last_updated - datetime.now()).total_seconds() > CACHE_TTL:
       self.update_cache()
     with self._lock:
       return self._branches
@@ -104,21 +106,21 @@ class AirflowAdapter(Adapter):
     Returns:
       Array of types as strings.
     """
-    if (self._cache_last_updated - datetime.now()).total_seconds() > 1800:
+    if (self._cache_last_updated - datetime.now()).total_seconds() > CACHE_TTL:
       self.update_cache()
     with self._lock:
       return self._release_types
 
   def _update_cache(self):
-    with self._lock:
-      raw_release_data = self._airflow_db.query('SELECT dag_id, execution_date FROM dag_run;')
-      self._releases = read_releases(raw_release_data, self._airflow_db)
+    raw_release_data = self._airflow_db.query('SELECT dag_id, execution_date FROM dag_run;')
+    self._releases = read_releases(raw_release_data, self._airflow_db)
+    branches = set()
+    types = set()
+    for release in self._releases:
+      branches.add(self._releases[release].branch)
+      types.add(self._releases[release].release_type)
 
-      branches = set()
-      types = set()
-      for release in self._releases:
-        branches.add(self._releases[release].branch)
-        types.add(self._releases[release].release_type)
+    with self._lock:
       self._branches = list(branches)
       self._release_types = list(types)
 

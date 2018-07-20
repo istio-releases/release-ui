@@ -24,7 +24,7 @@ class AirflowDB(object):
     self._user = user
     self._password = password
     self._db = db
-    self._airflow_db = self._create_connection()
+    self._create_connection()
 
   def query(self, request):
     """Sends an SQL query to the airflow database.
@@ -47,11 +47,10 @@ class AirflowDB(object):
       if e[0] in [errorcode.CR_SERVER_GONE_ERROR, errorcode.CR_SERVER_LOST]:
         if cursor:
           cursor.close()
-        self._airflow_db = self._create_connection()
+        self._create_connection()
         cursor = self._airflow_db.cursor()
         cursor.execute(request)
         response = cursor.fetchall()
-        logging.info('MySQLdb connection restored.')
 
     cursor.close()
 
@@ -72,7 +71,8 @@ class AirflowDB(object):
           user=self._user,
           passwd=self._password,
           db=self._db)
-    return db
+    self._airflow_db = db
+    logging.info('MySQLdb connection restored.')
 
 # TODO(dommarques):
 #   - get the data into something usable (currently a tuple, possibly shunt to adapter portion)  pylint: disable=line-too-long
