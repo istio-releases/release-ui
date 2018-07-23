@@ -1,8 +1,7 @@
 """UI Server, Connects all Components."""
 import os
-from adapters.airflow_connector import AirflowDB
-from adapters.file_adapter import FileAdapter
 from adapters.airflow_adapter import AirflowAdapter
+from adapters.airflow_connector import AirflowDB
 from flask import Flask
 from flask import make_response
 from flask_restful import Api

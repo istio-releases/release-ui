@@ -9,6 +9,8 @@ from data.release import Release
 from data.state import State
 from data.task import Task
 from data.xcom_keys import xcomKeys
+from google.appengine.api import urlfetch
+import xml.etree.ElementTree as ElementTree
 
 STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
                      'running': State.PENDING,
@@ -44,10 +46,13 @@ def read_releases(release_data, airflow_db):
     release.started = int(started)
     release.labels = [item.dag_id]
     release.state = state
-    if xcom_dict is None:
+    if green_sha is None:
       continue
     else:
       release.links = construct_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first, or we make our own way to get the links pylint: disable=line-too-long
+    if xcom_dict is None:
+      continue
+    else:
       release.name = xcom_dict[xcomKeys.VERSION]
       release.branch = xcom_dict[xcomKeys.BRANCH]
       try:
@@ -169,9 +174,19 @@ def get_xcom(execution_date, dag_id, airflow_db):
 
 def construct_links(green_sha):
   """Takes the green build sha and derives the repo links from that."""
+  response = []
   # green_sha[1:-1] gets rid of the quotes that enclose the SHA
   green_build_link = 'https://github.com/istio/green-builds/blob/' + green_sha[1:-1] + '/build.xml'
-  return [green_build_link]
+  response.append(green_build_link)
+  request_link = 'https://raw.githubusercontent.com/istio/green-builds/' + green_sha[1:-1] + '/build.xml'
+  r = urlfetch.fetch(request_link)
+  data = ElementTree.fromstring(r.content)
+  for project in data.iter('project'):
+    name = project.attrib['name']
+    sha = project.attrib['revision']
+    link = 'https://github.com/' + name + '/commit/' + sha
+    response.append(link)
+  return response
 
 
 def parse_dag_id(dag_id):
