@@ -92,7 +92,7 @@ class Release(object):
   @links.setter
   def links(self, value):
     """Sets links as list of string urls."""
-    self._validate_array(basestring, value, 'links')
+    self._validate_array(dict, value, 'links')
 
   @property
   def started(self):

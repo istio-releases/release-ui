@@ -3,6 +3,9 @@
 /* Controllers */
 
 var site = window.location.origin;
+var auth_org = 'istio-releases';
+var auth_team = 'release-ui';
+
 var app = angular.module('ReleaseUI.controllers', ['ngStorage', 'ReleaseUI.filters']);
 
 
@@ -332,7 +335,7 @@ app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStor
                var name = teams[key].name;
                var org = teams[key].organization.login;
 
-               if (name == 'release-ui' && org == 'istio-release-ui'){
+               if (name == auth_team && org == auth_org){
                  auth = true;
                  console.log('loggedin');
                  localStorage.setItem('loggedIn', true);

@@ -29,14 +29,12 @@ for i in range(number_of_releases):
   for task_num in range(number_of_tasks):
     new_data[release_id]['tasks'].append(random.randint(0, 9))
   new_data[release_id]['links'] = []
-  new_data[release_id]['links'].append('https://youtu.be/dQw4w9WgXcQ')
-  new_data[release_id]['links'].append('https://youtu.be/dQw4w9WgXcQ')
   if number_of_repos >= 1:
-    new_data[release_id]['links'].append('https://youtu.be/dQw4w9WgXcQ')
+    new_data[release_id]['links'].append({'name':'Repo 1', 'url':'https://youtu.be/dQw4w9WgXcQ'})
   if number_of_repos >= 2:
-    new_data[release_id]['links'].append('https://youtu.be/dQw4w9WgXcQ')
+    new_data[release_id]['links'].append({'name':'Repo 2', 'url':'https://youtu.be/dQw4w9WgXcQ'})
   if number_of_repos >= 3:
-    new_data[release_id]['links'].append('https://youtu.be/dQw4w9WgXcQ')
+    new_data[release_id]['links'].append({'name':'Repo 3', 'url':'https://youtu.be/dQw4w9WgXcQ'})
   new_data[release_id]['last_active_task'] = 'task' + str(random.randint(1, 5)) + '_ID'
   branch = random.randint(0,2)
   if branch == 0:
