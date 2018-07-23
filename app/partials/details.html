@@ -31,8 +31,8 @@
     <button ng-if="release.stage == 5" type="button" class="btn btn-info btn-sm">Tagging</button>
     <button ng-if="release.stage == 6" type="button" class="btn btn-info btn-sm">Finalizing</button>
     <button ng-if="release.stage == 7" type="button" class="btn btn-info btn-sm">Done</button>
-    <button type="button" class="btn btn-secondary"> {{release.branch}} </button>
-    <button type="button" class="btn btn-secondary"> {{release.release_type}} </button>
+    <button type="button" class="not-clickable btn btn-secondary"> {{release.branch}} </button>
+    <button type="button" class="not-clickable btn btn-secondary"> {{release.release_type}} </button>
 
   </div>
 
@@ -81,10 +81,10 @@
               {{task.last_modified * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
             </td>
             <td>
-              <button ng-if="task.dependent_on.length == 0" type="button" class="btn btn-sm">
+              <button ng-if="task.dependent_on.length == 0" type="button" class="not-clickable btn btn-sm">
                 None
               </button>
-              <button ng-if="task.dependent_on.length != 0" ng-repeat="tag in task.dependent_on" type="button" class="btn btn-sm">
+              <button ng-if="task.dependent_on.length != 0" ng-repeat="tag in task.dependent_on" type="button" class="not-clickable btn btn-sm">
                 {{tag}}
               </button>
             </td>

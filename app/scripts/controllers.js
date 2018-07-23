@@ -305,6 +305,7 @@ app.controller('DetailsController', ['$scope', '$location', '$http', '$routePara
 
 app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStorage',
   function($scope, $location, $http){
+    var loggingIn;
 
     var provider = new firebase.auth.GithubAuthProvider();
     provider.addScope('repo');
@@ -312,8 +313,10 @@ app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStor
     if (localStorage.getItem('loggedIn')) {
       $scope.message = 'Go to Dashboard';
     }
-    else if (localStorage.getItem('user') === null) {
+    else if (localStorage.getItem('loggingIn')) {
       $scope.message = 'Log In with GitHub';
+      localStorage.removeItem('loggingIn');
+      $scope.isLoading = true;
       firebase.auth().getRedirectResult().then(function(result) {
         var token = result.credential.accessToken;
         console.log(result);
@@ -323,23 +326,31 @@ app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStor
             headers: {'Authorization': 'token ' + token}
         }).then(function successCallback(response) {
             var teams = response.data;
+            var auth = false;
             for (var key in teams) {
              if (teams.hasOwnProperty(key)){
                var name = teams[key].name;
                var org = teams[key].organization.login;
 
-               if (name == 'release-ui' && org == 'istio-releases'){
-                 console.log('loggedin')
+               if (name == 'release-ui' && org == 'istio-release-ui'){
+                 auth = true;
+                 console.log('loggedin');
                  localStorage.setItem('loggedIn', true);
                  localStorage.setItem('user', result.user.displayName);
                  $location.path('/dashboard');
                }
              }
-            }
+           }
+           if(!auth){
+             alert("You are not authorized to view this page.");
+           }
+            $scope.isLoading = false;
         }, function errorCallback(response) {
-            console.log(response);
+          $scope.isLoading = false;
+          console.log(response);
         });
       }).catch(function(error) {
+        $scope.isLoading = false;
         console.log(error);
       });
     }
@@ -358,6 +369,7 @@ app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStor
         $location.path('/dashboard');
       }
       else {
+        localStorage.setItem('loggingIn', true);
         firebase.auth().signInWithRedirect(provider);
       }
     };

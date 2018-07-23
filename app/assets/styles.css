@@ -45,6 +45,7 @@ html
     min-width: 883px;
 }
 
+
 /* -------------------------- */
 /* login.html styling */
 
@@ -66,8 +67,30 @@ html
     margin-top: 10px;
 }
 
+md-progress-circular
+{
+    color: white;
+}
+
+#authorizing
+{
+    position: relative;
+    top: -105px;
+    font-weight: bold;
+}
+
 /* -------------------------- */
 /* main.html styling */
+
+.clickable
+{
+    cursor: pointer;
+}
+
+.not-clickable
+{
+    cursor: auto !important;
+}
 
 .logout
 {

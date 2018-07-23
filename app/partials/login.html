@@ -1,16 +1,23 @@
 <div class="w3-animate-opacity w3-text-white welcome">
-  <div class="w3-display-middle">
+  <div class="w3-display-middle" ng-show="!isLoading">
     <div class="animation w3-jumbo w3-animate-left">
       <img src="/app/assets/images/logo.png" style="width:30%;">
     </div>
     <div class="animation w3-jumbo w3-animate-right">
-      <h1 class="w3-jumbo">Istio Release Dashboard</h1>
+      <h1 class="w3-jumbo">Istio Release <br> Dashboard</h1>
     </div>
     <hr class="w3-border-white" style="margin:auto;width:50%">
     <div class="w3-center">
       <button type="button" class="btn btn-lg btn-outline-light login" ng-click="login()">
         {{message}}
       </button>
+    </div>
+  </div>
+  <div class="w3-display-middle" ng-show="isLoading">
+    <md-progress-circular md-diameter="200" class="md-accent" md-mode="indeterminate">
+    </md-progress-circular>
+    <div id="authorizing">
+        Authorizing...
     </div>
   </div>
 </div>

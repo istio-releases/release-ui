@@ -24,12 +24,12 @@
         md-placeholder="To" md-min-date="minToDate" md-max-date="maxDate"> </md-datepicker>
     </div>
     <div class="col">
-      <input type="radio" ng-model="filterDate" value="started" ng-click="dateTypeChange(0)" default>
+      <input class="clickable" type="radio" ng-model="filterDate" value="started" ng-click="dateTypeChange(0)" default>
       <label class="greyed">
         Filter by Creation Date
       </label>
       <br/>
-      <input type="radio" ng-model="filterDate" value="last_modified" ng-click="dateTypeChange(1)">
+      <input class="clickable" type="radio" ng-model="filterDate" value="last_modified" ng-click="dateTypeChange(1)">
       <label class="greyed">
         Filter by Modified Date
       </label>
@@ -42,7 +42,7 @@
     <thead class="thead-light">
       <th>
         <div>
-          <select class="form-control dropdown" ng-model="selectedValue"
+          <select class="form-control dropdown clickable" ng-model="selectedValue"
             ng-change="filterChange(0,selectedValue)"
             ng-options="state.id as state.status for state in stateValues">
             <option ng-selected="defaultStatus" value="">Status</option>
@@ -50,7 +50,7 @@
         </div>
       </th>
       <th>
-        <button class="btn table-header" type="button">
+        <button class="btn table-header not-clickable" type="button">
           Version
         </button>
       </th>
@@ -77,7 +77,7 @@
       </th>
       <th>
         <div>
-          <select class="form-control dropdown" ng-model="selectedBranch"
+          <select class="form-control dropdown clickable" ng-model="selectedBranch"
             ng-change="filterChange(1,selectedBranch)"
             ng-options="branch as branch for branch in branches">
             <option ng-selected="defaultBranch" value="">Branch</option>
@@ -86,7 +86,7 @@
       </th>
       <th>
         <div>
-          <select class="form-control dropdown" ng-model="selectedType"
+          <select class="form-control dropdown clickable" ng-model="selectedType"
             ng-change="filterChange(2,selectedType)"
             ng-options="type as type for type in types">
             <option ng-selected="defaultType" value="">Type</option>
@@ -95,7 +95,7 @@
       </th>
     </thead>
     <tbody id="dashboard">
-      <tr ng-repeat="release in $storage.releases | limitTo:numPerPage:numPerPage*($storage.currentPage-1)"
+      <tr class="clickable" ng-repeat="release in $storage.releases | limitTo:numPerPage:numPerPage*($storage.currentPage-1)"
           ng-click="redirectToDetails(release)">
         <td>
           <img ng-if="release.state == 2" src="/app/assets/images/check.png">
@@ -116,12 +116,12 @@
           {{release.last_active_task}}
         </td>
         <td>
-          <button type="button" class="btn btn-secondary">
+          <button type="button" class="btn btn-secondary not-clickable">
             {{release.branch}}
           </button>
         </td>
         <td>
-          <button type="button" class="btn btn-secondary">
+          <button type="button" class="btn btn-secondary not-clickable">
             {{release.release_type}}
           </button>
         </td>

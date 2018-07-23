@@ -22,7 +22,6 @@ app.config(function($routeProvider, $locationProvider) {
     });
 }).run(function($rootScope, $location) {
   $rootScope.$on("$routeChangeStart", function(event, next, current) {
-    console.log(localStorage.getItem('loggedIn'));
     if (localStorage.getItem('loggedIn') == null) {
       // no logged user, redirect to /login
       if ( next.templateUrl === "app/partials/login.html") {
