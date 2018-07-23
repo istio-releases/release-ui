@@ -31,6 +31,9 @@ class FilterOptions(object):
       error += ', instead got a ' + str(type(value))
       raise ValueError(error)
 
+  def _is_valid_state(self, state):
+    return 0 <= state <= 4
+
   @property
   def start_date(self):
     return self._filter_options['start_date']
@@ -64,7 +67,7 @@ class FilterOptions(object):
 
   @state.setter
   def state(self, value):
-    if self._validate_type(int, value, 'state'):
+    if self._is_valid_state(value):
       if value == 0:
         state = State.UNUSED_STATUS
       elif value == 1:

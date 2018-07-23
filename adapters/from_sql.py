@@ -1,20 +1,24 @@
 """Converts the data from SQL to expected format."""
+from collections import namedtuple
 import json
-from data.release import Release
-from data.task import Task
+import logging
+import time
 from adapters.to_sql import to_sql_tasks
 from adapters.to_sql import to_sql_xcom
-from resources.to_timestamp import to_timestamp
+from data.release import Release
 from data.state import State
-from collections import namedtuple
-import logging
+from data.task import Task
+from data.xcom_keys import xcomKeys
 
 STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
                      'running': State.PENDING,
                      'success': State.FINISHED,
                      'failed': State.FAILED,
                      'shutdown': State.ABANDONED,
-                     'upstream_failed': State.PENDING}
+                     'upstream_failed': State.PENDING,
+                     'None': State.UNUSED_STATUS}
+STRING_FROM_STATE =  {v: k for k, v in STATE_FROM_STRING.iteritems()}
+
 
 def read_releases(release_data, airflow_db):
   """Reads in releases in the SQL tuple format, transforms them into objects.
@@ -29,29 +33,35 @@ def read_releases(release_data, airflow_db):
   release_named_tuple = namedtuple('Row', ['dag_id', 'execution_date'])
   release_objects = {}  # resources.py expects a dict of objects
   for item in release_data:  # iterate through each release in release_data
-    item = release_named_tuple._make(item)
+    item = release_named_tuple(*item)
     release = Release()  # initialize the release object
-    started = to_timestamp(item.execution_date)
+    execution_date = item.execution_date
+    started = int(time.mktime(execution_date.timetuple()))
     task_ids, most_recent_task, state = get_task_info(item.dag_id, started, airflow_db)
     xcom_dict, green_sha = get_xcom(started, item.dag_id, airflow_db)
     release.release_id = item.dag_id + '@' + str(item.execution_date)
     release.tasks = task_ids
-    release.started = started
-    release.links = construct_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first, or we make our own way to get the links pylint: disable=line-too-long
+    release.started = int(started)
     release.labels = [item.dag_id]
     release.state = state
-    release.branch, release.release_type = parse_dag_id(item.dag_id)
     if xcom_dict is None:
-      # allows for continuation, even if xcom has not been generated yet
-      release.name = release.release_id
+      continue
     else:
-      release.name = xcom_dict['VERSION']
+      release.links = construct_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first, or we make our own way to get the links pylint: disable=line-too-long
+      release.name = xcom_dict[xcomKeys.VERSION]
+      release.branch = xcom_dict[xcomKeys.BRANCH]
+      try:
+        # it seems that some xcom dicts do not have this value for some reason?
+        release.release_type = xcom_dict[xcomKeys.RELEASE_TYPE]
+      except KeyError:
+        _, release.release_type = parse_dag_id(item.dag_id)
     if most_recent_task:
       # allows for continuation even if tasks have not begun/been generated yet
-      release.last_modified = to_timestamp(most_recent_task.last_modified)
+      last_modified = most_recent_task.last_modified
+      release.last_modified = int(time.mktime(last_modified.timetuple()))
       release.last_active_task = most_recent_task.task_name
     else:
-      release.last_modified = to_timestamp(item.execution_date)
+      release.last_modified = int(time.mktime(execution_date.timetuple()))
       release.last_active_task = ''
     release_objects[release.release_id] = release
 
@@ -72,26 +82,26 @@ def read_tasks(task_data):
   for item in task_data:
     task = Task()
     logging.debug(item)
-    item = task_named_tuple._make(item)
+    item = task_named_tuple(*item)
     task.task_name = item.task_id
     task.add_dependency = None  # TODO(dommarques): figure out how to get this - dag info?
-    if item.start_date == None:
-      task.started = to_timestamp(item.execution_date)
+    if item.start_date is None:
+      execution_date = item.execution_date
+      task.started = int(time.mktime(execution_date.timetuple()))
     else:
-      task.started = to_timestamp(item.start_date)
-    if item.state == None:
-      task.status = STATE_FROM_STRING.get('none')
+      start_date = item.start_date
+      task.started = int(time.mktime(start_date.timetuple()))
+    task.status = STATE_FROM_STRING.get(str(item.state))
+    if item.end_date is None:
+      task.last_modified = int(time.mktime(execution_date.timetuple()))
     else:
-      task.status = STATE_FROM_STRING.get(item.state)
-    if item.end_date == None:
-      task.last_modified = to_timestamp(item.execution_date)
-    else:
-      task.last_modified = to_timestamp(item.end_date)
+      end_date = item.end_date
+      task.last_modified = int(time.mktime(end_date.timetuple()))
     task.log_url = 'https://youtu.be/dQw4w9WgXcQ'  # TODO(dommarques): figure out how to get the log in here
-    if item.state == None:
-      item.state == 'none'
+    if item.state is None:
+      task.state = 'none'
     else:
-      task.error = item.state
+      task.error = STRING_FROM_STATE.get(task.status)
     task_objects.append(task)
   return task_objects
 
@@ -113,7 +123,7 @@ def get_task_info(dag_id, execution_date, airflow_db):
   state = 0
   task_ids = []
   if task_objects:
-    most_recent_task = task_objects[len(task_objects) - 1]
+    most_recent_task = task_objects[-1]
   else:
     most_recent_task = None
   for task in task_objects:
@@ -128,7 +138,7 @@ def read_xcom_vars(xcom_data):
   # occasionally, the xcom data doesn't exist yet. This is a workaround
   xcom_named_tuple = namedtuple('Row', ['xcom_dict', 'green_sha'])
   try:
-    xcom_data = xcom_named_tuple._make(xcom_data)
+    xcom_data = xcom_named_tuple(*xcom_data)
     # The index 0 is here because the data returns in a tuple
     xcom_dict = json.loads(xcom_data.xcom_dict[0])
     green_sha = xcom_data.green_sha[0]
@@ -159,9 +169,9 @@ def get_xcom(execution_date, dag_id, airflow_db):
 
 def construct_links(green_sha):
   """Takes the green build sha and derives the repo links from that."""
-  # this does nothing right now, but in the future it will get the links for
-  # each release
-  return ['https://youtu.be/dQw4w9WgXcQ']
+  # green_sha[1:-1] gets rid of the quotes that enclose the SHA
+  green_build_link = 'https://github.com/istio/green-builds/blob/' + green_sha[1:-1] + '/build.xml'
+  return [green_build_link]
 
 
 def parse_dag_id(dag_id):
@@ -174,18 +184,9 @@ def parse_dag_id(dag_id):
     branch: string
     release_type: string
   """
-  underscore_count = 0
-  last_underscore = False
-  for i, char in enumerate(dag_id):
-    if char == '_':
-      underscore_count += 1
-    if underscore_count == 1 and not last_underscore:
-      last_underscore = i
-    elif underscore_count == 2:
-      last_underscore += 1
-      release_type = dag_id[last_underscore:i]
-      branch = dag_id[i+1:len(dag_id)]
-      return branch, release_type
+  info = dag_id.split('_')
+  if len(info) in [2, 3]:
+    return info[-2], info[-1]
 
 
 # TODO(dommarques): The data adapter should be able to:

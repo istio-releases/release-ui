@@ -10,6 +10,7 @@ from to_sql import to_sql_releases
 from to_sql import to_sql_release
 from to_sql import to_sql_task
 from to_sql import to_sql_tasks
+import logging
 
 CACHE_TTL = 1800
 
@@ -19,6 +20,9 @@ class AirflowAdapter(Adapter):
   def __init__(self, airflow_db):
     self._airflow_db = airflow_db
     self._lock = threading.Lock()
+    self._release_types = set()
+    self._branches = set()
+    self._cache_last_updated = datetime.fromtimestamp(0)
     self._update_cache()
 
   def get_releases(self, filter_options):
@@ -59,6 +63,7 @@ class AirflowAdapter(Adapter):
     """Retrieve all task information.
 
     Args:
+      dag_id: str
       execution_date: unix format
 
     Returns:
@@ -95,8 +100,7 @@ class AirflowAdapter(Adapter):
       Array of branches as strings.
     """
     # check if cache is older than CACHE_TTL secs. If true, then update cache
-    if (self._cache_last_updated - datetime.now()).total_seconds() > CACHE_TTL:
-      self.update_cache()
+    self._update_cache()
     with self._lock:
       return self._branches
 
@@ -106,22 +110,24 @@ class AirflowAdapter(Adapter):
     Returns:
       Array of types as strings.
     """
-    if (self._cache_last_updated - datetime.now()).total_seconds() > CACHE_TTL:
-      self.update_cache()
+    self._update_cache()
     with self._lock:
       return self._release_types
 
   def _update_cache(self):
-    raw_release_data = self._airflow_db.query('SELECT dag_id, execution_date FROM dag_run;')
-    self._releases = read_releases(raw_release_data, self._airflow_db)
-    branches = set()
-    types = set()
-    for release in self._releases:
-      branches.add(self._releases[release].branch)
-      types.add(self._releases[release].release_type)
+    if (datetime.now() - self._cache_last_updated).total_seconds() > CACHE_TTL:
+      logging.info('Type and Branch cache updated')
+      raw_release_data = self._airflow_db.query('SELECT dag_id, execution_date FROM dag_run;')
+      releases = read_releases(raw_release_data, self._airflow_db)
+      branches = set()
+      types = set()
+      for release in releases:
+        branches.add(releases[release].branch)
+        types.add(releases[release].release_type)
 
-    with self._lock:
-      self._branches = list(branches)
-      self._release_types = list(types)
-
-      self._cache_last_updated = datetime.now()
+      with self._lock:
+        self._branches = list(branches)
+        self._release_types = list(types)
+        self._cache_last_updated = datetime.now()
+    else:
+      return

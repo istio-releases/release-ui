@@ -2,7 +2,7 @@
 import logging
 import MySQLdb
 from mysql.connector import errorcode
-
+import threading
 
 class AirflowDB(object):
   """Provides the methods which allow interaction with the Airflow SQL database."""  # pylint: disable=line-too-long
@@ -24,6 +24,7 @@ class AirflowDB(object):
     self._user = user
     self._password = password
     self._db = db
+    self._lock = threading.Lock()
     self._create_connection()
 
   def query(self, request):
@@ -38,21 +39,23 @@ class AirflowDB(object):
     # The following ensures that the query executes and returns,
     # even if the db connection has been lost
     logging.info('Running query "%s" against Airflow DB' % request)
-    try:
-      cursor = self._airflow_db.cursor()
-      cursor.execute(request)
-      response = cursor.fetchall()
-    except MySQLdb.OperationalError, e:
-      logging.error('Error %i triggered with MySQLdb: %s'  % (e[0], e[1]))
-      if e[0] in [errorcode.CR_SERVER_GONE_ERROR, errorcode.CR_SERVER_LOST]:
-        if cursor:
-          cursor.close()
-        self._create_connection()
+    # locking improves reliability for requests dramatically
+    with self._lock:
+      try:
         cursor = self._airflow_db.cursor()
         cursor.execute(request)
         response = cursor.fetchall()
+      except MySQLdb.OperationalError, e:
+        logging.error('Error %i triggered with MySQLdb: %s'  % (e[0], e[1]))
+        if e[0] in [errorcode.CR_SERVER_GONE_ERROR, errorcode.CR_SERVER_LOST]:
+          if cursor:
+            cursor.close()
+          self._create_connection()
+          cursor = self._airflow_db.cursor()
+          cursor.execute(request)
+          response = cursor.fetchall()
 
-    cursor.close()
+      cursor.close()
 
     return response
 

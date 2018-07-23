@@ -3,6 +3,15 @@ import datetime
 from resources.dag_name_parser import dag_name_parser
 from data.state import State
 
+STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
+                     'running': State.PENDING,
+                     'success': State.FINISHED,
+                     'failed': State.FAILED,
+                     'shutdown': State.ABANDONED,
+                     'upstream_failed': State.PENDING,
+                     'None': State.UNUSED_STATUS}
+STRING_FROM_STATE =  {v: k for k, v in STATE_FROM_STRING.iteritems()}
+
 
 def to_sql_releases(filter_options):
   """Converts a set of parameters contained in 'args' to a SQL query.
@@ -21,13 +30,10 @@ def to_sql_releases(filter_options):
   end_date = datetime.datetime.fromtimestamp(filter_options.end_date)
   # append the date filter to the query based on:
   # datetype, start_date, and end_date
-  if filter_options.datetype == 0:
-    sql_query += ' WHERE execution_date BETWEEN "' + str(start_date) + '" AND "'+ str(end_date) + '"'  # pylint: disable=line-too-long
-  else:
-    sql_query += ' WHERE execution_date BETWEEN "' + str(start_date) + '" AND "'+ str(end_date) + '"'  # pylint: disable=line-too-long
+  sql_query += ' WHERE execution_date BETWEEN "' + str(start_date) + '" AND "'+ str(end_date) + '"'  # pylint: disable=line-too-long
   # append a state filter, if there is one available -- '0' means all states
   if filter_options.state != 0:
-    sql_query += ' AND state = "%s"' %(convert_state(state))
+    sql_query += ' AND state = "%s"' %(STRING_FROM_STATE.get(filter_options.state))
   # add sorting parameter
   sql_query = add_sorting(sql_query, filter_options.sort_method, filter_options.reverse)
   # TODO(dommarques) - add label filtering, probably just the dag_id
@@ -71,28 +77,6 @@ def to_sql_xcom(dag_id, execution_date):
   sql_query += ' AND dag_id = "' + dag_id + '"'
   sql_query += ';'
   return sql_query
-
-
-def convert_state(state):
-  """Converts the state enumeration into the format needed for the SQL query.
-
-  Args:
-    state: the integer which enumerates the requested state (int)
-
-  Returns:
-    state: string format which follows the same format in the SQl db (str)
-  """
-  state = int(state)
-  if state == State.UNUSED_STATUS:
-    return 'none'
-  elif state == State.PENDING:
-    return 'running'
-  elif state == State.FINISHED:
-    return 'success'
-  elif state == State.FAILED:
-    return 'failed'
-  elif state == State.ABANDONED:
-    return 'shutdown'
 
 
 def add_sorting(sql_query, sort_method, reverse):

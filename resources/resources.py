@@ -1,12 +1,11 @@
 """REST API."""
 import json
-from filter_releases import filter_releases
-from filter_releases import sort
+import time
+from dag_name_parser import dag_name_parser
 from flask_restful import reqparse
 from flask_restful import Resource
-from to_timestamp import to_timestamp
-from dag_name_parser import dag_name_parser
 from data.filter_options import FilterOptions
+import logging
 
 release_requests = {}
 
@@ -54,8 +53,9 @@ class Releases(Resource):
 
     response = self._adapter.get_releases(filter_options)
 
-      # returns a jsonified array with the determined start and end indices
-    return to_json(response[array_from:array_to])
+    # returns a jsonified array with the determined start and end indices
+    response = to_json(response[array_from:array_to])
+    return response
 
 
 class Release(Resource):
@@ -71,7 +71,7 @@ class Release(Resource):
 
     response = self._adapter.get_release(str(args['release']))
     response = response[str(args['release'])].to_json()
-    return json.dumps(response)
+    return response
 
 
 class Branches(Resource):
@@ -108,7 +108,7 @@ class Tasks(Resource):
     release = self._adapter.get_release(str(args['release']))
     release_tasks = release[str(args['release'])].tasks
     dag_id, execution_date = dag_name_parser(str(args['release']))
-    execution_date = to_timestamp(execution_date)
+    execution_date = time.mktime(execution_date.timetuple())
     task_objects = []
     for task_id in release_tasks:
       task_object = self._adapter.get_task(dag_id, task_id, execution_date)
