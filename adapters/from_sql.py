@@ -138,8 +138,8 @@ def get_task_info(dag_id, execution_date, airflow_db):
     if task.status > state:
       state = task.status
       if state == STATE_FROM_STRING.get('failed'):
-        return task_ids, most_recent_task, state
-    return task_ids, most_recent_task, state
+        most_recent_task = task
+  return task_ids, most_recent_task, state
 
 
 def read_xcom_vars(xcom_data):
