@@ -36,11 +36,11 @@
 
   </div>
 
-  <div class="row info greyed">
-      <h6>Created on: {{release.started * 1000 | date:'medium'}}</h6>
+  <div class="row info dates">
+    <p>Created on: {{release.started * 1000 | date:'medium'}}</p>
   </div>
-  <div class="row info greyed">
-      <h6>Last Modified: {{release.last_modified * 1000 | date:'medium'}}</h6>
+  <div class="row info dates">
+    <p>Last Modified: {{release.last_modified * 1000 | date:'medium'}}</p>
   </div>
 
   <table id="links" class="table table-bordered">
@@ -66,10 +66,10 @@
       <tbody>
           <tr ng-repeat="task in tasks | orderBy:'-started'">
             <td>
-              <img ng-if="task.status == 2" src="/app/assets/images/check.png">
-              <img ng-if="task.status == 3" src="/app/assets/images/error.png">
-              <img ng-if="task.status == 1" src="/app/assets/images/pending.png">
-              <img ng-if="task.status == 4" src="/app/assets/images/suspended.png">
+              <img ng-if="task.status == 2" title="Finished" src="/app/assets/images/check.png">
+              <img ng-if="task.status == 3" title="Failed" src="/app/assets/images/error.png">
+              <img ng-if="task.status == 1" title="Pending" src="/app/assets/images/pending.png">
+              <img ng-if="task.status == 4" title="Abandoned" src="/app/assets/images/suspended.png">
             </td>
             <td>
               {{ task.task_name }}
@@ -82,7 +82,7 @@
             </td>
             <td>
               <button ng-if="task.dependent_on.length == 0" type="button" class="not-clickable btn btn-sm">
-                None
+                N/A
               </button>
               <button ng-if="task.dependent_on.length != 0" ng-repeat="tag in task.dependent_on" type="button" class="not-clickable btn btn-sm">
                 {{tag}}

@@ -37,6 +37,11 @@
     text-align: center;
 }
 
+h1
+{
+  font-family: Verdana,sans-serif;
+}
+
 html
 {
     height: 100%;
@@ -44,7 +49,6 @@ html
     font-size: 0.9rem;
     min-width: 883px;
 }
-
 
 /* -------------------------- */
 /* login.html styling */
@@ -67,16 +71,20 @@ html
     margin-top: 10px;
 }
 
-md-progress-circular
-{
-    color: white;
+md-progress-circular path {
+  stroke: white;
 }
 
 #authorizing
 {
     position: relative;
     top: -105px;
-    font-weight: bold;
+}
+
+#icon
+{
+    margin-top: -5px;
+    margin-left: 10px;
 }
 
 /* -------------------------- */
@@ -164,7 +172,7 @@ md-progress-circular
 
 #release-image
 {
-    margin-top: 28px;
+    margin-top: 26px;
     margin-left: 20px;
 }
 
@@ -173,6 +181,12 @@ md-progress-circular
     margin-top: 10px;
     margin-bottom: 10px;
     margin-left: 45px;
+}
+
+.dates
+{
+    color: #858585;
+    font-style: italic;
 }
 
 #links

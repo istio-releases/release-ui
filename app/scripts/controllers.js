@@ -19,8 +19,8 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
 
     // Set static variables
     $scope.user = localStorage.getItem('user');
-    $scope.numPerPage = 15;
-    $scope.numRequested = 45;
+    $scope.numPerPage = 10;
+    $scope.numRequested = 30;
     var getBranches = function () {
       $http({
           method: 'GET',
@@ -314,10 +314,10 @@ app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStor
     provider.addScope('repo');
 
     if (localStorage.getItem('loggedIn')) {
-      $scope.message = 'Go to Dashboard';
+      $scope.login_message = 'Go to Dashboard';
     }
     else if (localStorage.getItem('loggingIn')) {
-      $scope.message = 'Log In with GitHub';
+      $scope.login_message = 'Log In with GitHub';
       localStorage.removeItem('loggingIn');
       $scope.isLoading = true;
       firebase.auth().getRedirectResult().then(function(result) {
@@ -347,7 +347,7 @@ app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStor
            if(!auth){
              alert("You are not authorized to view this page.");
            }
-            $scope.isLoading = false;
+           $scope.isLoading = false;
         }, function errorCallback(response) {
           $scope.isLoading = false;
           console.log(response);
@@ -358,7 +358,7 @@ app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStor
       });
     }
     else {
-      $scope.message = 'Log In with GitHub';
+      $scope.login_message = 'Log In with GitHub';
       localStorage.removeItem('user');
       firebase.auth().signOut().then(function() {
         console.log('Sign out successful');
