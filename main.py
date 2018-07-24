@@ -1,7 +1,7 @@
 """UI Server, Connects all Components."""
 import os
+from adapters.airflow_adapter import AirflowAdapter
 from adapters.airflow_connector import AirflowDB
-from adapters.file_adapter import FileAdapter
 from flask import Flask
 from flask import make_response
 from flask_restful import Api
@@ -11,17 +11,23 @@ import resources.resources as resources
 # creating the Flask application
 APP = Flask(__name__)
 API = Api(APP)
-
-
-adapter = FileAdapter('fake_data/fake_release_data.json', 'fake_data/fake_task_data.json')
-
-# creating the connection in the object allows for reconnection in event of
-# a lost connection
-airflow_db = AirflowDB(unix_socket=os.path.join('/cloudsql', 'istio-release-ui:us-central1:prod-airflow-snapshot-sandbox'),
-                       host=os.environ.get('CLOUDSQL_HOST'),
-                       user=os.environ.get('CLOUDSQL_USER'),
-                       password=os.environ.get('CLOUDSQL_PASSWORD'),
-                       db=os.environ.get('CLOUDSQL_DB'))
+# creates the proper database connection depending on whether the app is
+# deployed locally or on App Engine
+if os.getenv('SERVER_SOFTWARE', '').startswith('Development/'):
+  airflow_db = AirflowDB(host=os.environ.get('CLOUDSQL_HOST'),
+                         user=os.environ.get('CLOUDSQL_USER'),
+                         password=os.environ.get('CLOUDSQL_PASSWORD'),
+                         db=os.environ.get('CLOUDSQL_DB'))
+else:
+  # Connect using the unix socket located at
+  # /cloudsql/cloudsql-connection-name.
+  CLOUDSQL_CONNECTION_NAME = os.environ.get('CLOUDSQL_CONNECTION_NAME')
+  CLOUDSQL_UNIX_SOCKET = os.path.join('/cloudsql', CLOUDSQL_CONNECTION_NAME)
+  airflow_db = AirflowDB(unix_socket=CLOUDSQL_UNIX_SOCKET,
+                         user=os.environ.get('CLOUDSQL_USER'),
+                         password=os.environ.get('CLOUDSQL_PASSWORD'),
+                         db=os.environ.get('CLOUDSQL_DB'))
+adapter = AirflowAdapter(airflow_db)
 
 # adding resource endpoints to different urls
 API.add_resource(resources.Releases, '/releases', resource_class_kwargs={'adapter': adapter})
@@ -29,10 +35,9 @@ API.add_resource(resources.Release, '/release', resource_class_kwargs={'adapter'
 API.add_resource(resources.Branches, '/branches', resource_class_kwargs={'adapter': adapter})
 API.add_resource(resources.Types, '/types', resource_class_kwargs={'adapter': adapter})
 API.add_resource(resources.Tasks, '/tasks', resource_class_kwargs={'adapter': adapter})
-API.add_resource(resources.AirflowDBTesting, '/airflowdb', resource_class_kwargs={'airflow_db': airflow_db})  # TODO(dommarques): Delete when done
 
 if __name__ == '__main__':
-  APP.run(port='8080', debug=True)
+  APP.run(port='8080', debug=True)  # TODO(dommarques): Delete debug when app is done
 
 
 # route to the first page

@@ -1,1 +1,1 @@
-__all__ = ["release", "task"]
+__all__ = ["release", "task", "filter_options"]

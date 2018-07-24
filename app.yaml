@@ -3,6 +3,7 @@ threadsafe: true
 api_version: 1
 
 env_variables:
+  CLOUDSQL_CONNECTION_NAME: 't35db24833ba76815-tp:us-central1:us-central1-istio-release-e-79a693d8-sql'
   CLOUDSQL_HOST: '35.193.234.53'
   CLOUDSQL_USER: 'root'
   CLOUDSQL_PASSWORD: ''

@@ -1,0 +1,4 @@
+class xcomKeys(object):
+  VERSION = 'VERSION'
+  RELEASE_TYPE = 'PIPELINE_TYPE'
+  BRANCH = 'BRANCH'

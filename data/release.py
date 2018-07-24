@@ -15,7 +15,7 @@ class Release(object):
     """
     self._release = {}
     if data:
-      self.release_id = data['id']
+      self.release_id = data['release_id']
       self.name = data['name']
       self.tasks = data['tasks']
       self.links = data['links']
@@ -32,6 +32,7 @@ class Release(object):
       return True
     else:
       error = 'Invalid input for ' + attribute + ': not a ' + check.__name__
+      error += ', instead got a ' + str(type(value))
       raise ValueError(error)
 
   def _validate_array(self, check, value, attribute):
@@ -82,8 +83,8 @@ class Release(object):
 
   @tasks.setter
   def tasks(self, value):
-    """Sets tasks as list of int unique identifiers."""
-    self._validate_array(int, value, 'tasks')
+    """Sets tasks as list of string unique identifiers, when combined with execution_date."""
+    self._validate_array(basestring, value, 'tasks')
 
   @property
   def links(self):

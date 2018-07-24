@@ -2,7 +2,7 @@
 from datetime import datetime
 
 
-def filter_releases(releases, state, branch, release_type, start_date, end_date, datetype):
+def filter_releases(releases, filter_options):
   """Filters by all of the criteria.
 
   Args:
@@ -20,31 +20,31 @@ def filter_releases(releases, state, branch, release_type, start_date, end_date,
   """
 
   # convert and validate inputs
-  state = int(state)
+  state = int(filter_options.state)
   if state < 0 or state > 4:
     state = 0
 
   now = datetime.now()
-  start_date = datetime.fromtimestamp(int(start_date))
+  start_date = datetime.fromtimestamp(int(filter_options.start_date))
   if start_date < datetime.fromtimestamp(0) or start_date > now:
     start_date = datetime.fromtimestamp(0)
 
-  end_date = datetime.fromtimestamp(int(end_date))
+  end_date = datetime.fromtimestamp(int(filter_options.end_date))
   if end_date <= datetime.fromtimestamp(0):
     end_date = now
 
-  branch = str(branch)
+  branch = str(filter_options.branch)
   if branch == 'null':
     branch = None
 
-  release_type = str(release_type)
+  release_type = str(filter_options.release_type)
   if release_type == 'null':
     release_type = None
 
   filtered = []
   for release in releases.values():
     # If invalid datetype will default to started
-    if datetype == 'last_modified':
+    if filter_options.datetype == 'last_modified':
       check_date = release.last_modified
     else:
       check_date = release.started
@@ -70,7 +70,7 @@ class Sorting(object):
   BY_LAST_ACTIVE = 4
 
 
-def sort(releases, sort_method, reverse):
+def sort(releases, filter_options):
   """Sorts 'releases' according to 'sort_method'.
 
   Args:
@@ -81,8 +81,8 @@ def sort(releases, sort_method, reverse):
   Returns:
     Array 'releases' in a sorted order.
   """
-  sort_method = int(sort_method)
-  reverse = bool(int(reverse))
+  sort_method = int(filter_options.sort_method)
+  reverse = bool(int(filter_options.reverse))
   if sort_method == Sorting.BY_NAME:
     result = sorted(releases, key=lambda k: k.name, reverse=reverse)
   elif sort_method == Sorting.BY_CREATION:
