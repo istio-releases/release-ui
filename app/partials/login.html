@@ -1,0 +1,24 @@
+<div class="w3-animate-opacity w3-text-white welcome">
+  <div class="w3-display-middle" ng-show="!isLoading">
+    <div class="animation w3-jumbo w3-animate-left">
+      <img src="/app/assets/images/logo.png" style="width:30%;">
+    </div>
+    <div class="animation w3-jumbo w3-animate-right">
+      <h1 class="w3-jumbo">Istio Release <br> Dashboard</h1>
+    </div>
+    <hr class="w3-border-white" style="margin:auto;width:50%">
+    <div class="w3-center">
+      <button type="button" class="btn btn-lg btn-outline-light login" ng-click="login()">
+        {{login_message}}
+        <img id="icon" height="20" width="20" src="/app/assets/images/github_icon.png">
+      </button>
+    </div>
+  </div>
+  <div class="w3-display-middle" ng-show="isLoading">
+    <md-progress-circular md-diameter="200" md-mode="indeterminate">
+    </md-progress-circular>
+    <div id="authorizing">
+      Authenticating...
+    </div>
+  </div>
+</div>

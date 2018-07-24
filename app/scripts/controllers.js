@@ -3,14 +3,24 @@
 /* Controllers */
 
 var site = window.location.origin;
-var app = angular.module('ReleaseUI.controllers', ['ngStorage']);
+var auth_org = 'istio-releases';
+var auth_team = 'release-ui';
 
-app.controller('MainController', ['$scope','$http','$location','$log', '$sessionStorage',
-  function($scope, $http, $location, $log, $sessionStorage) {
+var app = angular.module('ReleaseUI.controllers', ['ngStorage', 'ReleaseUI.filters']);
+
+
+app.controller('MainController', ['$scope','$http','$location', '$sessionStorage',
+  function($scope, $http, $location, $sessionStorage) {
+
+    $scope.logout = function () {
+      localStorage.removeItem('loggedIn');
+      $location.path('/login');
+    };
 
     // Set static variables
-    $scope.numPerPage = 15;
-    $scope.numRequested = 45;
+    $scope.user = localStorage.getItem('user');
+    $scope.numPerPage = 10;
+    $scope.numRequested = 30;
     var getBranches = function () {
       $http({
           method: 'GET',
@@ -19,7 +29,7 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
       }).then(function successCallback(response) {
           $scope.branches = angular.fromJson(response.data);
       }, function errorCallback(response) {
-          $log.log(response);
+          console.log(response);
       });
     };
     getBranches();
@@ -32,7 +42,7 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
       }).then(function successCallback(response) {
           $scope.types = angular.fromJson(response.data);
       }, function errorCallback(response) {
-          $log.log(response);
+          console.log(response);
       });
     };
     getTypes();
@@ -153,9 +163,9 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
             $scope.$storage.releases = data;
           }
            $scope.totalPages = Math.ceil($scope.$storage.releases.length / $scope.numPerPage);
-           $log.log('request successful');
+           console.log('request successful');
        }, function errorCallback(response) {
-           $log.log(response);
+           console.log(response);
        });
     };
     getReleases('onload');
@@ -252,8 +262,20 @@ app.controller('MainController', ['$scope','$http','$location','$log', '$session
     };
 }]);
 
-app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$routeParams',
-  function ($scope, $location, $log, $http, $routeParams) {
+app.controller('DetailsController', ['$scope', '$location', '$http', '$routeParams', '$sessionStorage',
+  function ($scope, $location, $http, $routeParams, $sessionStorage) {
+
+    $scope.user = localStorage.getItem('user');
+
+    $scope.logout = function () {
+      localStorage.removeItem('loggedIn');
+      $location.path('/login');
+    };
+
+
+    $scope.redirect = function () {
+      $location.path('/dashboard');
+    };
 
     var release_name = $routeParams.release_id;
 
@@ -265,7 +287,7 @@ app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$r
      }).then(function successCallback(response) {
          $scope.release = angular.fromJson(response.data);
      }, function errorCallback(response) {
-         $log.log(response);
+         console.log(response);
      });
 
     // Request task details
@@ -276,8 +298,84 @@ app.controller('DetailsController', ['$scope', '$location', '$log', '$http', '$r
      }).then(function successCallback(response) {
           $scope.tasks = transform(response.data);
      }, function errorCallback(response) {
-         $log.log(response);
+         console.log(response);
      });
+
+     $scope.redirect = function () {
+       $location.path('/dashboard');
+     };
+}]);
+
+app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStorage',
+  function($scope, $location, $http){
+    var loggingIn;
+
+    var provider = new firebase.auth.GithubAuthProvider();
+    provider.addScope('repo');
+
+    if (localStorage.getItem('loggedIn')) {
+      $scope.login_message = 'Go to Dashboard';
+    }
+    else if (localStorage.getItem('loggingIn')) {
+      $scope.login_message = 'Log In with GitHub';
+      localStorage.removeItem('loggingIn');
+      $scope.isLoading = true;
+      firebase.auth().getRedirectResult().then(function(result) {
+        var token = result.credential.accessToken;
+        console.log(result);
+        $http({
+            method: 'GET',
+            url: 'https://api.github.com/user/teams',
+            headers: {'Authorization': 'token ' + token}
+        }).then(function successCallback(response) {
+            var teams = response.data;
+            var auth = false;
+            for (var key in teams) {
+             if (teams.hasOwnProperty(key)){
+               var name = teams[key].name;
+               var org = teams[key].organization.login;
+
+               if (name == auth_team && org == auth_org){
+                 auth = true;
+                 console.log('loggedin');
+                 localStorage.setItem('loggedIn', true);
+                 localStorage.setItem('user', result.user.displayName);
+                 $location.path('/dashboard');
+               }
+             }
+           }
+           if(!auth){
+             alert("You are not authorized to view this page.");
+           }
+           $scope.isLoading = false;
+        }, function errorCallback(response) {
+          $scope.isLoading = false;
+          console.log(response);
+        });
+      }).catch(function(error) {
+        $scope.isLoading = false;
+        console.log(error);
+      });
+    }
+    else {
+      $scope.login_message = 'Log In with GitHub';
+      localStorage.removeItem('user');
+      firebase.auth().signOut().then(function() {
+        console.log('Sign out successful');
+      }).catch(function(error) {
+        console.log(error);
+      });
+    }
+
+    $scope.login = function () {
+      if (localStorage.getItem('loggedIn')){
+        $location.path('/dashboard');
+      }
+      else {
+        localStorage.setItem('loggingIn', true);
+        firebase.auth().signInWithRedirect(provider);
+      }
+    };
 }]);
 
 var transform =

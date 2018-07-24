@@ -2,12 +2,13 @@
 
   <nav id="top-bar" class="navbar sticky-top">
     <div class="navbar-header header" href="/">
-      <a id="top-bar-content" class="navbar-brand" href="/">
+      <a id="top-bar-content" class="navbar-brand" href="" ng-click="redirect()">
         <img src="/app/assets/images/logo.png" style="width:20%;">
-        <span>ISTIO Releases</span>
+        <span>Istio Releases</span>
       </a>
-      <div class="login">
-        <button type="button" class="btn btn-lg btn-outline-light" ng-click="login()">Log In</button>
+      <div class="logout">
+        <span class="greeting">Welcome, {{user}}</span>
+        <button type="button" class="btn btn-lg btn-outline-light" ng-click="logout()">Log Out</button>
       </div>
     </div>
   </nav>
@@ -30,24 +31,24 @@
     <button ng-if="release.stage == 5" type="button" class="btn btn-info btn-sm">Tagging</button>
     <button ng-if="release.stage == 6" type="button" class="btn btn-info btn-sm">Finalizing</button>
     <button ng-if="release.stage == 7" type="button" class="btn btn-info btn-sm">Done</button>
-    <button type="button" class="btn btn-secondary"> {{release.branch}} </button>
-    <button type="button" class="btn btn-secondary"> {{release.release_type}} </button>
+    <button type="button" class="not-clickable btn btn-secondary"> {{release.branch}} </button>
+    <button type="button" class="not-clickable btn btn-secondary"> {{release.release_type}} </button>
 
   </div>
 
-  <div class="row info greyed">
-      <h6>Created on: {{release.started * 1000 | date:'medium'}}</h6>
+  <div class="row info dates">
+    <p>Created on: {{release.started * 1000 | date:'medium'}}</p>
   </div>
-  <div class="row info greyed">
-      <h6>Last Modified: {{release.last_modified * 1000 | date:'medium'}}</h6>
+  <div class="row info dates">
+    <p>Last Modified: {{release.last_modified * 1000 | date:'medium'}}</p>
   </div>
 
   <table id="links" class="table table-bordered">
     <th>
       Links:
     </th>
-    <td ng-repeat="link in release.links track by $index">
-      <a href="{{link}}" target="_blank">Link {{$index}}</a>
+    <td ng-repeat="link in release.links">
+      <a href="{{link.url}}" target="_blank">{{link.name}}</a>
     </td>
   </table>
 
@@ -65,10 +66,10 @@
       <tbody>
           <tr ng-repeat="task in tasks | orderBy:'-started'">
             <td>
-              <img ng-if="task.status == 2" src="/app/assets/images/check.png">
-              <img ng-if="task.status == 3" src="/app/assets/images/error.png">
-              <img ng-if="task.status == 1" src="/app/assets/images/pending.png">
-              <img ng-if="task.status == 4" src="/app/assets/images/suspended.png">
+              <img ng-if="task.status == 2" title="Finished" src="/app/assets/images/check.png">
+              <img ng-if="task.status == 3" title="Failed" src="/app/assets/images/error.png">
+              <img ng-if="task.status == 1" title="Pending" src="/app/assets/images/pending.png">
+              <img ng-if="task.status == 4" title="Abandoned" src="/app/assets/images/suspended.png">
             </td>
             <td>
               {{ task.task_name }}
@@ -80,10 +81,10 @@
               {{task.last_modified * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
             </td>
             <td>
-              <button ng-if="task.dependent_on.length == 0" type="button" class="btn btn-sm">
-                None
+              <button ng-if="task.dependent_on.length == 0" type="button" class="not-clickable btn btn-sm">
+                N/A
               </button>
-              <button ng-if="task.dependent_on.length != 0" ng-repeat="tag in task.dependent_on" type="button" class="btn btn-sm">
+              <button ng-if="task.dependent_on.length != 0" ng-repeat="tag in task.dependent_on" type="button" class="not-clickable btn btn-sm">
                 {{tag}}
               </button>
             </td>
