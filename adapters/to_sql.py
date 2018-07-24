@@ -41,9 +41,7 @@ def to_sql_releases(filter_options):
   return sql_query
 
 
-def to_sql_release(release_id):
-  # get id and execution date from release id
-  dag_id, execution_date = dag_name_parser(release_id)
+def to_sql_release(dag_id, execution_date):
   # construct query
   sql_query = 'SELECT dag_id, execution_date FROM dag_run'
   sql_query += ' WHERE dag_id = "' + dag_id + '"'

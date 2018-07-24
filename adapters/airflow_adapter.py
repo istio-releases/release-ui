@@ -11,6 +11,8 @@ from to_sql import to_sql_release
 from to_sql import to_sql_task
 from to_sql import to_sql_tasks
 import logging
+from resources.dag_name_parser import dag_name_parser
+import time
 
 CACHE_TTL = 1800
 
@@ -50,8 +52,9 @@ class AirflowAdapter(Adapter):
     return releases_data
 
   def get_release(self, release_name):
+    dag_id, execution_date = dag_name_parser(release_name)
     # construct SQL query
-    release_query = to_sql_release(release_name)
+    release_query = to_sql_release(dag_id, execution_date)
     # get data from SQL
     release_data = self._airflow_db.query(release_query)
     # package data into a release object
@@ -59,7 +62,7 @@ class AirflowAdapter(Adapter):
 
     return release_data
 
-  def get_tasks(self, dag_id, execution_date):
+  def get_tasks(self, dag_name):
     """Retrieve all task information.
 
     Args:
@@ -69,6 +72,8 @@ class AirflowAdapter(Adapter):
     Returns:
       Dictionary of Task objects.
     """
+    dag_id, execution_date = dag_name_parser(dag_name)
+    execution_date = time.mktime(execution_date.timetuple())
     # build SQl query
     task_query = to_sql_tasks(execution_date)
     # get data from SQL
@@ -78,7 +83,10 @@ class AirflowAdapter(Adapter):
 
     return task_objects
 
-  def get_task(self, dag_id, task_name, execution_date):
+  def get_task(self, task_name, dag_name):
+    dag_id, execution_date = dag_name_parser(dag_name)
+    execution_date = time.mktime(execution_date.timetuple())
+
     task_query = to_sql_task(dag_id, task_name, execution_date)
     task_data = self._airflow_db.query(task_query)
     task_data = read_tasks(task_data)
