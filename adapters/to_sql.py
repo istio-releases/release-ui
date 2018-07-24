@@ -56,7 +56,7 @@ def to_sql_tasks(dag_id, execution_date):
   sql_query = 'SELECT task_id, dag_id, execution_date, start_date, end_date, state FROM task_instance'
   sql_query += ' WHERE execution_date = "' + str(datetime.datetime.fromtimestamp(execution_date)) + '"'
   sql_query += ' AND dag_id = "' + str(dag_id) + '"'
-  sql_query += ' ORDER BY execution_date DESC'
+  sql_query += ' ORDER BY start_date ASC'
   sql_query += ';'   # put the finishing touch on it
   return sql_query
 
@@ -66,7 +66,7 @@ def to_sql_task(dag_id, task_name, execution_date):
   sql_query += ' WHERE execution_date = "' + str(datetime.datetime.fromtimestamp(execution_date)) + '"'
   sql_query += ' AND task_id = "' + task_name + '"'
   sql_query += ' AND dag_id = "' + str(dag_id) + '"'
-  sql_query += ' ORDER BY execution_date DESC'
+  sql_query += ' ORDER BY start_date ASC'
   sql_query += ';'   # put the finishing touch on it
   return sql_query
 

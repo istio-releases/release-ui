@@ -97,14 +97,16 @@ def read_tasks(task_data):
       start_date = item.start_date
       task.started = int(time.mktime(start_date.timetuple()))
     task.status = STATE_FROM_STRING.get(str(item.state))
+    task.log_url = 'https://youtu.be/dQw4w9WgXcQ'  # TODO(dommarques): figure out how to get the log in here
     if item.end_date is None:
       task.last_modified = int(time.mktime(execution_date.timetuple()))
     else:
       end_date = item.end_date
       task.last_modified = int(time.mktime(end_date.timetuple()))
-    task.log_url = 'https://youtu.be/dQw4w9WgXcQ'  # TODO(dommarques): figure out how to get the log in here
     if item.state is None:
       task.state = 'none'
+    elif item.end_date is None:
+      task.status = STATE_FROM_STRING.get('running')
     else:
       task.error = STRING_FROM_STATE.get(task.status)
     task_objects.append(task)
@@ -135,7 +137,9 @@ def get_task_info(dag_id, execution_date, airflow_db):
     if task.status > state:
       state = task.status
     task_ids.append(task.task_name)
-  return task_ids, most_recent_task, state
+    if state == STATE_FROM_STRING.get('failed'):
+      return task_ids, most_recent_task, state
+    return task_ids, most_recent_task, state
 
 
 def read_xcom_vars(xcom_data):
