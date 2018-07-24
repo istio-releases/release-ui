@@ -142,17 +142,17 @@ class AirflowAdapter(Adapter):
   def _update_cache(self):
     if (datetime.now() - self._cache_last_updated).total_seconds() < CACHE_TTL:
       return
-    else:
-      logging.info('Type and Branch cache updated')
-      raw_release_data = self._airflow_db.query('SELECT dag_id, execution_date FROM dag_run;')
-      releases = read_releases(raw_release_data, self._airflow_db)
-      branches = set()
-      types = set()
-      for release in releases:
-        branches.add(releases[release].branch)
-        types.add(releases[release].release_type)
 
-        with self._lock:
-          self._branches = list(branches)
-          self._release_types = list(types)
-          self._cache_last_updated = datetime.now()
+    logging.info('Type and Branch cache updated')
+    raw_release_data = self._airflow_db.query('SELECT dag_id, execution_date FROM dag_run;')
+    releases = read_releases(raw_release_data, self._airflow_db)
+    branches = set()
+    types = set()
+    for release in releases:
+      branches.add(releases[release].branch)
+      types.add(releases[release].release_type)
+
+      with self._lock:
+        self._branches = list(branches)
+        self._release_types = list(types)
+        self._cache_last_updated = datetime.now()
