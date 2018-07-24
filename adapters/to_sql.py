@@ -1,6 +1,6 @@
 """Converts the request arguments to a SQL query."""
 import datetime
-from resources.dag_name_parser import dag_name_parser
+from resources.release_id_parser import release_id_parser
 from data.state import State
 
 STATE_FROM_STRING = {'none': State.UNUSED_STATUS,

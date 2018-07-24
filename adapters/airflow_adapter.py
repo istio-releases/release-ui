@@ -11,7 +11,7 @@ from to_sql import to_sql_release
 from to_sql import to_sql_task
 from to_sql import to_sql_tasks
 import logging
-from resources.dag_name_parser import dag_name_parser
+from resources.release_id_parser import release_id_parser
 import time
 
 CACHE_TTL = 1800
@@ -51,8 +51,16 @@ class AirflowAdapter(Adapter):
 
     return releases_data
 
-  def get_release(self, release_name):
-    dag_id, execution_date = dag_name_parser(release_name)
+  def get_release(self, release_id):
+    """Gets a single release, defined by release_id.
+
+    Args:
+      release_id: str, unique release identifier
+
+    Returns:
+      release_data: a release object in a list
+    """
+    dag_id, execution_date = release_id_parser(release_id)
     # construct SQL query
     release_query = to_sql_release(dag_id, execution_date)
     # get data from SQL
@@ -62,20 +70,19 @@ class AirflowAdapter(Adapter):
 
     return release_data
 
-  def get_tasks(self, dag_name):
+  def get_tasks(self, release_id):
     """Retrieve all task information.
 
     Args:
-      dag_id: str
-      execution_date: unix format
+      release_id: str, unique release identifier
 
     Returns:
       Dictionary of Task objects.
     """
-    dag_id, execution_date = dag_name_parser(dag_name)
+    dag_id, execution_date = release_id_parser(release_id)
     execution_date = time.mktime(execution_date.timetuple())
     # build SQl query
-    task_query = to_sql_tasks(execution_date)
+    task_query = to_sql_tasks(dag_id, execution_date)
     # get data from SQL
     task_data = self._airflow_db.query(task_query)
     # package data into task objects
@@ -83,8 +90,18 @@ class AirflowAdapter(Adapter):
 
     return task_objects
 
-  def get_task(self, task_name, dag_name):
-    dag_id, execution_date = dag_name_parser(dag_name)
+  def get_task(self, task_name, release_id):
+    """Retrieves a task object.
+
+    Args:
+      task_name: str
+      release_id: str, unique release identifier
+
+    Returns:
+      Dictionary with Task object.
+    """
+
+    dag_id, execution_date = release_id_parser(release_id)
     execution_date = time.mktime(execution_date.timetuple())
 
     task_query = to_sql_task(dag_id, task_name, execution_date)
