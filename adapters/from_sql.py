@@ -99,6 +99,7 @@ def read_tasks(task_data):
     task.status = STATE_FROM_STRING.get(str(item.state))
     task.log_url = 'https://youtu.be/dQw4w9WgXcQ'  # TODO(dommarques): figure out how to get the log in here
     if item.end_date is None:
+      execution_date = item.execution_date
       task.last_modified = int(time.mktime(execution_date.timetuple()))
     else:
       end_date = item.end_date
