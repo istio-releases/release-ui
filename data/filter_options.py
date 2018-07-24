@@ -68,19 +68,9 @@ class FilterOptions(object):
   @state.setter
   def state(self, value):
     if self._is_valid_state(value):
-      if value == 0:
-        state = State.UNUSED_STATUS
-      elif value == 1:
-        state = State.PENDING
-      elif value == 2:
-        state = State.FINISHED
-      elif value == 3:
-        state = State.FAILED
-      elif value == 4:
-        state = State.ABANDONED
-      else:
-        raise ValueError('Invalid input for status')
-      self._filter_options['state'] = state
+      self._filter_options['state'] = value
+    else:
+      raise ValueError('Invalid input for status: ' + str(value))
 
   @property
   def branch(self):

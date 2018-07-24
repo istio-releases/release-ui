@@ -14,16 +14,16 @@ API = Api(APP)
 # creates the proper database connection depending on whether the app is
 # deployed locally or on App Engine
 if os.getenv('SERVER_SOFTWARE', '').startswith('Development/'):
-  airflow_db = AirflowDB(host='35.193.234.53',
+  airflow_db = AirflowDB(host=os.environ.get('CLOUDSQL_HOST'),
                          user=os.environ.get('CLOUDSQL_USER'),
                          password=os.environ.get('CLOUDSQL_PASSWORD'),
                          db=os.environ.get('CLOUDSQL_DB'))
 else:
   # Connect using the unix socket located at
   # /cloudsql/cloudsql-connection-name.
-  cloudsql_connection_name = os.environ.get('CLOUDSQL_CONNECTION_NAME')
-  cloudsql_unix_socket = os.path.join('/cloudsql', cloudsql_connection_name)
-  airflow_db = AirflowDB(unix_socket=cloudsql_unix_socket,
+  CLOUDSQL_CONNECTION_NAME = os.environ.get('CLOUDSQL_CONNECTION_NAME')
+  CLOUDSQL_UNIX_SOCKET = os.path.join('/cloudsql', CLOUDSQL_CONNECTION_NAME)
+  airflow_db = AirflowDB(unix_socket=CLOUDSQL_UNIX_SOCKET,
                          user=os.environ.get('CLOUDSQL_USER'),
                          password=os.environ.get('CLOUDSQL_PASSWORD'),
                          db=os.environ.get('CLOUDSQL_DB'))

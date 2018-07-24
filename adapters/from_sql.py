@@ -134,11 +134,11 @@ def get_task_info(dag_id, execution_date, airflow_db):
   else:
     most_recent_task = None
   for task in task_objects:
+    task_ids.append(task.task_name)
     if task.status > state:
       state = task.status
-    task_ids.append(task.task_name)
-    if state == STATE_FROM_STRING.get('failed'):
-      return task_ids, most_recent_task, state
+      if state == STATE_FROM_STRING.get('failed'):
+        return task_ids, most_recent_task, state
     return task_ids, most_recent_task, state
 
 
@@ -179,10 +179,11 @@ def get_xcom(execution_date, dag_id, airflow_db):
 def construct_links(green_sha):
   """Takes the green build sha and derives the repo links from that."""
   response = []
-  # green_sha[1:-1] gets rid of the quotes that enclose the SHA
-  green_build_link = 'https://github.com/istio/green-builds/blob/' + green_sha[1:-1] + '/build.xml'
+  # get rid of the quotes that enclose the SHA
+  green_sha = green_sha.replace('"', '').strip()
+  green_build_link = 'https://github.com/istio/green-builds/blob/' + green_sha  + '/build.xml'
   response.append(green_build_link)
-  request_link = 'https://raw.githubusercontent.com/istio/green-builds/' + green_sha[1:-1] + '/build.xml'
+  request_link = 'https://raw.githubusercontent.com/istio/green-builds/' + green_sha + '/build.xml'
   r = urlfetch.fetch(request_link)
   data = ElementTree.fromstring(r.content)
   for project in data.iter('project'):
