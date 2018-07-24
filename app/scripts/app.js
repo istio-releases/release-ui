@@ -1,18 +1,33 @@
 'use strict';
 
-var App = angular.module('ReleaseUI', ['ReleaseUI.controllers', 'ReleaseUI.filters','ngRoute', 'ngResource', 'ngMaterial', 'ReleaseUI.services']);
+var app = angular.module('ReleaseUI', ['ReleaseUI.controllers', 'ngRoute', 'ngResource', 'ngMaterial']);
 
-App.config(['$routeProvider', function($routeProvider) {
+
+app.config(function($routeProvider, $locationProvider) {
   $routeProvider
-  .when('/', {
-    templateUrl: 'app/partials/main.html',
-    controller: 'MainController'
-  })
-  .when('/:release_id', {
-    templateUrl: 'app/partials/details.html',
-    controller: 'DetailsController'
-  })
-  .otherwise({
-    redirectTo: '/'
+    .when('/dashboard', {
+      templateUrl: 'app/partials/main.html',
+      controller: 'MainController'
+    })
+    .when('/login', {
+      templateUrl: 'app/partials/login.html',
+      controller: 'LoginController'
+    })
+    .when('/:release_id', {
+      templateUrl: 'app/partials/details.html',
+      controller: 'DetailsController'
+    })
+    .otherwise({
+      redirectTo: '/login'
+    });
+}).run(function($rootScope, $location) {
+  $rootScope.$on("$routeChangeStart", function(event, next, current) {
+    if (localStorage.getItem('loggedIn') == null) {
+      // no logged user, redirect to /login
+      if ( next.templateUrl === "app/partials/login.html") {
+      } else {
+        $location.path("/login");
+      }
+    }
   });
-}]);
+});

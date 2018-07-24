@@ -49,6 +49,8 @@ def read_releases(release_data, airflow_db):
     if green_sha is None:
       continue
     else:
+      print '!!!!!!!!!!!!!!!!!!'
+      print construct_links(green_sha)
       release.links = construct_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first, or we make our own way to get the links pylint: disable=line-too-long
     if xcom_dict is None:
       continue
@@ -183,15 +185,18 @@ def construct_links(green_sha):
   # get rid of the quotes that enclose the SHA
   green_sha = green_sha.replace('"', '').strip()
   green_build_link = 'https://github.com/istio/green-builds/blob/' + green_sha  + '/build.xml'
-  response.append(green_build_link)
+  response.append({'name': 'Green Build', 'url':green_build_link})
   request_link = 'https://raw.githubusercontent.com/istio/green-builds/' + green_sha + '/build.xml'
   r = urlfetch.fetch(request_link)
   data = ElementTree.fromstring(r.content)
   for project in data.iter('project'):
+    link_dict = {}
     name = project.attrib['name']
     sha = project.attrib['revision']
     link = 'https://github.com/' + name + '/commit/' + sha
-    response.append(link)
+    link_dict['name'] = name
+    link_dict['url'] = link
+    response.append(link_dict)
   return response
 
 

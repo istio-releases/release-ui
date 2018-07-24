@@ -23,7 +23,7 @@
     float: left;
 }
 
-.login
+.logout
 {
     float: right;
     display: inline-block;
@@ -37,16 +37,78 @@
     text-align: center;
 }
 
+h1
+{
+  font-family: Verdana,sans-serif;
+}
+
 html
 {
     height: 100%;
     background-color: white;
     font-size: 0.9rem;
+    min-width: 883px;
 }
 
+/* -------------------------- */
+/* login.html styling */
+
+.welcome
+{
+    background-color: #2C6AC4;
+    width:100%;
+    height: 100%;
+    position: absolute;
+}
+
+.animation
+{
+     animation-duration: 0.5s;
+}
+
+.login
+{
+    margin-top: 10px;
+}
+
+md-progress-circular path {
+  stroke: white;
+}
+
+#authorizing
+{
+    position: relative;
+    top: -105px;
+}
+
+#icon
+{
+    margin-top: -5px;
+    margin-left: 10px;
+}
 
 /* -------------------------- */
 /* main.html styling */
+
+.clickable
+{
+    cursor: pointer;
+}
+
+.not-clickable
+{
+    cursor: auto !important;
+}
+
+.logout
+{
+    float: right;
+}
+
+.greeting
+{
+    color: white;
+}
 
 #filters
 {
@@ -60,6 +122,11 @@ html
 {
     background-color: #2C6AC4;
     color: white;
+}
+
+.form-control
+{
+    font-weight: normal;
 }
 
 .btn
@@ -105,7 +172,7 @@ html
 
 #release-image
 {
-    margin-top: 28px;
+    margin-top: 26px;
     margin-left: 20px;
 }
 
@@ -114,6 +181,12 @@ html
     margin-top: 10px;
     margin-bottom: 10px;
     margin-left: 45px;
+}
+
+.dates
+{
+    color: #858585;
+    font-style: italic;
 }
 
 #links
