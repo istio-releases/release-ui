@@ -101,17 +101,22 @@ def read_tasks(task_data):
     task.status = STATE_FROM_STRING.get(str(item.state))
     task.log_url = construct_log_link(item.dag_id, item.execution_date, item.task_id)  # TODO(dommarques): figure out how to get the log in here
     if item.end_date is None:
-      execution_date = item.execution_date
-      task.last_modified = int(time.mktime(execution_date.timetuple()))
+      if item.start_date is None:
+        execution_date = item.execution_date
+        task.last_modified = int(time.mktime(execution_date.timetuple()))
+      else:
+        start_date = item.start_date
+        task.last_modified = int(time.mktime(start_date.timetuple()))
     else:
       end_date = item.end_date
       task.last_modified = int(time.mktime(end_date.timetuple()))
     if item.state is None:
-      task.state = 'none'
+      task.status = STATE_FROM_STRING.get('none')
     elif item.end_date is None:
       task.status = STATE_FROM_STRING.get('running')
-    else:
       task.error = STRING_FROM_STATE.get(task.status)
+    else:
+      task.error = item.state
     task_objects.append(task)
   return task_objects
 
@@ -138,10 +143,15 @@ def get_task_info(dag_id, execution_date, airflow_db):
     most_recent_task = None
   for task in task_objects:
     task_ids.append(task.task_name)
-    if task.status > state:
+    if state == STATE_FROM_STRING.get('failed'):
+      continue
+    elif task.status == STATE_FROM_STRING.get('failed'):
       state = task.status
-      if state == STATE_FROM_STRING.get('failed'):
-        most_recent_task = task
+      most_recent_task = task
+    elif task.status == STATE_FROM_STRING.get('running'):
+      state = task.status
+    elif task.status > state:
+      state = task.status
   return task_ids, most_recent_task, state
 
 
