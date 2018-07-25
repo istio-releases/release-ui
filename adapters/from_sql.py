@@ -186,7 +186,7 @@ def construct_repo_links(green_sha):
   # get rid of the quotes that enclose the SHA
   green_sha = green_sha.replace('"', '').strip()
   green_build_link = 'https://github.com/istio/green-builds/blob/' + green_sha  + '/build.xml'
-  response.append({'name': 'Green Build', 'url':green_build_link})
+  response.append({'name': 'istio/green-builds', 'url':green_build_link})
   request_link = 'https://raw.githubusercontent.com/istio/green-builds/' + green_sha + '/build.xml'
   r = urlfetch.fetch(request_link)
   data = ElementTree.fromstring(r.content)
