@@ -9,8 +9,8 @@ var auth_team = 'release-ui';
 var app = angular.module('ReleaseUI.controllers', ['ngStorage', 'ReleaseUI.filters']);
 
 
-app.controller('MainController', ['$scope','$http','$location', '$sessionStorage',
-  function($scope, $http, $location, $sessionStorage) {
+app.controller('MainController', ['$scope','$http','$location', '$sessionStorage', '$q',
+  function($scope, $http, $location, $sessionStorage, $q) {
 
     $scope.logout = function () {
       localStorage.removeItem('loggedIn');
@@ -150,6 +150,8 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
           '&sort_method='+ sortMethodNum + '&limit=' + $scope.numRequested +
           '&offset=' + offset + '&descending=' + sortMethodDescending;
 
+      var mybody = angular.element(document).find('body');
+      mybody.addClass('waiting');
       $http({
            method: 'GET',
            url: url_string,
@@ -164,8 +166,10 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
           }
            $scope.totalPages = Math.ceil($scope.$storage.releases.length / $scope.numPerPage);
            console.log('request successful');
+           mybody.removeClass('waiting');
        }, function errorCallback(response) {
            console.log(response);
+           mybody.removeClass('waiting');
        });
     };
     getReleases('onload');
@@ -277,12 +281,14 @@ app.controller('DetailsController', ['$scope', '$location', '$http', '$routePara
       $location.path('/dashboard');
     };
 
-    var release_name = $routeParams.release_id;
+    var release_id = $routeParams.release_id;
 
+    var mybody = angular.element(document).find('body');
+    mybody.addClass('waiting');
     // Request release details
     $http({
          method: 'GET',
-         url: site + '/release?release=' + release_name,
+         url: site + '/release?release=' + release_id,
          cache: true
      }).then(function successCallback(response) {
          $scope.release = angular.fromJson(response.data);
@@ -293,20 +299,47 @@ app.controller('DetailsController', ['$scope', '$location', '$http', '$routePara
     // Request task details
     $http({
          method: 'GET',
-         url: site + '/tasks?release=' + release_name,
+         url: site + '/tasks?release=' + release_id,
          cache: true
      }).then(function successCallback(response) {
           $scope.tasks = transform(response.data);
+          mybody.removeClass('waiting');
      }, function errorCallback(response) {
          console.log(response);
+         mybody.removeClass('waiting');
      });
 
      $scope.redirect = function () {
        $location.path('/dashboard');
      };
+
+     $scope.getLogs = function (task) {
+       var newRoute = '/' + release_id + '/' + task.task_name + '/logs'
+       $location.path(newRoute);
+     };
 }]);
 
-app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStorage',
+app.controller('LogsController', ['$scope', '$http', '$routeParams', '$sce',
+  function($scope, $http, $routeParams, $sce){
+
+    var release = $routeParams.release_id;
+    var task = $routeParams.task;
+
+    $http({
+         method: 'GET',
+         url: site + '/logs?release=' + release + '&task=' + task,
+         cache: true
+     }).then(function successCallback(response) {
+         var text = angular.fromJson(response.data);
+         text = '<p align="left">' + text.replace(/\n/gm, '<br>') + '</p>';
+         $scope.html = $sce.trustAsHtml(text);
+     }, function errorCallback(response) {
+         console.log(response);
+     });
+
+}]);
+
+app.controller('LoginController', ['$scope', '$location', '$http',
   function($scope, $location, $http){
     var loggingIn;
 
@@ -322,7 +355,6 @@ app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStor
       $scope.isLoading = true;
       firebase.auth().getRedirectResult().then(function(result) {
         var token = result.credential.accessToken;
-        console.log(result);
         $http({
             method: 'GET',
             url: 'https://api.github.com/user/teams',

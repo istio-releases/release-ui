@@ -3,6 +3,7 @@ import json
 from data.filter_options import FilterOptions
 from flask_restful import reqparse
 from flask_restful import Resource
+from flask import render_template
 
 release_requests = {}
 
@@ -111,3 +112,20 @@ class Tasks(Resource):
       task_objects.append(task_object)
     response = to_json(task_objects)
     return response
+
+class Logs(Resource):
+  """"Resource for singe logs request."""
+
+  def __init__(self, adapter):
+    self._adapter = adapter
+
+  def get(self):
+    # parser = reqparse.RequestParser()
+    # parser.add_argument('release_id')
+    # parser.add_argument('task_name')
+    # args = parser.parse_args()
+
+    with open('fake_data/logs.log') as f:
+      content = f.read()
+
+    return json.dumps(content)

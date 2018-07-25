@@ -43,12 +43,12 @@
     <p>Last Modified: {{release.last_modified * 1000 | date:'medium'}}</p>
   </div>
 
-  <table id="links" class="table table-bordered">
+  <table id="repos" class="table table-bordered">
     <th>
-      Links:
+      Repos:
     </th>
     <td ng-repeat="link in release.links">
-      <a href="{{link.url}}" target="_blank">{{link.name}}</a>
+      <a class="link" href="{{link.url}}" target="_blank">{{link.name}}</a>
     </td>
   </table>
 
@@ -59,12 +59,12 @@
         <th>Task</th>
         <th>Start Time</th>
         <th>Last Modified</th>
-        <th>Dependencies</th>
-        <th>Error</th>
+        <!-- <th>Dependencies</th> -->
+        <th>Message</th>
         <th>View Logs</th>
       </thead>
       <tbody>
-          <tr ng-repeat="task in tasks | orderBy:'-started'">
+          <tr ng-repeat="task in tasks">
             <td>
               <img ng-if="task.status == 2" title="Finished" src="/app/assets/images/check.png">
               <img ng-if="task.status == 3" title="Failed" src="/app/assets/images/error.png">
@@ -80,19 +80,19 @@
             <td>
               {{task.last_modified * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
             </td>
-            <td>
+            <!-- <td>
               <button ng-if="task.dependent_on.length == 0" type="button" class="not-clickable btn btn-sm">
                 N/A
               </button>
               <button ng-if="task.dependent_on.length != 0" ng-repeat="tag in task.dependent_on" type="button" class="not-clickable btn btn-sm">
                 {{tag}}
               </button>
-            </td>
+            </td> -->
             <td>
               {{ task.error }}
             </td>
             <td>
-              <a href="{{task.log_url}}" target="_blank"> logs </a>
+              <a  href="" class="link" ng-click="getLogs(task)"> logs </a>
             </td>
           </tr>
       </tbody>

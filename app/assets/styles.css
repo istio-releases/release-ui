@@ -50,6 +50,11 @@ html
     min-width: 883px;
 }
 
+.waiting
+{
+    cursor: wait;
+}
+
 /* -------------------------- */
 /* login.html styling */
 
@@ -189,11 +194,16 @@ md-progress-circular path {
     font-style: italic;
 }
 
-#links
+#repos
 {
     float: left;
     width: 50%;
     margin-left: 35px;
+}
+
+.link
+{
+    color: #007bff;
 }
 
 #detail-table

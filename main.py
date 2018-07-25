@@ -35,6 +35,8 @@ API.add_resource(resources.Release, '/release', resource_class_kwargs={'adapter'
 API.add_resource(resources.Branches, '/branches', resource_class_kwargs={'adapter': adapter})
 API.add_resource(resources.Types, '/types', resource_class_kwargs={'adapter': adapter})
 API.add_resource(resources.Tasks, '/tasks', resource_class_kwargs={'adapter': adapter})
+API.add_resource(resources.Logs, '/logs', resource_class_kwargs={'adapter': adapter})
+
 
 if __name__ == '__main__':
   APP.run(port='8080', debug=True)  # TODO(dommarques): Delete debug when app is done
