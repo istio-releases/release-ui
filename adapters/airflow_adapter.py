@@ -51,8 +51,16 @@ class AirflowAdapter(Adapter):
 
     return releases_data
 
-  def get_release(self, release_name):
-    dag_id, execution_date = release_id_parser(release_name)
+  def get_release(self, release_id):
+    """Gets a single release, defined by release_id.
+
+    Args:
+      release_id: str, unique release identifier
+
+    Returns:
+      release_data: a release object in a list
+    """
+    dag_id, execution_date = release_id_parser(release_id)
     # construct SQL query
     release_query = to_sql_release(dag_id, execution_date)
     # get data from SQL
@@ -66,8 +74,7 @@ class AirflowAdapter(Adapter):
     """Retrieve all task information.
 
     Args:
-      dag_id: str
-      execution_date: unix format
+      release_id: str, unique release identifier
 
     Returns:
       Dictionary of Task objects.
@@ -84,6 +91,16 @@ class AirflowAdapter(Adapter):
     return task_objects
 
   def get_task(self, task_name, release_id):
+
+    """Retrieves a task object.
+
+    Args:
+      task_name: str
+      release_id: str, unique release identifier
+
+    Returns:
+      Dictionary with Task object.
+    """
     dag_id, execution_date = release_id_parser(release_id)
     execution_date = time.mktime(execution_date.timetuple())
 
