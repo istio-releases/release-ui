@@ -2,8 +2,8 @@
 from datetime import datetime
 
 
-def dag_name_parser(dag_name):
-  info = dag_name.split('@')
+def release_id_parser(release_id):
+  info = release_id.split('@')
   dag_id = info[0]
   execution_date = info[1]
   try:

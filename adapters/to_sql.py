@@ -1,6 +1,6 @@
 """Converts the request arguments to a SQL query."""
 import datetime
-from resources.dag_name_parser import dag_name_parser
+from resources.release_id_parser import release_id_parser
 from data.state import State
 
 STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
@@ -9,7 +9,8 @@ STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
                      'failed': State.FAILED,
                      'shutdown': State.ABANDONED,
                      'upstream_failed': State.PENDING,
-                     'None': State.UNUSED_STATUS}
+                     'None': State.UNUSED_STATUS,
+                     'removed': State.ABANDONED}
 STRING_FROM_STATE =  {v: k for k, v in STATE_FROM_STRING.iteritems()}
 
 
@@ -45,14 +46,14 @@ def to_sql_release(dag_id, execution_date):
   # construct query
   sql_query = 'SELECT dag_id, execution_date FROM dag_run'
   sql_query += ' WHERE dag_id = "' + dag_id + '"'
-  sql_query += ' AND execution_date = "' + str(execution_date) + '"'
+  sql_query += ' AND execution_date LIKE "%' + str(execution_date) + '%"'
   sql_query += ';'   # put the finishing touch on it
   return sql_query
 
 
 def to_sql_tasks(dag_id, execution_date):
   sql_query = 'SELECT task_id, dag_id, execution_date, start_date, end_date, state FROM task_instance'
-  sql_query += ' WHERE execution_date = "' + str(datetime.datetime.fromtimestamp(execution_date)) + '"'
+  sql_query += ' WHERE execution_date LIKE "%' + str(datetime.datetime.fromtimestamp(execution_date)) + '%"'
   sql_query += ' AND dag_id = "' + str(dag_id) + '"'
   sql_query += ' ORDER BY start_date ASC'
   sql_query += ';'   # put the finishing touch on it
@@ -61,7 +62,7 @@ def to_sql_tasks(dag_id, execution_date):
 
 def to_sql_task(dag_id, task_name, execution_date):
   sql_query = 'SELECT task_id, dag_id, execution_date, start_date, end_date, state FROM task_instance'
-  sql_query += ' WHERE execution_date = "' + str(datetime.datetime.fromtimestamp(execution_date)) + '"'
+  sql_query += ' WHERE execution_date LIKE "%' + str(datetime.datetime.fromtimestamp(execution_date)) + '%"'
   sql_query += ' AND task_id = "' + task_name + '"'
   sql_query += ' AND dag_id = "' + str(dag_id) + '"'
   sql_query += ' ORDER BY start_date ASC'
@@ -71,7 +72,7 @@ def to_sql_task(dag_id, task_name, execution_date):
 
 def to_sql_xcom(dag_id, execution_date):
   sql_query = 'SELECT value FROM xcom'
-  sql_query += ' WHERE execution_date = "' + str(datetime.datetime.fromtimestamp(execution_date)) + '"'
+  sql_query += ' WHERE execution_date LIKE "%' + str(datetime.datetime.fromtimestamp(execution_date)) + '%"'
   sql_query += ' AND dag_id = "' + dag_id + '"'
   sql_query += ';'
   return sql_query

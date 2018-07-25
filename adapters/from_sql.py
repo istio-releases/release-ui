@@ -18,7 +18,8 @@ STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
                      'failed': State.FAILED,
                      'shutdown': State.ABANDONED,
                      'upstream_failed': State.PENDING,
-                     'None': State.UNUSED_STATUS}
+                     'None': State.UNUSED_STATUS,
+                     'removed': State.ABANDONED}
 STRING_FROM_STATE =  {v: k for k, v in STATE_FROM_STRING.iteritems()}
 
 
@@ -49,9 +50,7 @@ def read_releases(release_data, airflow_db):
     if green_sha is None:
       continue
     else:
-      print '!!!!!!!!!!!!!!!!!!'
-      print construct_links(green_sha)
-      release.links = construct_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first, or we make our own way to get the links pylint: disable=line-too-long
+      release.links = construct_repo_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first, or we make our own way to get the links pylint: disable=line-too-long
     if xcom_dict is None:
       continue
     else:
@@ -61,7 +60,8 @@ def read_releases(release_data, airflow_db):
         # it seems that some xcom dicts do not have this value for some reason?
         release.release_type = xcom_dict[xcomKeys.RELEASE_TYPE]
       except KeyError:
-        _, release.release_type = parse_dag_id(item.dag_id)
+        # old releases don't have release types, so this is a fallback
+        release.release_type, _ = parse_dag_id(item.dag_id)
     if most_recent_task:
       # allows for continuation even if tasks have not begun/been generated yet
       last_modified = most_recent_task.last_modified
@@ -99,7 +99,7 @@ def read_tasks(task_data):
       start_date = item.start_date
       task.started = int(time.mktime(start_date.timetuple()))
     task.status = STATE_FROM_STRING.get(str(item.state))
-    task.log_url = 'https://youtu.be/dQw4w9WgXcQ'  # TODO(dommarques): figure out how to get the log in here
+    task.log_url = construct_log_link(item.dag_id, item.execution_date, item.task_id)  # TODO(dommarques): figure out how to get the log in here
     if item.end_date is None:
       execution_date = item.execution_date
       task.last_modified = int(time.mktime(execution_date.timetuple()))
@@ -153,6 +153,7 @@ def read_xcom_vars(xcom_data):
     xcom_data = xcom_named_tuple(*xcom_data)
     # The index 0 is here because the data returns in a tuple
     xcom_dict = json.loads(xcom_data.xcom_dict[0])
+    logging.info('Data from xcom: ' + str(xcom_dict))
     green_sha = xcom_data.green_sha[0]
     return xcom_dict, green_sha
   except IndexError:
@@ -179,7 +180,7 @@ def get_xcom(execution_date, dag_id, airflow_db):
   return xcom_dict, green_sha
 
 
-def construct_links(green_sha):
+def construct_repo_links(green_sha):
   """Takes the green build sha and derives the repo links from that."""
   response = []
   # get rid of the quotes that enclose the SHA
@@ -197,8 +198,15 @@ def construct_links(green_sha):
     link_dict['name'] = name
     link_dict['url'] = link
     response.append(link_dict)
+  logging.info('Links constructed:' + str(link_dict))
   return response
 
+
+def construct_log_link(dag_id, execution_date, task_id):
+  url = 'https://istio-release-ui.appspot.com/logs'
+  url += '?release_id=' + str(dag_id) + '@' + str(execution_date)
+  url += '&task_name=' + str(task_id)
+  return url
 
 def parse_dag_id(dag_id):
   """Parses the dag_id for the release branch and type.

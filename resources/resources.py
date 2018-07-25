@@ -3,6 +3,7 @@ import json
 from data.filter_options import FilterOptions
 from flask_restful import reqparse
 from flask_restful import Resource
+import adapters.gcs_access as gcs
 
 release_requests = {}
 
@@ -111,3 +112,17 @@ class Tasks(Resource):
       task_objects.append(task_object)
     response = to_json(task_objects)
     return response
+
+
+class Logs(Resource):
+  def __init__(self, bucket_name):
+    self._bucket_name = bucket_name
+
+  def get(self):
+    parser = reqparse.RequestParser()
+    parser.add_argument('release_id')
+    parser.add_argument('task_name')
+    args = parser.parse_args()
+
+    response = gcs.read_file(self._bucket_name, str(args['release_id']), str(args['task_name']))
+    return json.dumps(response)

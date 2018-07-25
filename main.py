@@ -29,12 +29,15 @@ else:
                          db=os.environ.get('CLOUDSQL_DB'))
 adapter = AirflowAdapter(airflow_db)
 
+bucket_name = os.environ.get('GCS_LOGS_BUCKET')
+
 # adding resource endpoints to different urls
 API.add_resource(resources.Releases, '/releases', resource_class_kwargs={'adapter': adapter})
 API.add_resource(resources.Release, '/release', resource_class_kwargs={'adapter': adapter})
 API.add_resource(resources.Branches, '/branches', resource_class_kwargs={'adapter': adapter})
 API.add_resource(resources.Types, '/types', resource_class_kwargs={'adapter': adapter})
 API.add_resource(resources.Tasks, '/tasks', resource_class_kwargs={'adapter': adapter})
+API.add_resource(resources.Logs, '/logs', resource_class_kwargs={'bucket_name': bucket_name})
 
 if __name__ == '__main__':
   APP.run(port='8080', debug=True)  # TODO(dommarques): Delete debug when app is done
