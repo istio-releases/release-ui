@@ -1,5 +1,6 @@
 """REST API."""
 import json
+import logging
 from data.filter_options import FilterOptions
 from flask_restful import reqparse
 from flask_restful import Resource
@@ -113,19 +114,20 @@ class Tasks(Resource):
     response = to_json(task_objects)
     return response
 
-class Logs(Resource):
-  """"Resource for singe logs request."""
 
-  def __init__(self, adapter):
+class Logs(Resource):
+  def __init__(self, adapter, bucket_name):
     self._adapter = adapter
+    self._bucket_name = bucket_name
 
   def get(self):
-    # parser = reqparse.RequestParser()
-    # parser.add_argument('release_id')
-    # parser.add_argument('task_name')
-    # args = parser.parse_args()
+    parser = reqparse.RequestParser()
+    parser.add_argument('release_id')
+    parser.add_argument('task_name')
+    args = parser.parse_args()
+    logging.debug('Bucket name: ' + str(self._bucket_name))
+    logging.debug('Release id: ' + str(args['release_id']))
+    logging.debug('Task name: ' + str(args['task_name']))
 
-    with open('fake_data/logs.log') as f:
-      content = f.read()
-
-    return json.dumps(content)
+    response = self._adapter.get_logs(str(self._bucket_name), str(args['release_id']), str(args['task_name']))
+    return json.dumps(response)

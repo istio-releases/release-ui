@@ -172,7 +172,7 @@ class Release(object):
   def release_type(self, value):
     """Sets release_type as a string release_type name."""
     if self._validate_type(basestring, value, 'release_type'):
-      self._release['release_type'] = value
+      self._release['release_type'] = value.lower()
 
   def to_json(self):
     returner = self._release.copy()

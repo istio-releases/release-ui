@@ -1,18 +1,21 @@
 """The Airflow Adapter."""
+import os
 from datetime import datetime
+import logging
 import threading
+import time
 from adapter_abc import Adapter
 from from_sql import read_releases
 from from_sql import read_tasks
+import lib.cloudstorage as gcs
 from resources.filter_releases import filter_releases
 from resources.filter_releases import sort
-from to_sql import to_sql_releases
+from resources.release_id_parser import release_id_parser
 from to_sql import to_sql_release
+from to_sql import to_sql_releases
 from to_sql import to_sql_task
 from to_sql import to_sql_tasks
-import logging
-from resources.release_id_parser import release_id_parser
-import time
+
 
 CACHE_TTL = 1800
 
@@ -82,7 +85,7 @@ class AirflowAdapter(Adapter):
     dag_id, execution_date = release_id_parser(release_id)
     execution_date = time.mktime(execution_date.timetuple())
     # build SQl query
-    task_query = to_sql_tasks(dag_id, execution_date)
+    task_query = to_sql_tasks(execution_date)
     # get data from SQL
     task_data = self._airflow_db.query(task_query)
     # package data into task objects
@@ -91,6 +94,7 @@ class AirflowAdapter(Adapter):
     return task_objects
 
   def get_task(self, task_name, release_id):
+
     """Retrieves a task object.
 
     Args:
@@ -100,7 +104,6 @@ class AirflowAdapter(Adapter):
     Returns:
       Dictionary with Task object.
     """
-
     dag_id, execution_date = release_id_parser(release_id)
     execution_date = time.mktime(execution_date.timetuple())
 
@@ -138,6 +141,26 @@ class AirflowAdapter(Adapter):
     self._update_cache()
     with self._lock:
       return self._release_types
+
+  def get_logs(self, bucket_name, release_id, task_name, log_file='1.log'):
+    """Gets the logs for a task from GCS.
+
+    Args:
+      bucket_name: str
+      release_id: str
+      task_name: str
+      log_file: str
+
+    Returns:
+      Structured log text
+    """
+    dag_id, execution_date = release_id_parser(release_id)
+    execution_date = str(execution_date).replace(' ', 'T')  # put into same format as gcs bucket
+    filename = os.path.join(os.path.sep, bucket_name , 'logs' , dag_id , task_name, str(execution_date),  log_file)
+    gcs_file = gcs.open(filename)
+    contents = gcs_file.read()
+    gcs_file.close()
+    return contents
 
   def _update_cache(self):
     if (datetime.now() - self._cache_last_updated).total_seconds() < CACHE_TTL:
