@@ -218,6 +218,7 @@ def construct_log_link(dag_id, execution_date, task_id):
   url += '&task_name=' + str(task_id)
   return url
 
+
 def parse_dag_id(dag_id):
   """Parses the dag_id for the release branch and type.
 
@@ -231,9 +232,3 @@ def parse_dag_id(dag_id):
   info = dag_id.split('_')
   if len(info) in [2, 3]:
     return info[-2], info[-1]
-
-
-# TODO(dommarques): The data adapter should be able to:
-# - take in the relevant raw sql data, such as the release data and task data
-# - relate the tasks and releases
-# - put this information into the unified storage format

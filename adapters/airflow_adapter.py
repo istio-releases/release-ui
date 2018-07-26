@@ -1,18 +1,20 @@
 """The Airflow Adapter."""
 from datetime import datetime
+import logging
 import threading
+import time
 from adapter_abc import Adapter
 from from_sql import read_releases
 from from_sql import read_tasks
+import lib.cloudstorage as gcs
 from resources.filter_releases import filter_releases
 from resources.filter_releases import sort
-from to_sql import to_sql_releases
+from resources.release_id_parser import release_id_parser
 from to_sql import to_sql_release
+from to_sql import to_sql_releases
 from to_sql import to_sql_task
 from to_sql import to_sql_tasks
-import logging
-from resources.release_id_parser import release_id_parser
-import time
+
 
 CACHE_TTL = 1800
 
@@ -139,20 +141,39 @@ class AirflowAdapter(Adapter):
     with self._lock:
       return self._release_types
 
+  def get_logs(self, bucket_name, release_id, task_name):
+    """Gets the logs for a task from GCS.
+
+    Args:
+      bucket_name: str
+      release_id: str
+      task_name: str
+
+    Returns:
+      Structured log text
+    """
+    dag_id, execution_date = release_id_parser(release_id)
+    execution_date = str(execution_date).replace(' ', 'T')  # put into same format as gcs bucket
+    filename = '/' + bucket_name + '/logs/' + dag_id + '/' + task_name + '/' + str(execution_date) + '/' + '1.log'
+    gcs_file = gcs.open(filename)
+    contents = gcs_file.read()
+    gcs_file.close()
+    return contents
+
   def _update_cache(self):
     if (datetime.now() - self._cache_last_updated).total_seconds() < CACHE_TTL:
       return
-    else:
-      logging.info('Type and Branch cache updated')
-      raw_release_data = self._airflow_db.query('SELECT dag_id, execution_date FROM dag_run;')
-      releases = read_releases(raw_release_data, self._airflow_db)
-      branches = set()
-      types = set()
-      for release in releases:
-        branches.add(releases[release].branch)
-        types.add(releases[release].release_type)
 
-        with self._lock:
-          self._branches = list(branches)
-          self._release_types = list(types)
-          self._cache_last_updated = datetime.now()
+    logging.info('Type and Branch cache updated')
+    raw_release_data = self._airflow_db.query('SELECT dag_id, execution_date FROM dag_run;')
+    releases = read_releases(raw_release_data, self._airflow_db)
+    branches = set()
+    types = set()
+    for release in releases:
+      branches.add(releases[release].branch)
+      types.add(releases[release].release_type)
+
+      with self._lock:
+        self._branches = list(branches)
+        self._release_types = list(types)
+        self._cache_last_updated = datetime.now()
