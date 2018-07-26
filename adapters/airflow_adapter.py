@@ -1,4 +1,5 @@
 """The Airflow Adapter."""
+import os
 from datetime import datetime
 import logging
 import threading
@@ -141,20 +142,21 @@ class AirflowAdapter(Adapter):
     with self._lock:
       return self._release_types
 
-  def get_logs(self, bucket_name, release_id, task_name):
+  def get_logs(self, bucket_name, release_id, task_name, log_file='1.log'):
     """Gets the logs for a task from GCS.
 
     Args:
       bucket_name: str
       release_id: str
       task_name: str
+      log_file: str
 
     Returns:
       Structured log text
     """
     dag_id, execution_date = release_id_parser(release_id)
     execution_date = str(execution_date).replace(' ', 'T')  # put into same format as gcs bucket
-    filename = '/' + bucket_name + '/logs/' + dag_id + '/' + task_name + '/' + str(execution_date) + '/' + '1.log'
+    filename = os.path.join(os.path.sep, bucket_name , 'logs' , dag_id , task_name, str(execution_date),  log_file)
     gcs_file = gcs.open(filename)
     contents = gcs_file.read()
     gcs_file.close()
