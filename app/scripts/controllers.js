@@ -360,26 +360,31 @@ app.controller('LoginController', ['$scope', '$location', '$http',
             url: 'https://api.github.com/user/teams',
             headers: {'Authorization': 'token ' + token}
         }).then(function successCallback(response) {
-            var teams = response.data;
-            var auth = false;
-            for (var key in teams) {
-             if (teams.hasOwnProperty(key)){
-               var name = teams[key].name;
-               var org = teams[key].organization.login;
+             var teams = response.data;
+             localStorage.setItem('loggedIn', true);
+             localStorage.setItem('user', result.user.displayName);
+             $location.path('/dashboard');
 
-               if (name == auth_team && org == auth_org){
-                 auth = true;
-                 console.log('loggedin');
-                 localStorage.setItem('loggedIn', true);
-                 localStorage.setItem('user', result.user.displayName);
-                 $location.path('/dashboard');
-               }
-             }
-           }
-           if(!auth){
-             alert("You are not authorized to view this page.");
-           }
-           $scope.isLoading = false;
+            // Code for more stringent authentication (specific org and team)
+            // var auth = false;
+            // for (var key in teams) {
+            //  if (teams.hasOwnProperty(key)){
+            //    var name = teams[key].name;
+            //    var org = teams[key].organization.login;
+            //
+            //    if (name == auth_team && org == auth_org){
+            //      auth = true;
+            //      console.log('loggedin');
+            //      localStorage.setItem('loggedIn', true);
+            //      localStorage.setItem('user', result.user.displayName);
+            //      $location.path('/dashboard');
+            //    }
+            //  }
+            // }
+            // if(!auth){
+            //   alert("You are not authorized to view this page.");
+            // }
+            $scope.isLoading = false;
         }, function errorCallback(response) {
           $scope.isLoading = false;
           console.log(response);
