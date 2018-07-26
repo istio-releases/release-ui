@@ -7,20 +7,13 @@ from adapters.to_sql import to_sql_tasks
 from adapters.to_sql import to_sql_xcom
 from data.release import Release
 from data.state import State
+from data.state import STRING_FROM_STATE
+from data.state import STATE_FROM_STRING
 from data.task import Task
 from data.xcom_keys import xcomKeys
 from google.appengine.api import urlfetch
 import xml.etree.ElementTree as ElementTree
 
-STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
-                     'running': State.PENDING,
-                     'success': State.FINISHED,
-                     'failed': State.FAILED,
-                     'shutdown': State.ABANDONED,
-                     'upstream_failed': State.PENDING,
-                     'None': State.UNUSED_STATUS,
-                     'removed': State.ABANDONED}
-STRING_FROM_STATE =  {v: k for k, v in STATE_FROM_STRING.iteritems()}
 
 
 def read_releases(release_data, airflow_db):
@@ -98,6 +91,7 @@ def read_tasks(task_data):
     else:
       start_date = item.start_date
       task.started = int(time.mktime(start_date.timetuple()))
+    logging.debug("LOOK AT ME:"+str(item.state))
     task.status = STATE_FROM_STRING.get(str(item.state))
     task.log_url = construct_log_link(item.dag_id, item.execution_date, item.task_id)  # TODO(dommarques): figure out how to get the log in here
     if item.end_date is None:
@@ -112,6 +106,7 @@ def read_tasks(task_data):
       task.last_modified = int(time.mktime(end_date.timetuple()))
     if item.state is None:
       task.status = STATE_FROM_STRING.get('none')
+      task.error = 'not started'
     elif item.end_date is None:
       task.status = STATE_FROM_STRING.get('running')
       task.error = STRING_FROM_STATE.get(task.status)
@@ -152,6 +147,7 @@ def get_task_info(dag_id, execution_date, airflow_db):
       state = task.status
     elif task.status > state:
       state = task.status
+    logging.debug(task.status)
   return task_ids, most_recent_task, state
 
 

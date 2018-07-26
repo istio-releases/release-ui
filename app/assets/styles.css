@@ -212,3 +212,11 @@ md-progress-circular path {
     margin-top: 20px;
     margin-left: 35px;
 }
+
+/* -------------------------- */
+/* logs.html styling */
+
+#log_page
+{
+    font-family: "Courier New";
+}

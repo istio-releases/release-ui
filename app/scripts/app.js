@@ -17,7 +17,7 @@ app.config(function($routeProvider, $locationProvider) {
       templateUrl: 'app/partials/details.html',
       controller: 'DetailsController'
     })
-    .when('/:release_id/:task/logs', {
+    .when('/:release_id/:task_name/logs', {
       templateUrl: 'app/partials/logs.html',
       controller: 'LogsController'
     })

@@ -94,6 +94,8 @@ class Task(object):
         status = State.FAILED
       elif value == 4:
         status = State.ABANDONED
+      elif value == 5:
+        status = State.RUNNING
       else:
         raise ValueError('Invalid input for status')
       self._task['status'] = status

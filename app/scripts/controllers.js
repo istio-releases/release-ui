@@ -9,8 +9,8 @@ var auth_team = 'release-ui';
 var app = angular.module('ReleaseUI.controllers', ['ngStorage', 'ReleaseUI.filters']);
 
 
-app.controller('MainController', ['$scope','$http','$location', '$sessionStorage', '$q',
-  function($scope, $http, $location, $sessionStorage, $q) {
+app.controller('MainController', ['$scope','$http','$location', '$sessionStorage',
+  function($scope, $http, $location, $sessionStorage) {
 
     $scope.logout = function () {
       localStorage.removeItem('loggedIn');
@@ -323,11 +323,11 @@ app.controller('LogsController', ['$scope', '$http', '$routeParams', '$sce',
   function($scope, $http, $routeParams, $sce){
 
     var release = $routeParams.release_id;
-    var task = $routeParams.task;
+    var task = $routeParams.task_name;
 
     $http({
          method: 'GET',
-         url: site + '/logs?release=' + release + '&task=' + task,
+         url: site + '/logs?release_id=' + release + '&task_name=' + task,
          cache: true
      }).then(function successCallback(response) {
          var text = angular.fromJson(response.data);

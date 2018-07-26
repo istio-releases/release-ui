@@ -69,7 +69,7 @@
             <td>
               <img ng-if="task.status == 2" title="Finished" src="/app/assets/images/check.png">
               <img ng-if="task.status == 3" title="Failed" src="/app/assets/images/error.png">
-              <img ng-if="task.status == 1" title="Pending" src="/app/assets/images/pending.png">
+              <img ng-if="task.status == 1 || task.status == 0" title="Pending" src="/app/assets/images/pending.png">
               <img ng-if="task.status == 4" title="Abandoned" src="/app/assets/images/suspended.png">
               <img ng-if="task.status == 5" title="Running" height="35" width="35" src="/app/assets/images/running.gif">
             </td>

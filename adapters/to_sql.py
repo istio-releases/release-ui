@@ -2,16 +2,7 @@
 import datetime
 from resources.release_id_parser import release_id_parser
 from data.state import State
-
-STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
-                     'running': State.PENDING,
-                     'success': State.FINISHED,
-                     'failed': State.FAILED,
-                     'shutdown': State.ABANDONED,
-                     'upstream_failed': State.PENDING,
-                     'None': State.UNUSED_STATUS,
-                     'removed': State.ABANDONED}
-STRING_FROM_STATE =  {v: k for k, v in STATE_FROM_STRING.iteritems()}
+from data.state import STRING_FROM_STATE
 
 
 def to_sql_releases(filter_options):

@@ -131,6 +131,8 @@ class Release(object):
         state = State.FAILED
       elif value == 4:
         state = State.ABANDONED
+      elif value == 5:
+        state = State.RUNNING
       else:
         raise ValueError('Invalid input for status')
       self._release['state'] = state
