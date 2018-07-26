@@ -8,6 +8,7 @@ env_variables:
   CLOUDSQL_USER: 'root'
   CLOUDSQL_PASSWORD: ''
   CLOUDSQL_DB: 'airflow-db'
+  GCS_LOGS_BUCKET: 'us-central1-istio-release-e-79a693d8-bucket'
 
 handlers:
 - url: /app
