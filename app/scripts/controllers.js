@@ -52,7 +52,7 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
       {"id":3, "status": "Failed"},
       {"id":1, "status": "Pending"},
       {"id":4, "status": "Abandoned"},
-      {"id":4, "status": "Running"}
+      {"id":5, "status": "Running"}
     ];
 
     // Set default values for storage
