@@ -11,12 +11,15 @@ class State(object):
 
 
 STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
+                     'not_started': State.PENDING,
                      'running': State.RUNNING,
                      'success': State.FINISHED,
                      'failed': State.FAILED,
                      'shutdown': State.ABANDONED,
                      'upstream_failed': State.PENDING,
                      'None': State.UNUSED_STATUS,
-                     'removed': State.ABANDONED}
+                     'removed': State.ABANDONED,
+                     'queued': State.PENDING,
+                     'skipped': State.ABANDONED}
 
 STRING_FROM_STATE =  {v: k for k, v in STATE_FROM_STRING.iteritems()}
