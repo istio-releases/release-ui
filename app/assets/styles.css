@@ -1,32 +1,9 @@
 /* -------------------------- */
 /* index.html styling */
-#top-bar {
-padding: 20px;
-background-color: #2C6AC4;
-width:100%;
-}
-
-.header {
-  width: 100%;
-}
-
-#top-bar-content {
-  margin-left:0%;
-  padding:.5%;
-  padding-left: 50px;
-  font-size: xx-large;
-  color: white;
-  display: inline-block;
-  float: left;
-}
 
 #main {
   width: 100%;
   text-align: center;
-}
-
-h1 {
-font-family: Verdana,sans-serif;
 }
 
 html {
@@ -35,6 +12,53 @@ html {
   font-size: 0.9rem;
   min-width: 883px;
 }
+
+
+/* -------------------------- */
+/* Shared styling */
+
+#top-bar {
+  padding: 20px;
+  background-color: #2C6AC4;
+}
+
+#top-bar-content {
+  padding-left: 50px;
+  font-size: xx-large;
+  color: white;
+}
+
+h1 {
+  font-family: Verdana,sans-serif;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.not-clickable {
+  cursor: auto !important;
+}
+
+.logout {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 20px;
+}
+
+.make-release {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 40px;
+  margin-right: 60px;
+}
+
+.greeting {
+  color: white;
+}
+
 
 /* -------------------------- */
 /* login.html styling */
@@ -68,35 +92,9 @@ md-progress-circular path {
   margin-left: 10px;
 }
 
+
 /* -------------------------- */
 /* main.html styling */
-
-.clickable {
-  cursor: pointer;
-}
-
-.not-clickable {
-  cursor: auto !important;
-}
-
-.logout {
-  position: absolute;
-  right:    0;
-  top:   0;
-  margin: 20px;
-}
-
-.make-release {
-  position: absolute;
-  right:    0;
-  bottom:   0;
-  margin: 40px;
-  margin-right: 60px;
-}
-
-.greeting {
-  color: white;
-}
 
 #filters {
   float: right;
@@ -114,12 +112,7 @@ md-progress-circular path {
   font-weight: normal;
 }
 
-.btn {
-  margin-left: 1px;
-}
-
 .reset {
-  margin-left: 15px;
   margin-top: 8px;
   height: 75%;
 }
@@ -145,20 +138,18 @@ md-progress-circular path {
 /* -------------------------- */
 /* details.html styling */
 
-#detail_release_title {
-  margin-top: 20px;
-  font-size: xx-large;
-}
-
 #release-image {
-  margin-top: 26px;
-  margin-left: 20px;
+  margin: 18px;
 }
 
 .info {
   margin-top: 10px;
   margin-bottom: 10px;
   margin-left: 45px;
+}
+
+.tag {
+  margin-right: 10px;
 }
 
 .dates {
@@ -177,6 +168,7 @@ md-progress-circular path {
   margin-top: 20px;
   margin-left: 35px;
 }
+
 
 /* -------------------------- */
 /* create-release.html styling */
