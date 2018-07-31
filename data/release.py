@@ -121,18 +121,18 @@ class Release(object):
   def state(self, value):
     """Sets state as State."""
     if self._validate_type(int, value, 'state'):
-      if value == 0:
+      if value == 1:
         state = State.UNUSED_STATUS
-      elif value == 1:
-        state = State.PENDING
       elif value == 2:
-        state = State.FINISHED
-      elif value == 3:
-        state = State.FAILED
-      elif value == 4:
         state = State.ABANDONED
+      elif value == 3:
+        state = State.FINISHED
+      elif value == 4:
+        state = State.PENDING
       elif value == 5:
         state = State.RUNNING
+      elif value == 6:
+        state = State.FAILED
       else:
         raise ValueError('Invalid input for status')
       self._release['state'] = state

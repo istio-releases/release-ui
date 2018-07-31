@@ -135,13 +135,16 @@ def get_task_info(dag_id, execution_date, airflow_db):
   task_query = to_sql_tasks(dag_id, execution_date)
   task_data = airflow_db.query(task_query)
   task_objects = read_tasks(task_data)
-  state = 0
+  state = 1
   task_ids = []
   if task_objects:
     most_recent_task = task_objects[-1]
   else:
     most_recent_task = None
   for task in task_objects:
+    print '///////////////////'
+    print task
+    print task.status
     task_ids.append(task.task_name)
     if state == STATE_FROM_STRING.get('failed'):
       continue
@@ -154,6 +157,8 @@ def get_task_info(dag_id, execution_date, airflow_db):
     elif task.status > state:
       state = task.status
     logging.debug(task.status)
+  print '????????'
+  print state
   return task_ids, most_recent_task, state
 
 

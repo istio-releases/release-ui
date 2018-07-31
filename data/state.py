@@ -2,12 +2,12 @@
 
 
 class State(object):
-  UNUSED_STATUS = 0
-  PENDING = 1
-  FINISHED = 2
-  FAILED = 3
-  ABANDONED = 4
+  UNUSED_STATUS = 1
+  ABANDONED = 2
+  FINISHED = 3
+  PENDING = 4
   RUNNING = 5
+  FAILED = 6
 
 
 STATE_FROM_STRING = {'none': State.UNUSED_STATUS,

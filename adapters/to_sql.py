@@ -24,8 +24,8 @@ def to_sql_releases(filter_options):
   # datetype, start_date, and end_date
   sql_query += ' WHERE execution_date BETWEEN "' + str(start_date) + '" AND "'+ str(end_date) + '"'  # pylint: disable=line-too-long
   # append a state filter, if there is one available -- '0' means all states
-  if filter_options.state != 0:
-    sql_query += ' AND state = "%s"' %(STRING_FROM_STATE.get(filter_options.state))
+  # if filter_options.state != 0:
+  #   sql_query += ' AND state = "%s"' %(STRING_FROM_STATE.get(filter_options.state))
   # add sorting parameter
   sql_query = add_sorting(sql_query, filter_options.sort_method, filter_options.reverse)
   # TODO(dommarques) - add label filtering, probably just the dag_id

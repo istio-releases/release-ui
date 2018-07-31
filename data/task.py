@@ -84,21 +84,21 @@ class Task(object):
   def status(self, value):
     """Sets status as State."""
     if self._validate_type(int, value, 'status'):
-      if value == 0:
-        status = State.UNUSED_STATUS
-      elif value == 1:
-        status = State.PENDING
+      if value == 1:
+        state = State.UNUSED_STATUS
       elif value == 2:
-        status = State.FINISHED
+        state = State.ABANDONED
       elif value == 3:
-        status = State.FAILED
+        state = State.FINISHED
       elif value == 4:
-        status = State.ABANDONED
+        state = State.PENDING
       elif value == 5:
-        status = State.RUNNING
+        state = State.RUNNING
+      elif value == 6:
+        state = State.FAILED
       else:
         raise ValueError('Invalid input for status')
-      self._task['status'] = status
+      self._task['status'] = state
 
   @property
   def last_modified(self):

@@ -32,7 +32,7 @@ class FilterOptions(object):
       raise ValueError(error)
 
   def _is_valid_state(self, state):
-    return 0 <= state <= 5
+    return 0 <= state <= 6
 
   @property
   def start_date(self):

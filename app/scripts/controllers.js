@@ -48,11 +48,12 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
     getTypes();
 
     $scope.stateValues = [
-      {"id":2, "status": "Finished"},
-      {"id":3, "status": "Failed"},
-      {"id":1, "status": "Pending"},
-      {"id":4, "status": "Abandoned"},
-      {"id":5, "status": "Running"}
+      {"id":1, "status": "No Status"},
+      {"id":2, "status": "Abandoned"},
+      {"id":3, "status": "Finished"},
+      {"id":4, "status": "Pending"},
+      {"id":5, "status": "Running"},
+      {"id":6, "status": "Failed"}
     ];
 
     // Set default values for storage
@@ -165,6 +166,7 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
           else {
             $scope.$storage.releases = data;
           }
+          console.log($scope.$storage.releases);
            $scope.totalPages = Math.ceil($scope.$storage.releases.length / $scope.numPerPage);
            console.log('request successful');
            mybody.removeClass('waiting');
