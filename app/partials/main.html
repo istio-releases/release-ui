@@ -8,13 +8,15 @@
       </a>
       <div class="logout">
         <span class="greeting">Welcome, {{user}}</span>
-        <button type="button" class="btn btn-lg btn-outline-light" ng-click="logout()">Log Out</button>
+        <button type="button" class="btn btn-outline-light" ng-click="logout()">Log Out</button>
       </div>
+      <button ng-if="auth" ng-click="createRelease()" type="button" class="btn btn-lg btn-danger make-release">Create Release</button>
     </div>
   </nav>
 
   <!-- Filter Options -->
   <div class="row" id="filters">
+    <button type="button" class="reset btn btn-danger" ng-click="resetFilter()">Reset Filters</button>
     <div class="col">
       <md-datepicker md-current-view="year" ng-model="startDate" ng-change="dateChange(true,startDate)"
         md-placeholder="From" md-max-date="maxFromDate"></md-datepicker>
@@ -34,7 +36,6 @@
         Filter by Modified Date
       </label>
     </div>
-      <button type="button" class="btn btn-danger" ng-click="resetFilter()">Reset Filters</button>
   </div>
 
 <!-- Table of Releases -->

@@ -1,204 +1,203 @@
 /* -------------------------- */
 /* index.html styling */
-#top-bar
-{
-    padding: 20px;
-    background-color: #2C6AC4;
-    width:100%;
+#top-bar {
+padding: 20px;
+background-color: #2C6AC4;
+width:100%;
 }
 
-.header
-{
-    width: 100%;
+.header {
+  width: 100%;
 }
 
-#top-bar-content
-{
-    margin-left:0%;
-    padding:.5%;
-    padding-left: 50px;
-    font-size: xx-large;
-    color: white;
-    display: inline-block;
-    float: left;
+#top-bar-content {
+  margin-left:0%;
+  padding:.5%;
+  padding-left: 50px;
+  font-size: xx-large;
+  color: white;
+  display: inline-block;
+  float: left;
 }
 
-.logout
-{
-    float: right;
-    display: inline-block;
-    margin-top: 40px;
-    margin-right: 30px;
+#main {
+  width: 100%;
+  text-align: center;
 }
 
-#main
-{
-    width: 100%;
-    text-align: center;
+h1 {
+font-family: Verdana,sans-serif;
 }
 
-h1
-{
-  font-family: Verdana,sans-serif;
-}
-
-html
-{
-    height: 100%;
-    background-color: white;
-    font-size: 0.9rem;
-    min-width: 883px;
+html {
+  height: 100%;
+  background-color: white;
+  font-size: 0.9rem;
+  min-width: 883px;
 }
 
 /* -------------------------- */
 /* login.html styling */
 
-.welcome
-{
-    background-color: #2C6AC4;
-    width:100%;
-    height: 100%;
-    position: absolute;
+.welcome {
+  background-color: #2C6AC4;
+  width:100%;
+  height: 100%;
+  position: absolute;
 }
 
-.animation
-{
-     animation-duration: 0.5s;
+.animation {
+   animation-duration: 0.5s;
 }
 
-.login
-{
-    margin-top: 10px;
+.login {
+  margin-top: 10px;
 }
 
 md-progress-circular path {
   stroke: white;
 }
 
-#authorizing
-{
-    position: relative;
-    top: -105px;
+#authorizing {
+  position: relative;
+  top: -105px;
 }
 
-#icon
-{
-    margin-top: -5px;
-    margin-left: 10px;
+#icon {
+  margin-top: -5px;
+  margin-left: 10px;
 }
 
 /* -------------------------- */
 /* main.html styling */
 
-.clickable
-{
-    cursor: pointer;
+.clickable {
+  cursor: pointer;
 }
 
-.not-clickable
-{
-    cursor: auto !important;
+.not-clickable {
+  cursor: auto !important;
 }
 
-.logout
-{
-    float: right;
+.logout {
+  position: absolute;
+  right:    0;
+  top:   0;
+  margin: 20px;
 }
 
-.greeting
-{
-    color: white;
+.make-release {
+  position: absolute;
+  right:    0;
+  bottom:   0;
+  margin: 40px;
+  margin-right: 60px;
 }
 
-#filters
-{
-    float:left;
-    margin: 20px;
-    width: 90%;
-    margin-top: 40px;
+.greeting {
+  color: white;
 }
 
-.table-header
-{
-    background-color: #2C6AC4;
-    color: white;
+#filters {
+  float: right;
+  margin: 20px;
+  width: 90%;
+  margin-top: 40px;
 }
 
-.form-control
-{
-    font-weight: normal;
+.table-header {
+  background-color: #2C6AC4;
+  color: white;
 }
 
-.btn
-{
-    margin-left: 1px;
+.form-control {
+  font-weight: normal;
 }
 
-.btn-danger
-{
-    margin-left: 15px;
-    margin-top: 8px;
-    height: 75%;
+.btn {
+  margin-left: 1px;
 }
 
-.greyed
-{
-    color: #858585;
+.reset {
+  margin-left: 15px;
+  margin-top: 8px;
+  height: 75%;
 }
 
-.caret
-{
-    color: white;
+.greyed {
+  color: #858585;
+}
+
+.caret {
+  color: white;
 }
 
 #footer {
-    position: relative;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    margin-bottom: 20px;
-    margin-top: 20px;
+  position: relative;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 
 /* -------------------------- */
 /* details.html styling */
 
-#detail_release_title
-{
-    margin-top: 20px;
-    font-size: xx-large;
+#detail_release_title {
+  margin-top: 20px;
+  font-size: xx-large;
 }
 
-#release-image
-{
-    margin-top: 26px;
-    margin-left: 20px;
+#release-image {
+  margin-top: 26px;
+  margin-left: 20px;
 }
 
-.info
-{
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 45px;
+.info {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 45px;
 }
 
-.dates
-{
-    color: #858585;
-    font-style: italic;
+.dates {
+  color: #858585;
+  font-style: italic;
 }
 
-#links
-{
-    float: left;
-    width: 50%;
-    margin-left: 35px;
+#links {
+  float: left;
+  width: 50%;
+  margin-left: 35px;
 }
 
-#detail-table
-{
-    width:90%;
-    margin-top: 20px;
-    margin-left: 35px;
+#detail-table {
+  width:90%;
+  margin-top: 20px;
+  margin-left: 35px;
+}
+
+/* -------------------------- */
+/* create-release.html styling */
+
+#centered-form {
+  margin: 60px;
+}
+
+#add-attribute {
+  font-weight: bold;
+  width: 100%;
+  height: 100%;
+}
+
+.attribute {
+  display: inline;
+  width: 90%;
+  float: right;
+}
+
+.remove-img {
+  margin-top: 5px;
+  margin-right: 5px;
 }

@@ -8,8 +8,9 @@
       </a>
       <div class="logout">
         <span class="greeting">Welcome, {{user}}</span>
-        <button type="button" class="btn btn-lg btn-outline-light" ng-click="logout()">Log Out</button>
+        <button type="button" class="btn btn-outline-light" ng-click="logout()">Log Out</button>
       </div>
+      <button ng-if="auth" ng-click="createRelease()" type="button" class="btn btn-lg btn-danger make-release">Create Release</button>
     </div>
   </nav>
 
