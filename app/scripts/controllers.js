@@ -5,6 +5,7 @@
 var site = window.location.origin;
 var auth_org = 'istio-releases';
 var auth_team = 'release-ui';
+var refresh_time = 900000;
 
 var app = angular.module('ReleaseUI.controllers', ['ngStorage', 'ReleaseUI.filters']);
 
@@ -191,7 +192,7 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
     $scope.reload();
 
     //calls reload every 15 minutes
-    $interval($scope.reload, 900000);
+    $interval($scope.reload, refresh_time);
 
     // onclick/onchange functions that may request more data from server
 
