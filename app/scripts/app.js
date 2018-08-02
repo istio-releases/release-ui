@@ -13,6 +13,10 @@ app.config(function($routeProvider, $locationProvider) {
       templateUrl: 'app/partials/login.html',
       controller: 'LoginController'
     })
+    .when('/create-release', {
+      templateUrl: 'app/partials/create-release.html',
+      controller: 'FormController'
+    })
     .when('/:release_id', {
       templateUrl: 'app/partials/details.html',
       controller: 'DetailsController'
@@ -27,6 +31,12 @@ app.config(function($routeProvider, $locationProvider) {
       if ( next.templateUrl === "app/partials/login.html") {
       } else {
         $location.path("/login");
+      }
+    }
+    if (localStorage.getItem('auth') == null) {
+      // no authenticated user, redirect to previous page or dashboard
+      if ( next.templateUrl === "app/partials/create-release.html") {
+        $location.path("/dashboard");
       }
     }
   });
