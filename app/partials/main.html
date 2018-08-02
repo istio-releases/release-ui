@@ -1,177 +1,204 @@
-<div ng-controller="MainController">
 
-  <nav id="top-bar" class="navbar sticky-top">
-    <div class="navbar-header header">
-      <a id="top-bar-content" class="navbar-brand">
-        <img src="/app/assets/images/logo.png" style="width:20%;">
-        <span>Istio Releases</span>
-      </a>
-      <div class="logout">
-        <span class="greeting">Welcome, {{user}}</span>
-        <button type="button" class="btn btn-lg btn-outline-light" ng-click="logout()">Log Out</button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Filter Options -->
-  <div class="row" id="filters">
-    <div class="col">
-      <md-datepicker md-current-view="year" ng-model="startDate" ng-change="dateChange(true,startDate)"
-        md-placeholder="From" md-max-date="maxFromDate"></md-datepicker>
-    </div>
-    <div class="col">
-      <md-datepicker md-current-view="year" ng-model="endDate" ng-change="dateChange(false,endDate)"
-        md-placeholder="To" md-min-date="minToDate" md-max-date="maxDate"> </md-datepicker>
-    </div>
-    <div class="col">
-      <input class="clickable" type="radio" ng-model="filterDate" value="started" ng-click="dateTypeChange(0)" default>
-      <label class="greyed">
-        Filter by Creation Date
-      </label>
-      <br/>
-      <input class="clickable" type="radio" ng-model="filterDate" value="last_modified" ng-click="dateTypeChange(1)">
-      <label class="greyed">
-        Filter by Modified Date
-      </label>
-    </div>
-      <button type="button" class="btn btn-danger" ng-click="resetFilter()">Reset Filters</button>
+<nav id="top-bar" class="navbar sticky-top">
+  <a id="top-bar-content">
+    <img src="/app/assets/images/logo.png" style="width:20%;">
+    <span>Istio Releases</span>
+  </a>
+  <div class="logout">
+    <span class="greeting">Welcome, {{user}} </span>
+    <button type="button" class="btn btn-outline-light"
+      ng-click="logout()">
+        Log Out
+    </button>
   </div>
+  <button ng-if="auth" ng-click="createRelease()" type="button"
+    class="btn btn-lg btn-danger make-release">
+      Create Release
+  </button>
+</nav>
+
+<!-- Filter Options -->
+<div class="row" id="filters">
+  <button type="button" class="reset btn btn-danger"
+    ng-click="resetFilter()">
+      Reset Filters
+  </button>
+  <div class="col">
+    <md-datepicker md-current-view="year" ng-model="startDate"
+      ng-change="dateChange(true,startDate)" md-placeholder="From"
+      md-max-date="maxFromDate">
+    </md-datepicker>
+  </div>
+  <div class="col">
+    <md-datepicker md-current-view="year" ng-model="endDate"
+      ng-change="dateChange(false,endDate)" md-placeholder="To"
+      md-min-date="minToDate" md-max-date="maxDate">
+    </md-datepicker>
+  </div>
+  <div class="col">
+    <input class="clickable" type="radio" ng-model="filterDate"
+      value="started" ng-click="dateTypeChange(0)" default>
+    <label class="greyed">
+      Filter by Creation Date
+    </label>
+    <br/>
+    <input class="clickable" type="radio" ng-model="filterDate"
+      value="last_modified" ng-click="dateTypeChange(1)">
+    <label class="greyed">
+      Filter by Modified Date
+    </label>
+  </div>
+</div>
 
 <!-- Table of Releases -->
-  <table class="table table-hover">
-    <thead class="thead-light">
-      <th>
-        <div>
-          <select class="form-control dropdown clickable" ng-model="selectedValue"
-            ng-change="filterChange(0,selectedValue)"
-            ng-options="state.id as state.status for state in stateValues">
-            <option ng-selected="defaultStatus" value="">Status</option>
-          </select>
-        </div>
-      </th>
-      <th>
-        <button class="btn table-header not-clickable" type="button">
-          Version
+<table class="table table-hover">
+  <thead class="thead-light">
+    <th>
+      <div>
+        <select class="form-control dropdown clickable" ng-model="selectedValue"
+          ng-change="filterChange(0,selectedValue)"
+          ng-options="state.id as state.status for state in stateValues">
+          <option ng-selected="defaultStatus" value="">Status</option>
+        </select>
+      </div>
+    </th>
+    <th>
+      <button class="btn table-header not-clickable" type="button">
+        Version
+      </button>
+    </th>
+    <th>
+      <button class="btn table-header" type="button" ng-click="sortChange(3)">
+        Created
+        <span ng-show="$storage.sortMethod == 3" class="caret">&#9660;</span>
+        <span ng-show="$storage.sortMethod == 4" class="caret">&#9650;</span>
+      </button>
+    </th>
+    <th>
+      <button class="btn table-header" type="button" ng-click="sortChange(5)">
+        Modified
+        <span ng-show="$storage.sortMethod == 5" class="caret">&#9660;</span>
+        <span ng-show="$storage.sortMethod == 6" class="caret">&#9650;</span>
+      </button>
+    </th>
+    <th>
+      <button class="btn table-header" type="button" ng-click="sortChange(7)">
+        Last Task
+        <span ng-show="$storage.sortMethod == 7" class="caret">&#9660;</span>
+        <span ng-show="$storage.sortMethod == 8" class="caret">&#9650;</span>
+      </button>
+    </th>
+    <th>
+      <div>
+        <select class="form-control dropdown clickable"
+          ng-model="selectedBranch" ng-change="filterChange(1,selectedBranch)"
+          ng-options="branch as branch for branch in branches">
+          <option ng-selected="defaultBranch" value="">Branch</option>
+        </select>
+      </div>
+    </th>
+    <th>
+      <div>
+        <select class="form-control dropdown clickable" ng-model="selectedType"
+          ng-change="filterChange(2,selectedType)"
+          ng-options="type as type for type in types">
+          <option ng-selected="defaultType" value="">Type</option>
+        </select>
+      </div>
+    </th>
+  </thead>
+  <tbody id="dashboard">
+    <tr class="clickable" ng-repeat="release in $storage.releases | limitTo:numPerPage:numPerPage*($storage.currentPage-1)"
+        ng-click="redirectToDetails(release)">
+      <td>
+        <img ng-if="release.state == 2" title="Finished"
+          src="/app/assets/images/check.png">
+        <img ng-if="release.state == 3" title="Failed"
+          src="/app/assets/images/error.png">
+        <img ng-if="release.state == 1" title="Pending"
+          src="/app/assets/images/pending.png">
+        <img ng-if="release.state == 4" title="Abandoned"
+          src="/app/assets/images/suspended.png">
+      </td>
+      <td>
+        {{release.name}}
+      </td>
+      <td>
+        {{release.started * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
+      </td>
+      <td>
+        {{release.last_modified * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
+      </td>
+      <td>
+        {{release.last_active_task}}
+      </td>
+      <td>
+        <button type="button" class="btn btn-secondary not-clickable">
+          {{release.branch}}
         </button>
-      </th>
-      <th>
-        <button class="btn table-header" type="button" ng-click="sortChange(3)">
-          Created
-          <span ng-show="$storage.sortMethod == 3" class="caret">&#9660;</span>
-          <span ng-show="$storage.sortMethod == 4" class="caret">&#9650;</span>
+      </td>
+      <td>
+        <button type="button" class="btn btn-secondary not-clickable">
+          {{release.release_type}}
         </button>
-      </th>
-      <th>
-        <button class="btn table-header" type="button" ng-click="sortChange(5)">
-          Modified
-          <span ng-show="$storage.sortMethod == 5" class="caret">&#9660;</span>
-          <span ng-show="$storage.sortMethod == 6" class="caret">&#9650;</span>
-        </button>
-      </th>
-      <th>
-        <button class="btn table-header" type="button" ng-click="sortChange(7)">
-          Last Task
-          <span ng-show="$storage.sortMethod == 7" class="caret">&#9660;</span>
-          <span ng-show="$storage.sortMethod == 8" class="caret">&#9650;</span>
-        </button>
-      </th>
-      <th>
-        <div>
-          <select class="form-control dropdown clickable" ng-model="selectedBranch"
-            ng-change="filterChange(1,selectedBranch)"
-            ng-options="branch as branch for branch in branches">
-            <option ng-selected="defaultBranch" value="">Branch</option>
-          </select>
-        </div>
-      </th>
-      <th>
-        <div>
-          <select class="form-control dropdown clickable" ng-model="selectedType"
-            ng-change="filterChange(2,selectedType)"
-            ng-options="type as type for type in types">
-            <option ng-selected="defaultType" value="">Type</option>
-          </select>
-        </div>
-      </th>
-    </thead>
-    <tbody id="dashboard">
-      <tr class="clickable" ng-repeat="release in $storage.releases | limitTo:numPerPage:numPerPage*($storage.currentPage-1)"
-          ng-click="redirectToDetails(release)">
-        <td>
-          <img ng-if="release.state == 2" title="Finished" src="/app/assets/images/check.png">
-          <img ng-if="release.state == 3" title="Failed" src="/app/assets/images/error.png">
-          <img ng-if="release.state == 1" title="Pending" src="/app/assets/images/pending.png">
-          <img ng-if="release.state == 4" title="Abandoned" src="/app/assets/images/suspended.png">
-        </td>
-        <td>
-          {{release.name}}
-        </td>
-        <td>
-          {{release.started * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
-        </td>
-        <td>
-          {{release.last_modified * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
-        </td>
-        <td>
-          {{release.last_active_task}}
-        </td>
-        <td>
-          <button type="button" class="btn btn-secondary not-clickable">
-            {{release.branch}}
-          </button>
-        </td>
-        <td>
-          <button type="button" class="btn btn-secondary not-clickable">
-            {{release.release_type}}
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-  <!-- Page Selector -->
-  <div id="footer">
-    <ul class="pagination justify-content-center">
-      <li class="page-item">
-        <a ng-if="$storage.currentPage > 1" ng-click="pageChange(-2)" class="page-link" href="" aria-label="Next">
+<!-- Page Selector -->
+<div id="footer">
+  <ul class="pagination justify-content-center">
+    <li class="page-item">
+      <a ng-if="$storage.currentPage > 1" ng-click="pageChange(-2)"
+        class="page-link" href="" aria-label="Next">
           <span aria-hidden="true">&laquo;</span>
-        </a>
-        <a ng-if="$storage.currentPage == 1" class="page-link" aria-label="Next">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-      <li ng-if="$storage.currentPage == 1" ng-repeat="n in [] | range:totalPages" class="page-item">
-        <a ng-if="$storage.currentPage + $index == 1" class="page-link">{{$storage.currentPage + $index}}</a>
-        <a ng-if="$storage.currentPage + $index != 1" ng-click="pageChange($index)"
-          href="" class="page-link">
+      </a>
+      <a ng-if="$storage.currentPage == 1" class="page-link" aria-label="Next">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li ng-if="$storage.currentPage == 1"
+      ng-repeat="n in [] | range:totalPages" class="page-item">
+        <a ng-if="$storage.currentPage + $index == 1" class="page-link">
           {{$storage.currentPage + $index}}
         </a>
-      </li>
-      <li ng-if="$storage.currentPage > 1 && $storage.currentPage < totalPages"
-        ng-repeat="n in [] | range:totalPages" class="page-item">
-        <a ng-if="n == 0" class="page-link">{{$storage.currentPage}}</a>
-        <a ng-if="n != 0" class="page-link" ng-click="pageChange(n)" href="">
-          {{$storage.currentPage + n}}
+        <a ng-if="$storage.currentPage + $index != 1"
+          ng-click="pageChange($index)" href="" class="page-link">
+          {{$storage.currentPage + $index}}
         </a>
-      </li>
-      <li ng-if="$storage.currentPage >= totalPages && totalPages >= 3" class="page-item">
-        <a ng-click="pageChange(-2)" href="" class="page-link">{{$storage.currentPage - 2}}</a>
-      </li>
-      <li ng-if="$storage.currentPage >= totalPages && totalPages >= 2" class="page-item">
-        <a ng-click="pageChange(-1)" href="" class="page-link">{{$storage.currentPage -1}}</a>
-      </li>
-      <li ng-if="$storage.currentPage >= totalPages && $storage.currentPage != 1">
-        <a class="page-link">{{$storage.currentPage}}</a>
-      </li>
-      <li>
-        <a ng-if="$storage.currentPage < totalPages" ng-click="pageChange(1)"
-          class="page-link" href="" aria-label="Next">
+    </li>
+    <li ng-if="$storage.currentPage > 1 && $storage.currentPage < totalPages"
+      ng-repeat="n in [] | range:totalPages" class="page-item">
+      <a ng-if="n == 0" class="page-link">{{$storage.currentPage}}</a>
+      <a ng-if="n != 0" class="page-link" ng-click="pageChange(n)" href="">
+        {{$storage.currentPage + n}}
+      </a>
+    </li>
+    <li ng-if="$storage.currentPage >= totalPages && totalPages >= 3"
+      class="page-item">
+        <a ng-click="pageChange(-2)" href="" class="page-link">
+          {{$storage.currentPage - 2}}
+        </a>
+    </li>
+    <li ng-if="$storage.currentPage >= totalPages && totalPages >= 2"
+      class="page-item">
+        <a ng-click="pageChange(-1)" href="" class="page-link">
+          {{$storage.currentPage -1}}
+        </a>
+    </li>
+    <li ng-if="$storage.currentPage >= totalPages && $storage.currentPage != 1">
+      <a class="page-link">{{$storage.currentPage}}</a>
+    </li>
+    <li>
+      <a ng-if="$storage.currentPage < totalPages" ng-click="pageChange(1)"
+        class="page-link" href="" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+      <a ng-if="$storage.currentPage >= totalPages"
+        class="page-link" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
-        </a>
-        <a ng-if="$storage.currentPage >= totalPages" class="page-link" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    </ul>
-  </div>
+      </a>
+    </li>
+  </ul>
 </div>

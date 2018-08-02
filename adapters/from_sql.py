@@ -76,6 +76,7 @@ def read_releases(release_data, airflow_db):
       release.last_modified = int(time.mktime(execution_date.timetuple()))
       release.last_active_task = ''
     release_objects[release.release_id] = release
+    logging.info('Release ' + str(release.release_id) + ' has been read')
 
   return release_objects
 

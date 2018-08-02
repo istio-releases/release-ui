@@ -6,26 +6,24 @@ from flask import Flask
 from flask import make_response
 from flask_restful import Api
 import resources.resources as resources
-
+from collections import namedtuple
 
 # creating the Flask application
 APP = Flask(__name__)
 API = Api(APP)
 # creates the proper database connection depending on whether the app is
 # deployed locally or on App Engine
-airflow_db = []
-bucket_names = []
-if os.getenv('SERVER_SOFTWARE', '').startswith('Development/'):
-  for i in range(1, (int(os.environ.get('DB_NUM')) + 1)):
+AirflowConfig = namedtuple('AirflowConfig', ['db', 'bucket_name'])
+airflow_configs = []
+for i in range(1, (int(os.environ.get('DB_NUM')) + 1)):
+  if os.getenv('SERVER_SOFTWARE', '').startswith('Development/'):
     db = AirflowDB(host=os.environ.get('CLOUDSQL_HOST_' + str(i)),
                    user=os.environ.get('CLOUDSQL_USER_' + str(i)),
                    password=os.environ.get('CLOUDSQL_PASSWORD_' + str(i)),
                    db=os.environ.get('CLOUDSQL_DB_' + str(i)))
-    airflow_db.append(db)
     bucket_name = os.environ.get('GCS_LOGS_BUCKET_' + str(i))
-    bucket_names.append(bucket_name)
-else:
-  for i in range(1, (int(os.environ.get('DB_NUM')) + 1)):
+    airflow_configs.append(AirflowConfig(*(db, bucket_name)))
+  else:
     # Connect using the unix socket located at
     # /cloudsql/cloudsql-connection-name.
     CLOUDSQL_CONNECTION_NAME = os.environ.get('CLOUDSQL_CONNECTION_NAME_' + str(i))
@@ -34,11 +32,10 @@ else:
                    user=os.environ.get('CLOUDSQL_USER_' + str(i)),
                    password=os.environ.get('CLOUDSQL_PASSWORD_' + str(i)),
                    db=os.environ.get('CLOUDSQL_DB_' + str(i)))
-    airflow_db.append(db)
     bucket_name = os.environ.get('GCS_LOGS_BUCKET_' + str(i))
-    bucket_names.append(bucket_name)
+    airflow_configs.append(AirflowConfig(*(db, bucket_name)))
 
-adapter = AirflowAdapter(airflow_db, bucket_names)
+adapter = AirflowAdapter(airflow_configs)
 
 
 # adding resource endpoints to different urls

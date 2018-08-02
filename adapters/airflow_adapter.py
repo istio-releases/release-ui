@@ -22,9 +22,8 @@ CACHE_TTL = 1800
 class AirflowAdapter(Adapter):
   """Provides a way to interact with the Airflow Database, and get data from it."""
 
-  def __init__(self, airflow_db, bucket_names):
-    self._airflow_db = airflow_db
-    self._bucket_names = bucket_names
+  def __init__(self, airflow_configs):
+    self._configs = airflow_configs
     self._lock = threading.Lock()
     self._release_types = set()
     self._branches = set()
@@ -44,10 +43,10 @@ class AirflowAdapter(Adapter):
     release_query = to_sql_releases(filter_options)
     # get the data from SQL
     releases_data = {}
-    for db in self._airflow_db:
-      raw_release_data = db.query(release_query)  # it's a tuple, so no .append()
+    for config in self._configs:
+      raw_release_data = config.db.query(release_query)  # it's a tuple, so no .append()
       # package the data into release objects with all neccessary info
-      releases_data.update(read_releases(raw_release_data, db))
+      releases_data.update(read_releases(raw_release_data, config.db))
     # filter for the stuff that SQL can't natively filter for,
     # due to some data being based on a tasks
     releases_data = filter_releases(releases_data, filter_options)
@@ -71,10 +70,10 @@ class AirflowAdapter(Adapter):
     release_query = to_sql_release(dag_id, execution_date)
     # get data from SQL
     release_data = {}
-    for db in self._airflow_db:
-      raw_release_data = db.query(release_query)  # it's a tuple, so no .append()
+    for config in self._configs:
+      raw_release_data = config.db.query(release_query)  # it's a tuple, so no .append()
       # package the data into release objects with all neccessary info
-      release_data.update(read_releases(raw_release_data, db))
+      release_data.update(read_releases(raw_release_data, config.db))
 
     return release_data
 
@@ -93,8 +92,8 @@ class AirflowAdapter(Adapter):
     task_query = to_sql_tasks(execution_date)
     # get data from SQL
     task_objects = {}
-    for db in self._airflow_db:
-      raw_task_data = db.query(task_query)  # it's a tuple, so no .append()
+    for config in self._configs:
+      raw_task_data = config.db.query(task_query)  # it's a tuple, so no .append()
       if len(raw_task_data):
         # package the data into release objects with all neccessary info
         task_object = read_tasks(raw_task_data)
@@ -117,8 +116,8 @@ class AirflowAdapter(Adapter):
 
     task_query = to_sql_task(dag_id, task_name, execution_date)
     task_object = {}
-    for db in self._airflow_db:
-      raw_task_data = db.query(task_query)  # it's a tuple, so no .append()
+    for config in self._configs:
+      raw_task_data = config.db.query(task_query)  # it's a tuple, so no .append()
       if len(raw_task_data):
         # package the data into release objects with all neccessary info
         task_object = read_tasks(raw_task_data)
@@ -165,19 +164,23 @@ class AirflowAdapter(Adapter):
     Returns:
       Structured log text
     """
+    # !!! Note that because of overlapping datetimes and dag_ids, some logs WILL be broken.
+    #     This cannot be helped, because of the way which Airflow defines a release !!!
     dag_id, execution_date = release_id_parser(release_id)
-    for i, db in enumerate(self._airflow_db):
-      dag_run = db.query(to_sql_release(dag_id, execution_date))
+    for i, config in enumerate(self._configs):
+      dag_run = config.db.query(to_sql_tasks(dag_id, float(time.mktime(execution_date.timetuple()))))
       if len(dag_run):
         execution_date = str(execution_date).replace(' ', 'T')  # put into same format as gcs bucket
-        bucket_name = self._bucket_names[i]
-        logging.debug('Bucket name: ' + bucket_name)
-        filename = os.path.join(os.path.sep, bucket_name, 'logs', dag_id, task_name, str(execution_date), log_file)
+        logging.debug('Bucket name: ' + config.bucket_name)
+        filename = os.path.join(os.path.sep, config.bucket_name, 'logs', dag_id, task_name, execution_date, log_file)
         logging.info('Retrieving from GCS: ' + str(filename))
-        gcs_file = gcs.open(filename)
-        contents = gcs_file.read()
-        gcs_file.close()
-        return contents
+        try:
+          gcs_file = gcs.open(filename)
+          contents = gcs_file.read()
+          gcs_file.close()
+          return contents
+        except:
+          continue
 
   def _update_cache(self):
     if (datetime.now() - self._cache_last_updated).total_seconds() < CACHE_TTL:
@@ -186,10 +189,10 @@ class AirflowAdapter(Adapter):
     logging.info('Type and Branch cache updated')
     raw_release_data = ()
     releases = {}
-    for db in self._airflow_db:
-      raw_release_data += db.query('SELECT dag_id, execution_date FROM dag_run')  # it's a tuple, so no .append()
+    for config in self._configs:
+      raw_release_data += config.db.query('SELECT dag_id, execution_date FROM dag_run')  # it's a tuple, so no .append()
       # package the data into release objects with all neccessary info
-      releases.update(read_releases(raw_release_data, db))
+      releases.update(read_releases(raw_release_data, config.db))
     branches = set()
     types = set()
     for release in releases:

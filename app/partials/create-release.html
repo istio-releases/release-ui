@@ -1,0 +1,45 @@
+<nav id="top-bar" class="navbar sticky-top">
+  <div class="navbar-header header" href="/">
+    <a id="top-bar-content" class="navbar-brand" href="" ng-click="redirect()">
+      <img src="/app/assets/images/logo.png" style="width:20%;">
+      <span>Istio Releases</span>
+    </a>
+    <div class="logout">
+      <span class="greeting">Welcome, {{user}}</span>
+      <button type="button" class="btn btn-outline-light" ng-click="logout()">Log Out</button>
+    </div>
+    <button ng-if="auth" type="button" class="btn btn-lg btn-danger make-release">Create Release</button>
+  </div>
+</nav>
+
+<div id="centered-form">
+  <form name="form">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Attribute</th>
+          <th scope="col">Value</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <tr>
+          <td>
+            <input ng-model="release.attribute1" type="text" class="form-control attribute" placeholder="Attribute">
+          </td>
+          <td>
+            <input ng-model="release.value1" type="text" class="form-control" placeholder="Value">
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2" style="padding:0px;">
+            <button type="submit" class="btn" id="add-attribute" ng-click="addField()">+</button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+    <button type="button" class="btn btn-danger" ng-click="cancel()">Cancel</button>
+    <button type="button" class="btn btn-primary" ng-click="submit()">Submit</button>
+  </form>
+</div>

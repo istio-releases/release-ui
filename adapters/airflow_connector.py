@@ -57,6 +57,7 @@ class AirflowDB(object):
 
       cursor.close()
 
+    logging.info('Returns: ' + str(response))
     return response
 
   def _create_connection(self):
