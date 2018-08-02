@@ -19,7 +19,9 @@ STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
                      'shutdown': State.ABANDONED,
                      'upstream_failed': State.PENDING,
                      'None': State.UNUSED_STATUS,
-                     'removed': State.ABANDONED}
+                     'removed': State.ABANDONED,
+                     'skipped': State.ABANDONED,
+                     'up_for_retry': State.PENDING}
 STRING_FROM_STATE =  {v: k for k, v in STATE_FROM_STRING.iteritems()}
 
 
@@ -55,7 +57,10 @@ def read_releases(release_data, airflow_db):
       continue
     else:
       release.name = xcom_dict[xcomKeys.VERSION]
-      release.branch = xcom_dict[xcomKeys.BRANCH]
+      try:
+        release.branch = xcom_dict[xcomKeys.BRANCH]
+      except KeyError:
+        _, release.branch = parse_dag_id(item.dag_id)
       try:
         # it seems that some xcom dicts do not have this value for some reason?
         release.release_type = xcom_dict[xcomKeys.RELEASE_TYPE]
@@ -98,7 +103,6 @@ def read_tasks(task_data):
     else:
       start_date = item.start_date
       task.started = int(time.mktime(start_date.timetuple()))
-    task.status = STATE_FROM_STRING.get(str(item.state))
     task.log_url = construct_log_link(item.dag_id, item.execution_date, item.task_id)  # TODO(dommarques): figure out how to get the log in here
     if item.end_date is None:
       if item.start_date is None:
@@ -117,6 +121,7 @@ def read_tasks(task_data):
       task.error = STRING_FROM_STATE.get(task.status)
     else:
       task.error = item.state
+      task.status = STATE_FROM_STRING.get(str(item.state))
     task_objects.append(task)
   return task_objects
 

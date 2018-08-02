@@ -10,7 +10,9 @@ STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
                      'shutdown': State.ABANDONED,
                      'upstream_failed': State.PENDING,
                      'None': State.UNUSED_STATUS,
-                     'removed': State.ABANDONED}
+                     'removed': State.ABANDONED,
+                     'skipped': State.ABANDONED,
+                     'up_for_retry': State.PENDING}
 STRING_FROM_STATE =  {v: k for k, v in STATE_FROM_STRING.iteritems()}
 
 
