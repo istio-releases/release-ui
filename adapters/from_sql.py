@@ -41,7 +41,7 @@ def read_releases(release_data, airflow_db):
     release.labels = [item.dag_id]
     release.state = state
     if green_sha is None:
-      release.links = [{'name': 'no links available', 'url': 'https://youtu.be/dQw4w9WgXcQ'}]
+      release.links = [{'name': 'no links available', 'url': None}]
     else:
       release.links = construct_repo_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first, or we make our own way to get the links pylint: disable=line-too-long
     if xcom_dict is None:
@@ -102,10 +102,10 @@ def read_tasks(task_data):
     else:
       end_date = item.end_date
       task.last_modified = int(time.mktime(end_date.timetuple()))
-    if item.state == None:
+    if item.state is None:
       task.status = STATE_FROM_STRING.get('not_started')
       task.error = 'not started'
-    elif item.state is 'running':
+    elif item.state == 'running':
       task.status = STATE_FROM_STRING.get('running')
       task.error = STRING_FROM_STATE.get(task.status)
     elif item.start_date is None:
@@ -125,6 +125,7 @@ def get_task_info(dag_id, execution_date, airflow_db):
   """Gets task-related info to fill in missing release object info.
 
   Args:
+    dag_id: str
     execution_date: a python datetime.datetime
     airflow_db: the database connection object
 
@@ -142,9 +143,6 @@ def get_task_info(dag_id, execution_date, airflow_db):
   else:
     most_recent_task = None
   for task in task_objects:
-    print '///////////////////'
-    print task
-    print task.status
     task_ids.append(task.task_name)
     if state == STATE_FROM_STRING.get('failed'):
       continue
@@ -157,8 +155,6 @@ def get_task_info(dag_id, execution_date, airflow_db):
     elif task.status > state:
       state = task.status
     logging.debug(task.status)
-  print '????????'
-  print state
   return task_ids, most_recent_task, state
 
 
