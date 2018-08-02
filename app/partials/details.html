@@ -1,96 +1,95 @@
-<div ng-controller="DetailsController">
 
-  <nav id="top-bar" class="navbar sticky-top">
-    <div class="navbar-header header" href="/">
-      <a id="top-bar-content" class="navbar-brand" href="" ng-click="redirect()">
-        <img src="/app/assets/images/logo.png" style="width:20%;">
-        <span>Istio Releases</span>
-      </a>
-      <div class="logout">
-        <span class="greeting">Welcome, {{user}}</span>
-        <button type="button" class="btn btn-lg btn-outline-light" ng-click="logout()">Log Out</button>
-      </div>
-    </div>
-  </nav>
-
-  <div class="row info">
-      <h1 id="detail_release_title"> {{ release.name }} </h1>
-    <div id ="release-image">
-      <img ng-if="release.state == 3" title="Finished" src="/app/assets/images/check.png">
-      <img ng-if="release.state == 6" title="Failed" src="/app/assets/images/error.png">
-      <img ng-if="release.state == 4" title="Pending" src="/app/assets/images/pending.png">
-      <img ng-if="release.state == 2" title="Abandoned" src="/app/assets/images/suspended.png">
-      <img ng-if="release.state == 5" title="Running" height="35" width="35" src="/app/assets/images/running.gif">
-    </div>
+<nav id="top-bar" class="navbar sticky-top">
+  <a id="top-bar-content" href="" ng-click="redirect()">
+    <img src="/app/assets/images/logo.png" style="width:20%;">
+    <span>Istio Releases</span>
+  </a>
+  <div class="logout">
+    <span class="greeting">Welcome, {{user}} </span>
+    <button type="button" class="btn btn-outline-light" ng-click="logout()">
+      Log Out
+    </button>
   </div>
+  <button ng-if="auth" ng-click="createRelease()" type="button"
+    class="btn btn-lg btn-danger make-release">
+      Create Release
+  </button>
+</nav>
 
-  <div class="row info">
-    <button type="button" class="not-clickable btn btn-secondary"> {{release.branch}} </button>
-    <button type="button" class="not-clickable btn btn-secondary"> {{release.release_type}} </button>
+<div class="row info">
+    <h1> {{ release.name }} </h1>
+  <div id ="release-image">
+    <img ng-if="release.state == 2" src="/app/assets/images/check.png">
+    <img ng-if="release.state == 3" src="/app/assets/images/error.png">
+    <img ng-if="release.state == 1" src="/app/assets/images/pending.png">
+    <img ng-if="release.state == 4" src="/app/assets/images/suspended.png">
   </div>
+</div>
 
-  <div class="row info dates">
-    <p>Created on: {{release.started * 1000 | date:'medium'}}</p>
-  </div>
-  <div class="row info dates">
-    <p>Last Modified: {{release.last_modified * 1000 | date:'medium'}}</p>
-  </div>
+<div class="row info">
+  <button type="button" class="not-clickable btn btn-secondary tag">
+    {{release.branch}}
+  </button>
+  <button type="button" class="not-clickable btn btn-secondary tag">
+    {{release.release_type}}
+  </button>
+</div>
 
-  <table id="repos" class="table table-bordered">
-    <th>
-      Repos:
-    </th>
-    <td ng-repeat="link in release.links">
-      <a class="link" href="{{link.url}}" target="_blank">{{link.name}}</a>
-    </td>
+<table id="repos" class="table table-bordered">
+  <th>
+    Repos:
+  </th>
+  <td ng-repeat="link in release.links">
+    <a class="link" href="{{link.url}}" target="_blank">{{link.name}}</a>
+  </td>
+</table>
+
+<div id="detail-table">
+  <table class="table">
+    <thead class="thead-light">
+      <th>Status</th>
+      <th>Task</th>
+      <th>Start Time</th>
+      <th>Last Modified</th>
+      <!-- <th>Dependencies</th> -->
+      <th>Message</th>
+      <th>View Logs</th>
+    </thead>
+    <tbody>
+        <tr ng-repeat="task in tasks">
+          <td>
+            <img ng-if="task.status == 3" title="Finished" src="/app/assets/images/check.png">
+            <img ng-if="task.status == 6" title="Failed" src="/app/assets/images/error.png">
+            <img ng-if="task.status == 4 || task.status == 1" title="Pending" src="/app/assets/images/pending.png">
+            <img ng-if="task.status == 2" title="Abandoned" src="/app/assets/images/suspended.png">
+            <img ng-if="task.status == 5" title="Running" height="35" width="35" src="/app/assets/images/running.gif">
+          </td>
+          <td>
+            {{ task.task_name }}
+          </td>
+          <td>
+            {{task.started * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
+          </td>
+          <td>
+            {{task.last_modified * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
+          </td>
+          <!-- <td>
+            <button ng-if="task.dependent_on.length == 0" type="button" class="not-clickable btn btn-sm">
+              N/A
+          </button>
+          <button ng-if="task.dependent_on.length != 0"
+            ng-repeat="tag in task.dependent_on" type="button"
+            class="not-clickable btn btn-sm">
+              {{tag}}
+            </button>
+          </td> -->
+          <td>
+            {{ task.error }}
+          </td>
+          <td>
+            <a  href="" class="link" ng-click="getLogs(task)"> logs </a>
+          </td>
+        </tr>
+    </tbody>
   </table>
-
-  <div id="detail-table">
-    <table class="table">
-      <thead class="thead-light">
-        <th>Status</th>
-        <th>Task</th>
-        <th>Start Time</th>
-        <th>Last Modified</th>
-        <!-- <th>Dependencies</th> -->
-        <th>Message</th>
-        <th>View Logs</th>
-      </thead>
-      <tbody>
-          <tr ng-repeat="task in tasks">
-            <td>
-              <img ng-if="task.status == 3" title="Finished" src="/app/assets/images/check.png">
-              <img ng-if="task.status == 6" title="Failed" src="/app/assets/images/error.png">
-              <img ng-if="task.status == 4 || task.status == 1" title="Pending" src="/app/assets/images/pending.png">
-              <img ng-if="task.status == 2" title="Abandoned" src="/app/assets/images/suspended.png">
-              <img ng-if="task.status == 5" title="Running" height="35" width="35" src="/app/assets/images/running.gif">
-            </td>
-            <td>
-              {{ task.task_name }}
-            </td>
-            <td>
-              {{task.started * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
-            </td>
-            <td>
-              {{task.last_modified * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
-            </td>
-            <!-- <td>
-              <button ng-if="task.dependent_on.length == 0" type="button" class="not-clickable btn btn-sm">
-                N/A
-              </button>
-              <button ng-if="task.dependent_on.length != 0" ng-repeat="tag in task.dependent_on" type="button" class="not-clickable btn btn-sm">
-                {{tag}}
-              </button>
-            </td> -->
-            <td>
-              {{ task.error }}
-            </td>
-            <td>
-              <a  href="" class="link" ng-click="getLogs(task)"> logs </a>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-  </div>
-
 </div>

@@ -5,12 +5,15 @@
 var site = window.location.origin;
 var auth_org = 'istio-releases';
 var auth_team = 'release-ui';
+var refresh_time = 900000;
 
 var app = angular.module('ReleaseUI.controllers', ['ngStorage', 'ReleaseUI.filters']);
 
 
-app.controller('MainController', ['$scope','$http','$location', '$sessionStorage',
-  function($scope, $http, $location, $sessionStorage) {
+app.controller('MainController', ['$scope','$http','$location', '$sessionStorage', '$interval',
+  function($scope, $http, $location, $sessionStorage, $interval) {
+
+    $scope.auth = localStorage.getItem('auth');
 
     $scope.logout = function () {
       localStorage.removeItem('loggedIn');
@@ -21,32 +24,8 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
     $scope.user = localStorage.getItem('user');
     $scope.numPerPage = 10;
     $scope.numRequested = 30;
-    var getBranches = function () {
-      $http({
-          method: 'GET',
-          url: site + '/branches',
-          cache: true
-      }).then(function successCallback(response) {
-          $scope.branches = angular.fromJson(response.data);
-      }, function errorCallback(response) {
-          console.log(response);
-      });
-    };
-    getBranches();
 
-    var getTypes = function () {
-      $http({
-          method: 'GET',
-          url: site + '/types',
-          cache: true
-      }).then(function successCallback(response) {
-          $scope.types = angular.fromJson(response.data);
-      }, function errorCallback(response) {
-          console.log(response);
-      });
-    };
-    getTypes();
-
+    // Manually set status dropdown
     $scope.stateValues = [
       {"id":1, "status": "No Status"},
       {"id":2, "status": "Abandoned"},
@@ -57,6 +36,7 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
     ];
 
     // Set default values for storage
+    // allows filter options to persist throughout the session
     var defaultStorage = {
       stateValue: null,
       currentPage: 1,
@@ -96,12 +76,41 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
       $scope.selectedType = $scope.$storage.typeValue;
     };
 
-    // Set Scope when loading page
-    setScope();
+    // Dynamically populate Branches dropdown from release data
+    var getBranches = function () {
+      $http({
+          method: 'GET',
+          url: site + '/branches',
+          cache: true
+      }).then(function successCallback(response) {
+          $scope.branches = angular.fromJson(response.data);
+      }, function errorCallback(response) {
+          console.log(response);
+      });
+    };
 
-    // HTTP Request to get release information
+    // Dynamically populate Types dropdown from release data
+    var getTypes = function () {
+      $http({
+          method: 'GET',
+          url: site + '/types',
+          cache: true
+      }).then(function successCallback(response) {
+          $scope.types = angular.fromJson(response.data);
+      }, function errorCallback(response) {
+          console.log(response);
+      });
+    };
+
+    /**
+    * HTTP Request to get release information
+    * @param {String} method: specifies why the function is being called
+    *                         'page' - page change, 'onload' - refresh,
+    *                          anything else is a change in filter/sort
+    */
     var getReleases = function (method) {
 
+      // sets state to selected value or default 0 if none are selected
       var state;
       if($scope.$storage.stateValue == null) {
         state = 0;
@@ -110,11 +119,15 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
         state = $scope.$storage.stateValue;
       }
 
+      // sets time interval for requested releases
       var start = new Date($scope.$storage.fromDate);
       start = Math.floor(start.getTime() / 1000);
       var end = new Date($scope.$storage.toDate);
       end = Math.ceil(end.getTime() / 1000);
 
+      // sets offset depending on why the function is called
+      // pagination adds an offset
+      // changes in filtering/sorting go back to page 1
       var offset;
       if (method == 'page') {
         offset = $scope.$storage.releases.length;
@@ -126,6 +139,7 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
         offset = 0;
         $scope.$storage.currentPage = 1;
       }
+
       // put the sorting into an enum and bool based format, as opposed to a
       // stricly enum format
       var sortMethodDescending;
@@ -145,6 +159,7 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
         sortMethodNum = 4;
       }
 
+      // request url with required parameters
       var url_string = site + '/releases?state=' + state +
           '&branch=' + $scope.$storage.branchValue +
           '&release_type=' + $scope.$storage.typeValue + '&start_date=' + start +
@@ -175,9 +190,26 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
            mybody.removeClass('waiting');
        });
     };
-    getReleases('onload');
+
+    // on reload, gets updated release, type, and branch information
+    $scope.reload = function () {
+      getReleases('onload');
+      getTypes();
+      getBranches();
+      setScope();
+    };
+    $scope.reload();
+
+    //calls reload every 15 minutes
+    $interval($scope.reload, refresh_time);
 
     // onclick/onchange functions that may request more data from server
+
+    /**
+    * Change in date selection filters
+    * @param {Boolean} from: true if its start date false if end date
+    * @param {Date} input: new value taken from datetime input field
+    */
     $scope.dateChange = function (from, input) {
       if (from) {
         $scope.$storage.fromDate = input;
@@ -193,6 +225,11 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
       getReleases('onDateChange');
     };
 
+    /**
+    * Change in type of date filter
+    * @param {Number} input: 0 if filtering by creation date,
+    *                        0 if by last modified
+    */
     $scope.dateTypeChange = function (input) {
       if (input == 0) {
         $scope.$storage.whichDate = 'started';
@@ -206,6 +243,11 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
       getReleases('onDateTypeChange');
     };
 
+    /**
+    * Change in dropdown filters
+    * @param {Number} type: 0 for state, 1 for branch, 2 for type
+    * @param {Date} input: new value taken from dropdown selection
+    */
     $scope.filterChange = function (type, input) {
       if (type == 0) {
         $scope.$storage.stateValue = input;
@@ -223,7 +265,12 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
       getReleases('onFilterChange');
     };
 
+    /**
+    * Change in sort method
+    * @param {Number} input: 3 for creation date, 5 for last modified, 7 for last task
+    */
     $scope.sortChange = function (input) {
+      // odd versus even allows for descending and ascending sorts
       if ($scope.$storage.sortMethod % 2 == 0) {
         $scope.$storage.sortMethod = input;
       }
@@ -233,7 +280,12 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
       getReleases('onSortChange');
     };
 
+    /**
+    * Change in sort method
+    * @param {Number} input: change in pages
+    */
     $scope.pageChange = function (input) {
+      // -2 brings user back to first page
       if (input == -2) {
         $scope.$storage.currentPage = 1;
       }
@@ -246,7 +298,7 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
       }
     };
 
-    // Reset Filters and OrderBy
+    // Reset filters and sort method
     $scope.resetFilter = function () {
       // Reset default settings and scope
       $sessionStorage.$reset(defaultStorage);
@@ -267,12 +319,74 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
       var newRoute = '/' + input.release_id;
       $location.path(newRoute);
     };
+
+    $scope.createRelease = function () {
+      $location.path('/create-release');
+    };
+}]);
+
+app.controller('FormController', ['$scope', '$location', '$http', '$compile',
+  function ($scope, $location, $http, $compile) {
+
+    $scope.release = {};
+    $scope.inputs = 1;
+
+    $scope.logout = function () {
+      localStorage.removeItem('loggedIn');
+      $location.path('/login');
+    };
+
+    $scope.user = localStorage.getItem('user');
+
+    $scope.redirect = function () {
+      $location.path('/dashboard');
+    };
+
+    $scope.addField = function () {
+      $scope.inputs = $scope.inputs + 1;
+      var attribute = 'attribute' + String($scope.inputs);
+      var value = 'value' + String($scope.inputs);
+      var html = '<tr><td>'+
+                 '<img class="remove-img" height="25" width="25" src="/app/assets/images/remove.png" ng-click="removeKey($event)">'+
+                 '<input ng-model="release.'+ attribute + '" type="text" class="form-control attribute" placeholder="Attribute"></td>'+
+                 '<td><input ng-model="release.'+ value + '" type="text" class="form-control" placeholder="Value"></td></tr>';
+
+      var ele = document.getElementById('table-body');
+      angular.element(ele).append($compile(html)($scope));
+    };
+
+    $scope.removeKey = function (e) {
+      console.log('removed attribute');
+      $(e.target).parent().parent().remove();
+    };
+
+    $scope.submit = function () {
+      var release_dict = {};
+      var keys = Object.keys($scope.release);
+      for (var i = 0; i < keys.length; i += 2) {
+        var key1 = keys[i];
+        var key2 = keys[i+1];
+        var attribute = $scope.release[key1];
+        var value = $scope.release[key2];
+        release_dict[attribute] = value;
+      }
+      console.log(release_dict);
+    };
+
+    $scope.cancel = function () {
+      $location.path('/dashboard');
+    };
 }]);
 
 app.controller('DetailsController', ['$scope', '$location', '$http', '$routeParams', '$sessionStorage',
   function ($scope, $location, $http, $routeParams, $sessionStorage) {
 
+    $scope.auth = localStorage.getItem('auth');
     $scope.user = localStorage.getItem('user');
+
+    $scope.createRelease = function () {
+      $location.path('/create-release');
+    };
 
     $scope.logout = function () {
       localStorage.removeItem('loggedIn');
@@ -280,6 +394,7 @@ app.controller('DetailsController', ['$scope', '$location', '$http', '$routePara
     };
 
 
+    // on click of nav bar returns user to main dashboard
     $scope.redirect = function () {
       $location.path('/dashboard');
     };
@@ -400,6 +515,7 @@ app.controller('LoginController', ['$scope', '$location', '$http',
     else {
       $scope.login_message = 'Log In with GitHub';
       localStorage.removeItem('user');
+      localStorage.removeItem('auth');
       firebase.auth().signOut().then(function() {
         console.log('Sign out successful');
       }).catch(function(error) {
