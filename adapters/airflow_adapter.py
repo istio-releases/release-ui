@@ -120,7 +120,7 @@ class AirflowAdapter(Adapter):
       Dictionary with Task object.
     """
     if release_id in self._releases:
-      return self._tasks[task_name]
+      return [self._tasks[task_name + '@' + release_id]]
 
 
     dag_id, execution_date = release_id_parser(release_id)
