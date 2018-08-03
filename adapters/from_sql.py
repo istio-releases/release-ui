@@ -56,12 +56,15 @@ def read_releases(release_data, airflow_db):
     else:
       release.name = xcom_dict[xcomKeys.VERSION]
       release.branch = xcom_dict[xcomKeys.BRANCH]
+      release.download_link = construct_download_link(xcom_dict[xcomKeys.GCS_BUILD_PATH])
+      print release.download_link
       try:
         # it seems that some xcom dicts do not have this value for some reason?
         release.release_type = xcom_dict[xcomKeys.RELEASE_TYPE]
       except KeyError:
         # old releases don't have release types, so this is a fallback
         release.release_type, _ = parse_dag_id(item.dag_id)
+        print release.release_type
     if most_recent_task:
       # allows for continuation even if tasks have not begun/been generated yet
       last_modified = most_recent_task.last_modified
@@ -218,6 +221,41 @@ def construct_log_link(dag_id, execution_date, task_id):
   url += '&task_name=' + str(task_id)
   return url
 
+
+def construct_download_link(gcs_build_path):
+  link = 'https://gcsweb.istio.io/gcs/'
+  link += gcs_build_path
+  return link
+
+
+def datetime_str_for_download(execution_date):
+  execution_date = execution_date.timetuple()
+  execution_str = str(execution_date.tm_year)
+  if check_if_2_chars(execution_date.tm_mon):
+    execution_str += str(execution_date.tm_mon)
+  else:
+    execution_str += '0' + str(execution_date.tm_mon)
+  if check_if_2_chars(execution_date.tm_day):
+    execution_str += str(execution_date.tm_mday)
+  else:
+    execution_str += '0' + str(execution_date.tm_mday)
+  execution_str += '-'
+  if check_if_2_chars(execution_date.tm_hour):
+    execution_str += str(execution_date.tm_hour)
+  else:
+    execution_str += '0' + str(execution_date.tm_hour)
+  execution_str += '-'
+  if check_if_2_chars(execution_date.tm_min):
+    execution_str += str(execution_date.tm_min)
+  else:
+    execution_str += '0' + str(execution_date.tm_min)
+  return execution_str
+
+def check_if_2_chars(string):
+  if len(str(string)) == 2:
+    return True
+  else:
+    return False
 
 def parse_dag_id(dag_id):
   """Parses the dag_id for the release branch and type.
