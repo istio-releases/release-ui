@@ -1,9 +1,11 @@
 """Connects to the Cloud SQL database."""
 import logging
 import MySQLdb
-from mysql.connector import errorcode
 import threading
-
+try:
+  from mysql.connector import errorcode
+except ImportError:
+  from lib.mysql.connector import errorcode
 class AirflowDB(object):
   """Provides the methods which allow interaction with the Airflow SQL database."""  # pylint: disable=line-too-long
 

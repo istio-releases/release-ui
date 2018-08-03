@@ -17,8 +17,6 @@ class Task(object):
     if data:
       self.task_name = data['task_name']
       self._task['dependent_on'] = []
-      for depend in data['dependent_on']:
-        self.add_dependency(depend)
       self.started = data['started']
       self.status = data['status']
       self.last_modified = data['last_modified']

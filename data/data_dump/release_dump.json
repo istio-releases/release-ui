@@ -1,0 +1,560 @@
+{
+  "istio_daily_master@2018-06-24 09:15:00": {
+    "tasks": [
+      {
+        "status": 2, 
+        "last_modified": 1529946922, 
+        "task_name": "generate_workflow_args", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-24 09:15:00&task_name=generate_workflow_args", 
+        "started": 1529946917, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529946967, 
+        "task_name": "get_git_commit", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-24 09:15:00&task_name=get_git_commit", 
+        "started": 1529946935, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529947850, 
+        "task_name": "run_cloud_builder", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-24 09:15:00&task_name=run_cloud_builder", 
+        "started": 1529946979, 
+        "error": "success"
+      }, 
+      {
+        "status": 3, 
+        "last_modified": 1529973429, 
+        "task_name": "run_release_qualification_tests", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-24 09:15:00&task_name=run_release_qualification_tests", 
+        "started": 1529947862, 
+        "error": "failed"
+      }, 
+      {
+        "status": 1, 
+        "last_modified": 1529973429, 
+        "task_name": "copy_files_for_release", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-24 09:15:00&task_name=copy_files_for_release", 
+        "started": 1529973429, 
+        "error": "upstream_failed"
+      }, 
+      {
+        "status": 1, 
+        "last_modified": 1529973429, 
+        "task_name": "mark_complete", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-24 09:15:00&task_name=mark_complete", 
+        "started": 1529973429, 
+        "error": "upstream_failed"
+      }, 
+      {
+        "status": 1, 
+        "last_modified": 1529973429, 
+        "task_name": "tag_daily_gcr", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-24 09:15:00&task_name=tag_daily_gcr", 
+        "started": 1529973429, 
+        "error": "upstream_failed"
+      }
+    ], 
+    "name": "master-20180625-09-15", 
+    "links": [
+      {
+        "url": "https://github.com/istio/green-builds/blob/f6182841348b9e9cb05ae64a411899ee865519eb/build.xml", 
+        "name": "istio/green-builds"
+      }, 
+      {
+        "url": "https://github.com/istio/api/commit/1ab9532ecae5db039bd95ad0a3686ae74a7e0b70", 
+        "name": "istio/api"
+      }, 
+      {
+        "url": "https://github.com/istio/global-build/commit/569cfb50532373125c85facb13b034571b04e8e4", 
+        "name": "istio/global-build"
+      }, 
+      {
+        "url": "https://github.com/istio/istio/commit/67ac3e2430f916c69ae8827d56c3dd1df7e02562", 
+        "name": "istio/istio"
+      }, 
+      {
+        "url": "https://github.com/istio/proxy/commit/c025c87a8c25ca77c79ed1db411b7ddd84a4d91b", 
+        "name": "istio/proxy"
+      }
+    ], 
+    "started": 1529860500, 
+    "labels": [
+      "istio_daily_master"
+    ], 
+    "state": 3, 
+    "release_id": "istio_daily_master@2018-06-24 09:15:00", 
+    "branch": "master", 
+    "last_modified": 1529973429, 
+    "release_type": "daily", 
+    "last_active_task": "run_release_qualification_tests"
+  }, 
+  "istio_daily_master@2018-06-25 05:05:44.441760": {
+    "tasks": [
+      {
+        "status": 2, 
+        "last_modified": 1529931962, 
+        "task_name": "generate_workflow_args", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 05:05:44.441760&task_name=generate_workflow_args", 
+        "started": 1529931959, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529932019, 
+        "task_name": "get_git_commit", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 05:05:44.441760&task_name=get_git_commit", 
+        "started": 1529931971, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529932887, 
+        "task_name": "run_cloud_builder", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 05:05:44.441760&task_name=run_cloud_builder", 
+        "started": 1529932030, 
+        "error": "success"
+      }, 
+      {
+        "status": 3, 
+        "last_modified": 1529973501, 
+        "task_name": "run_release_qualification_tests", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 05:05:44.441760&task_name=run_release_qualification_tests", 
+        "started": 1529932900, 
+        "error": "failed"
+      }, 
+      {
+        "status": 1, 
+        "last_modified": 1529973504, 
+        "task_name": "copy_files_for_release", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 05:05:44.441760&task_name=copy_files_for_release", 
+        "started": 1529973504, 
+        "error": "upstream_failed"
+      }, 
+      {
+        "status": 1, 
+        "last_modified": 1529973504, 
+        "task_name": "mark_complete", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 05:05:44.441760&task_name=mark_complete", 
+        "started": 1529973504, 
+        "error": "upstream_failed"
+      }, 
+      {
+        "status": 1, 
+        "last_modified": 1529973504, 
+        "task_name": "tag_daily_gcr", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 05:05:44.441760&task_name=tag_daily_gcr", 
+        "started": 1529973504, 
+        "error": "upstream_failed"
+      }
+    ], 
+    "name": "master-20180625-05-06", 
+    "links": [
+      {
+        "url": "https://github.com/istio/green-builds/blob/f6182841348b9e9cb05ae64a411899ee865519eb/build.xml", 
+        "name": "istio/green-builds"
+      }, 
+      {
+        "url": "https://github.com/istio/api/commit/1ab9532ecae5db039bd95ad0a3686ae74a7e0b70", 
+        "name": "istio/api"
+      }, 
+      {
+        "url": "https://github.com/istio/global-build/commit/569cfb50532373125c85facb13b034571b04e8e4", 
+        "name": "istio/global-build"
+      }, 
+      {
+        "url": "https://github.com/istio/istio/commit/67ac3e2430f916c69ae8827d56c3dd1df7e02562", 
+        "name": "istio/istio"
+      }, 
+      {
+        "url": "https://github.com/istio/proxy/commit/c025c87a8c25ca77c79ed1db411b7ddd84a4d91b", 
+        "name": "istio/proxy"
+      }
+    ], 
+    "started": 1529931944, 
+    "labels": [
+      "istio_daily_master"
+    ], 
+    "state": 3, 
+    "release_id": "istio_daily_master@2018-06-25 05:05:44.441760", 
+    "branch": "master", 
+    "last_modified": 1529973501, 
+    "release_type": "daily", 
+    "last_active_task": "run_release_qualification_tests"
+  }, 
+  "istio_daily_master@2018-06-25 09:15:00": {
+    "tasks": [
+      {
+        "status": 2, 
+        "last_modified": 1530033314, 
+        "task_name": "generate_workflow_args", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 09:15:00&task_name=generate_workflow_args", 
+        "started": 1530033309, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1530033353, 
+        "task_name": "get_git_commit", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 09:15:00&task_name=get_git_commit", 
+        "started": 1530033323, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1530034224, 
+        "task_name": "run_cloud_builder", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 09:15:00&task_name=run_cloud_builder", 
+        "started": 1530033359, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1530035753, 
+        "task_name": "run_release_qualification_tests", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 09:15:00&task_name=run_release_qualification_tests", 
+        "started": 1530034232, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1530035781, 
+        "task_name": "copy_files_for_release", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 09:15:00&task_name=copy_files_for_release", 
+        "started": 1530035766, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1530035795, 
+        "task_name": "mark_complete", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 09:15:00&task_name=mark_complete", 
+        "started": 1530035790, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1530035823, 
+        "task_name": "tag_daily_gcr", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 09:15:00&task_name=tag_daily_gcr", 
+        "started": 1530035803, 
+        "error": "success"
+      }
+    ], 
+    "name": "master-20180626-09-15", 
+    "links": [
+      {
+        "url": "https://github.com/istio/green-builds/blob/d3ae21e95a4c7eb8f1ca803ca919e5e5c2222442/build.xml", 
+        "name": "istio/green-builds"
+      }, 
+      {
+        "url": "https://github.com/istio/api/commit/1ab9532ecae5db039bd95ad0a3686ae74a7e0b70", 
+        "name": "istio/api"
+      }, 
+      {
+        "url": "https://github.com/istio/global-build/commit/569cfb50532373125c85facb13b034571b04e8e4", 
+        "name": "istio/global-build"
+      }, 
+      {
+        "url": "https://github.com/istio/istio/commit/e80a6e4058543eed75a5f4b093f87e105cfde038", 
+        "name": "istio/istio"
+      }, 
+      {
+        "url": "https://github.com/istio/proxy/commit/c025c87a8c25ca77c79ed1db411b7ddd84a4d91b", 
+        "name": "istio/proxy"
+      }
+    ], 
+    "started": 1529946900, 
+    "labels": [
+      "istio_daily_master"
+    ], 
+    "state": 2, 
+    "release_id": "istio_daily_master@2018-06-25 09:15:00", 
+    "branch": "master", 
+    "last_modified": 1530035823, 
+    "release_type": "daily", 
+    "last_active_task": "tag_daily_gcr"
+  }, 
+  "istio_daily_master@2018-06-25 23:07:31.784702": {
+    "tasks": [
+      {
+        "status": 2, 
+        "last_modified": 1529996864, 
+        "task_name": "generate_workflow_args", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 23:07:31.784702&task_name=generate_workflow_args", 
+        "started": 1529996860, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529996907, 
+        "task_name": "get_git_commit", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 23:07:31.784702&task_name=get_git_commit", 
+        "started": 1529996871, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529997826, 
+        "task_name": "run_cloud_builder", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 23:07:31.784702&task_name=run_cloud_builder", 
+        "started": 1529996920, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529999658, 
+        "task_name": "run_release_qualification_tests", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 23:07:31.784702&task_name=run_release_qualification_tests", 
+        "started": 1529997836, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529999684, 
+        "task_name": "copy_files_for_release", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 23:07:31.784702&task_name=copy_files_for_release", 
+        "started": 1529999667, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529999698, 
+        "task_name": "mark_complete", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 23:07:31.784702&task_name=mark_complete", 
+        "started": 1529999693, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1530021339, 
+        "task_name": "tag_daily_gcr", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 23:07:31.784702&task_name=tag_daily_gcr", 
+        "started": 1530021319, 
+        "error": "success"
+      }
+    ], 
+    "name": "master-20180625-23-07", 
+    "links": [
+      {
+        "url": "https://github.com/istio/green-builds/blob/e29b594d8b0dc8b1b135b266d1218da4d5e7c58e/build.xml", 
+        "name": "istio/green-builds"
+      }, 
+      {
+        "url": "https://github.com/istio/api/commit/1ab9532ecae5db039bd95ad0a3686ae74a7e0b70", 
+        "name": "istio/api"
+      }, 
+      {
+        "url": "https://github.com/istio/global-build/commit/569cfb50532373125c85facb13b034571b04e8e4", 
+        "name": "istio/global-build"
+      }, 
+      {
+        "url": "https://github.com/istio/istio/commit/36926908155c83a61254b5efacef8d844f297b8c", 
+        "name": "istio/istio"
+      }, 
+      {
+        "url": "https://github.com/istio/proxy/commit/c025c87a8c25ca77c79ed1db411b7ddd84a4d91b", 
+        "name": "istio/proxy"
+      }
+    ], 
+    "started": 1529996851, 
+    "labels": [
+      "istio_daily_master"
+    ], 
+    "state": 2, 
+    "release_id": "istio_daily_master@2018-06-25 23:07:31.784702", 
+    "branch": "master", 
+    "last_modified": 1530021339, 
+    "release_type": "daily", 
+    "last_active_task": "tag_daily_gcr"
+  }, 
+  "istio_daily_master@2018-06-25 17:04:17": {
+    "tasks": [
+      {
+        "status": 2, 
+        "last_modified": 1529975074, 
+        "task_name": "generate_workflow_args", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 17:04:17.986155&task_name=generate_workflow_args", 
+        "started": 1529975070, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529975116, 
+        "task_name": "get_git_commit", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 17:04:17.986155&task_name=get_git_commit", 
+        "started": 1529975084, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529975999, 
+        "task_name": "run_cloud_builder", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 17:04:17.986155&task_name=run_cloud_builder", 
+        "started": 1529975125, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529983544, 
+        "task_name": "run_release_qualification_tests", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 17:04:17.986155&task_name=run_release_qualification_tests", 
+        "started": 1529976009, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529983569, 
+        "task_name": "copy_files_for_release", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 17:04:17.986155&task_name=copy_files_for_release", 
+        "started": 1529983555, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529983587, 
+        "task_name": "mark_complete", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 17:04:17.986155&task_name=mark_complete", 
+        "started": 1529983584, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1530021461, 
+        "task_name": "tag_daily_gcr", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 17:04:17.986155&task_name=tag_daily_gcr", 
+        "started": 1530021437, 
+        "error": "success"
+      }
+    ], 
+    "name": "master-20180625-17-04", 
+    "links": [
+      {
+        "url": "https://github.com/istio/green-builds/blob/f6182841348b9e9cb05ae64a411899ee865519eb/build.xml", 
+        "name": "istio/green-builds"
+      }, 
+      {
+        "url": "https://github.com/istio/api/commit/1ab9532ecae5db039bd95ad0a3686ae74a7e0b70", 
+        "name": "istio/api"
+      }, 
+      {
+        "url": "https://github.com/istio/global-build/commit/569cfb50532373125c85facb13b034571b04e8e4", 
+        "name": "istio/global-build"
+      }, 
+      {
+        "url": "https://github.com/istio/istio/commit/67ac3e2430f916c69ae8827d56c3dd1df7e02562", 
+        "name": "istio/istio"
+      }, 
+      {
+        "url": "https://github.com/istio/proxy/commit/c025c87a8c25ca77c79ed1db411b7ddd84a4d91b", 
+        "name": "istio/proxy"
+      }
+    ], 
+    "started": 1529975057, 
+    "labels": [
+      "istio_daily_master"
+    ], 
+    "state": 2, 
+    "release_id": "istio_daily_master@2018-06-25 17:04:17", 
+    "branch": "master", 
+    "last_modified": 1530021461, 
+    "release_type": "daily", 
+    "last_active_task": "tag_daily_gcr"
+  }, 
+  "istio_daily_master@2018-06-25 21:51:33": {
+    "tasks": [
+      {
+        "status": 0, 
+        "last_modified": 1529992293, 
+        "task_name": "mark_complete", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 21:51:33.566363&task_name=mark_complete", 
+        "started": 1529992293, 
+        "error": ""
+      }, 
+      {
+        "status": 0, 
+        "last_modified": 1529992293, 
+        "task_name": "tag_daily_gcr", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 21:51:33.566363&task_name=tag_daily_gcr", 
+        "started": 1529992293, 
+        "error": ""
+      }, 
+      {
+        "status": 0, 
+        "last_modified": 1529992293, 
+        "task_name": "copy_files_for_release", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 21:51:33.566363&task_name=copy_files_for_release", 
+        "started": 1529992293, 
+        "error": ""
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529992306, 
+        "task_name": "generate_workflow_args", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 21:51:33.566363&task_name=generate_workflow_args", 
+        "started": 1529992303, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529992352, 
+        "task_name": "get_git_commit", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 21:51:33.566363&task_name=get_git_commit", 
+        "started": 1529992314, 
+        "error": "success"
+      }, 
+      {
+        "status": 2, 
+        "last_modified": 1529993307, 
+        "task_name": "run_cloud_builder", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 21:51:33.566363&task_name=run_cloud_builder", 
+        "started": 1529992363, 
+        "error": "success"
+      }, 
+      {
+        "status": 3, 
+        "last_modified": 1529999641, 
+        "task_name": "run_release_qualification_tests", 
+        "log_url": "https://istio-release-ui.appspot.com/logs?release_id=istio_daily_master@2018-06-25 21:51:33.566363&task_name=run_release_qualification_tests", 
+        "started": 1529993317, 
+        "error": "failed"
+      }
+    ], 
+    "name": "master-20180625-21-51", 
+    "links": [
+      {
+        "url": "https://github.com/istio/green-builds/blob/a163e809534aff6036e66848cd5479870ddb108f/build.xml", 
+        "name": "istio/green-builds"
+      }, 
+      {
+        "url": "https://github.com/istio/api/commit/1ab9532ecae5db039bd95ad0a3686ae74a7e0b70", 
+        "name": "istio/api"
+      }, 
+      {
+        "url": "https://github.com/istio/global-build/commit/569cfb50532373125c85facb13b034571b04e8e4", 
+        "name": "istio/global-build"
+      }, 
+      {
+        "url": "https://github.com/istio/istio/commit/75436e7fece226b90b66215107b127f54adb7f97", 
+        "name": "istio/istio"
+      }, 
+      {
+        "url": "https://github.com/istio/proxy/commit/c025c87a8c25ca77c79ed1db411b7ddd84a4d91b", 
+        "name": "istio/proxy"
+      }
+    ], 
+    "started": 1529992293, 
+    "labels": [
+      "istio_daily_master"
+    ], 
+    "state": 3, 
+    "release_id": "istio_daily_master@2018-06-25 21:51:33", 
+    "branch": "master", 
+    "last_modified": 1529999641, 
+    "release_type": "daily", 
+    "last_active_task": "run_release_qualification_tests"
+  }
+}
