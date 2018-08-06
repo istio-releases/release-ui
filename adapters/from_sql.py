@@ -250,35 +250,6 @@ def construct_download_link(gcs_build_path):
   return link
 
 
-def datetime_str_for_download(execution_date):
-  execution_date = execution_date.timetuple()
-  execution_str = str(execution_date.tm_year)
-  if check_if_2_chars(execution_date.tm_mon):
-    execution_str += str(execution_date.tm_mon)
-  else:
-    execution_str += '0' + str(execution_date.tm_mon)
-  if check_if_2_chars(execution_date.tm_day):
-    execution_str += str(execution_date.tm_mday)
-  else:
-    execution_str += '0' + str(execution_date.tm_mday)
-  execution_str += '-'
-  if check_if_2_chars(execution_date.tm_hour):
-    execution_str += str(execution_date.tm_hour)
-  else:
-    execution_str += '0' + str(execution_date.tm_hour)
-  execution_str += '-'
-  if check_if_2_chars(execution_date.tm_min):
-    execution_str += str(execution_date.tm_min)
-  else:
-    execution_str += '0' + str(execution_date.tm_min)
-  return execution_str
-
-def check_if_2_chars(string):
-  if len(str(string)) == 2:
-    return True
-  else:
-    return False
-
 def parse_dag_id(dag_id):
   """Parses the dag_id for the release branch and type.
 
