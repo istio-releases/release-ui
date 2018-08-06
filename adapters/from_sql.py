@@ -48,7 +48,10 @@ def read_releases(release_data, airflow_db):
       continue
     else:
       release.name = xcom_dict[xcomKeys.VERSION]
-      release.branch = xcom_dict[xcomKeys.BRANCH]
+      try:
+        release.branch = xcom_dict[xcomKeys.BRANCH]
+      except KeyError:
+        _, release.branch = parse_dag_id(item.dag_id)
       try:
         # it seems that some xcom dicts do not have this value for some reason?
         release.release_type = xcom_dict[xcomKeys.RELEASE_TYPE]
@@ -64,6 +67,7 @@ def read_releases(release_data, airflow_db):
       release.last_modified = int(time.mktime(execution_date.timetuple()))
       release.last_active_task = ''
     release_objects[release.release_id] = release
+    logging.info('Release ' + str(release.release_id) + ' has been read')
 
   return release_objects
 
@@ -196,7 +200,10 @@ def get_xcom(execution_date, dag_id, airflow_db):
   xcom_query = to_sql_xcom(dag_id, execution_date)
   xcom_data = airflow_db.query(xcom_query)
   xcom_dict, green_sha = read_xcom_vars(xcom_data)
-  return xcom_dict, green_sha
+  if type(xcom_dict) == type({'hello':'world'}):
+    return xcom_dict, green_sha
+  else:
+    return None, green_sha
 
 
 def construct_repo_links(green_sha):

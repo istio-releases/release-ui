@@ -125,9 +125,8 @@ class Logs(Resource):
     parser.add_argument('release_id')
     parser.add_argument('task_name')
     args = parser.parse_args()
-    logging.debug('Bucket name: ' + str(self._bucket_name))
     logging.debug('Release id: ' + str(args['release_id']))
     logging.debug('Task name: ' + str(args['task_name']))
 
-    response = self._adapter.get_logs(str(self._bucket_name), str(args['release_id']), str(args['task_name']))
+    response = self._adapter.get_logs(str(args['release_id']), str(args['task_name']))
     return json.dumps(response)
