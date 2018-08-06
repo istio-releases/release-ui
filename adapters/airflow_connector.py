@@ -15,7 +15,7 @@ class AirflowDB(object):
     Args:
       user: str
       password: str
-      db: str
+      db: list of databases
       host: str
       unix_socket: str
     """
@@ -59,6 +59,7 @@ class AirflowDB(object):
 
       cursor.close()
 
+    logging.info('Returns: ' + str(response))
     return response
 
   def _create_connection(self):

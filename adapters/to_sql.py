@@ -2,16 +2,7 @@
 import datetime
 from resources.release_id_parser import release_id_parser
 from data.state import State
-
-STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
-                     'running': State.PENDING,
-                     'success': State.FINISHED,
-                     'failed': State.FAILED,
-                     'shutdown': State.ABANDONED,
-                     'upstream_failed': State.PENDING,
-                     'None': State.UNUSED_STATUS,
-                     'removed': State.ABANDONED}
-STRING_FROM_STATE =  {v: k for k, v in STATE_FROM_STRING.iteritems()}
+from data.state import STRING_FROM_STATE
 
 
 def to_sql_releases(filter_options):
@@ -33,8 +24,8 @@ def to_sql_releases(filter_options):
   # datetype, start_date, and end_date
   sql_query += ' WHERE execution_date BETWEEN "' + str(start_date) + '" AND "'+ str(end_date) + '"'  # pylint: disable=line-too-long
   # append a state filter, if there is one available -- '0' means all states
-  if filter_options.state != 0:
-    sql_query += ' AND state = "%s"' %(STRING_FROM_STATE.get(filter_options.state))
+  # if filter_options.state != 0:
+  #   sql_query += ' AND state = "%s"' %(STRING_FROM_STATE.get(filter_options.state))
   # add sorting parameter
   sql_query = add_sorting(sql_query, filter_options.sort_method, filter_options.reverse)
   # TODO(dommarques) - add label filtering, probably just the dag_id
