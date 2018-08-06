@@ -175,6 +175,14 @@ md-progress-circular path {
   margin-left: 35px;
 }
 
+#external-links {
+  width: 90%;
+}
+
+#download {
+  float: right;
+}
+
 #repos {
   float: left;
   width: 50%;
