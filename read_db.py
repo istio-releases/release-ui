@@ -1,5 +1,8 @@
 """This script creates a json dump of the SQL database of releases.
 
+Simply run it to get a dump of the release database in JSON format, at the
+DUMP_FILE_NAME location.
+
 It is designed to be run on a local workstation, and because of this the machine's
 IP address must be whitelisted on the SQL database. It also requires MySQLdb to
 be installed on the machine.
