@@ -11,7 +11,10 @@ from data.state import STRING_FROM_STATE
 from data.state import STATE_FROM_STRING
 from data.task import Task
 from data.xcom_keys import xcomKeys
-from google.appengine.api import urlfetch
+try:
+  from google.appengine.api import urlfetch
+except ImportError:
+  import requests
 import xml.etree.ElementTree as ElementTree
 
 
@@ -214,8 +217,12 @@ def construct_repo_links(green_sha):
   green_build_link = 'https://github.com/istio/green-builds/blob/' + green_sha  + '/build.xml'
   response.append({'name': 'istio/green-builds', 'url':green_build_link})
   request_link = 'https://raw.githubusercontent.com/istio/green-builds/' + green_sha + '/build.xml'
-  r = urlfetch.fetch(request_link)
-  data = ElementTree.fromstring(r.content)
+  try:  # allows for local running, and for read_db.py to run
+    r = urlfetch.fetch(request_link)
+    data = ElementTree.fromstring(r.content)
+  except NameError:
+    r = requests.get(request_link)
+    data = ElementTree.fromstring(r.text)
   for project in data.iter('project'):
     link_dict = {}
     name = project.attrib['name']

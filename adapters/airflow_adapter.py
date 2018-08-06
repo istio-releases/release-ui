@@ -1,5 +1,6 @@
 """The Airflow Adapter."""
 import os
+import json
 from datetime import datetime
 import logging
 import threading
@@ -15,6 +16,8 @@ from to_sql import to_sql_release
 from to_sql import to_sql_releases
 from to_sql import to_sql_task
 from to_sql import to_sql_tasks
+from data.release import Release
+from data.task import Task
 
 
 CACHE_TTL = 1800
@@ -28,7 +31,10 @@ class AirflowAdapter(Adapter):
     self._release_types = set()
     self._branches = set()
     self._cache_last_updated = datetime.fromtimestamp(0)
+    self._releases = {}
+    self._tasks = {}
     self._update_cache()
+    self._load_dump('data/data_dump/release_dump.json')
 
   def get_releases(self, filter_options):
     """Gets all releases fitting filter_options.
@@ -86,6 +92,12 @@ class AirflowAdapter(Adapter):
     Returns:
       Dictionary of Task objects.
     """
+    if release_id in self._releases:
+      tasks = json.loads(self._releases['release_id'].tasks)
+      task_objects = []
+      for k, v in tasks:
+        task_objects.append(Task(v))
+      return task_objects
     dag_id, execution_date = release_id_parser(release_id)
     execution_date = time.mktime(execution_date.timetuple())
     # build SQl query
@@ -111,6 +123,10 @@ class AirflowAdapter(Adapter):
     Returns:
       Dictionary with Task object.
     """
+    if release_id in self._releases:
+      return [self._tasks[task_name + '@' + release_id]]
+
+
     dag_id, execution_date = release_id_parser(release_id)
     execution_date = time.mktime(execution_date.timetuple())
 
@@ -181,6 +197,21 @@ class AirflowAdapter(Adapter):
           return contents
         except:
           continue
+
+  def _load_dump(self, filename):
+    with open(filename) as f:
+      releases = f.read()
+    releases = json.loads(releases)
+
+    for k, v in releases.iteritems():
+      task_ids = []
+      for task in v['tasks']:
+        task_id = task['task_name'] + '@' + k
+        self._tasks[task_id] = Task(task)
+        task_ids.append(task_id)
+      v['tasks'] = task_ids
+      self._releases[k] = Release(v)
+    logging.info('Releases read from %s' % filename)
 
   def _update_cache(self):
     if (datetime.now() - self._cache_last_updated).total_seconds() < CACHE_TTL:
