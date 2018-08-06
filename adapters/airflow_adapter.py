@@ -18,9 +18,10 @@ from to_sql import to_sql_task
 from to_sql import to_sql_tasks
 from data.release import Release
 from data.task import Task
+from data.state import State
 
 
-CACHE_TTL = 1800
+CACHE_TTL = 3600
 
 class AirflowAdapter(Adapter):
   """Provides a way to interact with the Airflow Database, and get data from it."""
@@ -33,6 +34,13 @@ class AirflowAdapter(Adapter):
     self._cache_last_updated = datetime.fromtimestamp(0)
     self._releases = {}
     self._tasks = {}
+    self._overall_status = {State.UNUSED_STATUS:0,
+                            State.ABANDONED:0,
+                            State.FINISHED:0,
+                            State.PENDING:0,
+                            State.RUNNING:0,
+                            State.FAILED:0,
+                            'total': 0}
     self._update_cache()
     self._load_dump('data/data_dump/release_dump.json')
 
@@ -198,6 +206,11 @@ class AirflowAdapter(Adapter):
         except:
           continue
 
+  def get_overall_status(self):
+    self._update_cache()
+    with self._lock:
+      return self._overall_status
+
   def _load_dump(self, filename):
     with open(filename) as f:
       releases = f.read()
@@ -226,6 +239,7 @@ class AirflowAdapter(Adapter):
       releases.update(read_releases(raw_release_data, config.db))
     branches = set()
     types = set()
+
     for release in releases:
       branches.add(releases[release].branch)
       types.add(releases[release].release_type)
@@ -234,3 +248,5 @@ class AirflowAdapter(Adapter):
         self._branches = list(branches)
         self._release_types = list(types)
         self._cache_last_updated = datetime.now()
+        self._overall_status[releases[release].state] += 1
+        self._overall_status['total'] += 1

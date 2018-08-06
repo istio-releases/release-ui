@@ -130,3 +130,12 @@ class Logs(Resource):
 
     response = self._adapter.get_logs(str(args['release_id']), str(args['task_name']))
     return json.dumps(response)
+
+
+class OverallStatus(Resource):
+  def __init__(self, adapter):
+    self._adapter = adapter
+
+  def get(self):
+    response = self._adapter.get_overall_status()
+    return json.dumps(response)
