@@ -7,22 +7,13 @@ from adapters.to_sql import to_sql_tasks
 from adapters.to_sql import to_sql_xcom
 from data.release import Release
 from data.state import State
+from data.state import STRING_FROM_STATE
+from data.state import STATE_FROM_STRING
 from data.task import Task
 from data.xcom_keys import xcomKeys
 from google.appengine.api import urlfetch
 import xml.etree.ElementTree as ElementTree
 
-STATE_FROM_STRING = {'none': State.UNUSED_STATUS,
-                     'running': State.PENDING,
-                     'success': State.FINISHED,
-                     'failed': State.FAILED,
-                     'shutdown': State.ABANDONED,
-                     'upstream_failed': State.PENDING,
-                     'None': State.UNUSED_STATUS,
-                     'removed': State.ABANDONED,
-                     'skipped': State.ABANDONED,
-                     'up_for_retry': State.PENDING}
-STRING_FROM_STATE =  {v: k for k, v in STATE_FROM_STRING.iteritems()}
 
 
 def read_releases(release_data, airflow_db):
@@ -50,7 +41,7 @@ def read_releases(release_data, airflow_db):
     release.labels = [item.dag_id]
     release.state = state
     if green_sha is None:
-      continue
+      release.links = [{'name': 'no links available', 'url': None}]
     else:
       release.links = construct_repo_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first, or we make our own way to get the links pylint: disable=line-too-long
     if xcom_dict is None:
@@ -116,13 +107,20 @@ def read_tasks(task_data):
       end_date = item.end_date
       task.last_modified = int(time.mktime(end_date.timetuple()))
     if item.state is None:
-      task.status = STATE_FROM_STRING.get('none')
-    elif item.end_date is None:
+      task.status = STATE_FROM_STRING.get('not_started')
+      task.error = 'not started'
+    elif item.state == 'running':
       task.status = STATE_FROM_STRING.get('running')
       task.error = STRING_FROM_STATE.get(task.status)
+    elif item.start_date is None:
+      task.status = STATE_FROM_STRING.get('queued')
+      task.error = item.state
     else:
       task.error = item.state
-      task.status = STATE_FROM_STRING.get(str(item.state))
+      if str(item.state) in STATE_FROM_STRING:
+        task.status = STATE_FROM_STRING.get(str(item.state))
+      else:
+        task.status = STATE_FROM_STRING.get('none')
     task_objects.append(task)
   return task_objects
 
@@ -131,6 +129,7 @@ def get_task_info(dag_id, execution_date, airflow_db):
   """Gets task-related info to fill in missing release object info.
 
   Args:
+    dag_id: str
     execution_date: a python datetime.datetime
     airflow_db: the database connection object
 
@@ -141,7 +140,7 @@ def get_task_info(dag_id, execution_date, airflow_db):
   task_query = to_sql_tasks(dag_id, execution_date)
   task_data = airflow_db.query(task_query)
   task_objects = read_tasks(task_data)
-  state = 0
+  state = 1
   task_ids = []
   if task_objects:
     most_recent_task = task_objects[-1]
@@ -156,25 +155,33 @@ def get_task_info(dag_id, execution_date, airflow_db):
       most_recent_task = task
     elif task.status == STATE_FROM_STRING.get('running'):
       state = task.status
+      most_recent_task = task
     elif task.status > state:
       state = task.status
+    logging.debug(task.status)
   return task_ids, most_recent_task, state
 
 
 def read_xcom_vars(xcom_data):
   """Reads the xcom data to get the dict of vars and the green build SHA."""
   # occasionally, the xcom data doesn't exist yet. This is a workaround
-  xcom_named_tuple = namedtuple('Row', ['xcom_dict', 'green_sha'])
+
+  # The index 0 is here because the data returns in a tuple
   try:
-    xcom_data = xcom_named_tuple(*xcom_data)
-    # The index 0 is here because the data returns in a tuple
-    xcom_dict = json.loads(xcom_data.xcom_dict[0])
+    xcom_dict = xcom_data[0][0]
+    if len(xcom_data) > 1:
+      green_sha = xcom_data[1][0]
+    else:
+      green_sha = None
     logging.info('Data from xcom: ' + str(xcom_dict))
-    green_sha = xcom_data.green_sha[0]
+    logging.info('SHA: ' + str(green_sha))
+    xcom_dict = json.loads(xcom_dict)
     return xcom_dict, green_sha
   except IndexError:
+    logging.debug('Index Error')
     return None, None
   except TypeError:
+    logging.debug('Type Error')
     return None, None
 
 
@@ -193,7 +200,10 @@ def get_xcom(execution_date, dag_id, airflow_db):
   xcom_query = to_sql_xcom(dag_id, execution_date)
   xcom_data = airflow_db.query(xcom_query)
   xcom_dict, green_sha = read_xcom_vars(xcom_data)
-  return xcom_dict, green_sha
+  if type(xcom_dict) == type({'hello':'world'}):
+    return xcom_dict, green_sha
+  else:
+    return None, green_sha
 
 
 def construct_repo_links(green_sha):

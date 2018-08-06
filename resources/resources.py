@@ -4,6 +4,7 @@ import logging
 from data.filter_options import FilterOptions
 from flask_restful import reqparse
 from flask_restful import Resource
+from flask import render_template
 
 release_requests = {}
 

@@ -1,0 +1,657 @@
+[2018-06-28 20:54:45,251] {cli.py:374} INFO - Running on host airflow-worker-788b57ff9d-ng5sv
+[2018-06-28 20:54:45,345] {models.py:1196} INFO - Dependencies all met for <TaskInstance: istio_monthly_release-1.0.0-snapshot.0.github_and_docker_release 2018-06-28 19:28:01 [queued]>
+[2018-06-28 20:54:45,373] {models.py:1196} INFO - Dependencies all met for <TaskInstance: istio_monthly_release-1.0.0-snapshot.0.github_and_docker_release 2018-06-28 19:28:01 [queued]>
+[2018-06-28 20:54:45,373] {models.py:1406} INFO - 
+--------------------------------------------------------------------------------
+Starting attempt 1 of 2
+--------------------------------------------------------------------------------
+
+[2018-06-28 20:54:45,431] {models.py:1427} INFO - Executing <Task(BashOperator): github_and_docker_release> on 2018-06-28 19:28:01
+[2018-06-28 20:54:45,431] {base_task_runner.py:115} INFO - Running: ['bash', '-c', u'airflow run istio_monthly_release-1.0.0-snapshot.0 github_and_docker_release 2018-06-28T19:28:01 --job_id 88 --raw -sd DAGS_FOLDER/istio_monthly_release_1_0_0_snapshot.0.py']
+[2018-06-28 20:54:47,787] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:47,787] {__init__.py:45} INFO - Using executor CeleryExecutor
+[2018-06-28 20:54:47,862] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:47,862] {models.py:189} INFO - Filling up the DagBag from /home/airflow/gcs/dags/istio_monthly_release_1_0_0_snapshot.0.py
+[2018-06-28 20:54:47,864] {base_task_runner.py:98} INFO - Subtask: /home/airflow/gcs/dags/istio_monthly_release_1_0_0_snapshot.0.py:15: RuntimeWarning: Parent module 'unusual_prefix_4c77e148e149fee2f8d00adafd50c97e29a99a76_istio_monthly_release_1_0_0_snapshot' not found while handling absolute import
+[2018-06-28 20:54:47,865] {base_task_runner.py:98} INFO - Subtask:   import logging
+[2018-06-28 20:54:47,865] {base_task_runner.py:98} INFO - Subtask: /home/airflow/gcs/dags/istio_monthly_release_1_0_0_snapshot.0.py:16: RuntimeWarning: Parent module 'unusual_prefix_4c77e148e149fee2f8d00adafd50c97e29a99a76_istio_monthly_release_1_0_0_snapshot' not found while handling absolute import
+[2018-06-28 20:54:47,865] {base_task_runner.py:98} INFO - Subtask:   import re
+[2018-06-28 20:54:47,866] {base_task_runner.py:98} INFO - Subtask: /home/airflow/gcs/dags/istio_monthly_release_1_0_0_snapshot.0.py:18: RuntimeWarning: Parent module 'unusual_prefix_4c77e148e149fee2f8d00adafd50c97e29a99a76_istio_monthly_release_1_0_0_snapshot' not found while handling absolute import
+[2018-06-28 20:54:47,866] {base_task_runner.py:98} INFO - Subtask:   from airflow import DAG
+[2018-06-28 20:54:47,870] {base_task_runner.py:98} INFO - Subtask: /home/airflow/gcs/dags/istio_monthly_release_1_0_0_snapshot.0.py:19: RuntimeWarning: Parent module 'unusual_prefix_4c77e148e149fee2f8d00adafd50c97e29a99a76_istio_monthly_release_1_0_0_snapshot' not found while handling absolute import
+[2018-06-28 20:54:47,870] {base_task_runner.py:98} INFO - Subtask:   import istio_common_dag
+[2018-06-28 20:54:48,274] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:48,274] {bash_operator.py:70} INFO - Tmp dir root location: 
+[2018-06-28 20:54:48,276] {base_task_runner.py:98} INFO - Subtask:  /tmp
+[2018-06-28 20:54:48,277] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:48,277] {bash_operator.py:80} INFO - Temporary script location: /tmp/airflowtmpo0IUSA//tmp/airflowtmpo0IUSA/github_and_docker_releasesqK2eM
+[2018-06-28 20:54:48,278] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:48,278] {bash_operator.py:88} INFO - Running command: 
+[2018-06-28 20:54:48,278] {base_task_runner.py:98} INFO - Subtask: 
+[2018-06-28 20:54:48,278] {base_task_runner.py:98} INFO - Subtask: 
+[2018-06-28 20:54:48,279] {base_task_runner.py:98} INFO - Subtask: gsutil cp gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/*.json .
+[2018-06-28 20:54:48,279] {base_task_runner.py:98} INFO - Subtask: gsutil cp gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/*.sh .
+[2018-06-28 20:54:48,280] {base_task_runner.py:98} INFO - Subtask: chmod u+x *
+[2018-06-28 20:54:48,281] {base_task_runner.py:98} INFO - Subtask: ./start_gcb_publish.sh -p "istio-io" -a "202987436673-compute@developer.gserviceaccount.com"  -v "1.0.0-snapshot.0" -s "istio-prerelease/prerelease/1.0.0-snapshot.0" -b "istio-release/releases/1.0.0-snapshot.0" -r "istio-io" -g "istio-secrets/github.txt.enc" -u "https://github.com/istio/green-builds" -t "d5dd7fc9c7ef8eab94c167583e89748a9d9e2f5c" -m "build.xml" -h "istio" -i "istio" -d "istio" -w
+[2018-06-28 20:54:48,286] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:48,285] {bash_operator.py:97} INFO - Output:
+[2018-06-28 20:54:50,918] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:50,917] {bash_operator.py:101} INFO - Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/cloud_build.template.json...
+[2018-06-28 20:54:51,087] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:51,086] {bash_operator.py:101} INFO - / [0 files][    0.0 B/  1.2 KiB]                                                
+[2018-06-28 20:54:51,088] {base_task_runner.py:98} INFO - Subtask: / [1 files][  1.2 KiB/  1.2 KiB]                                                
+[2018-06-28 20:54:51,089] {base_task_runner.py:98} INFO - Subtask: Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/cloud_publish.template.json...
+[2018-06-28 20:54:51,175] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:51,175] {bash_operator.py:101} INFO - / [1 files][  1.2 KiB/  1.7 KiB]                                                
+[2018-06-28 20:54:51,176] {base_task_runner.py:98} INFO - Subtask: / [2 files][  1.7 KiB/  1.7 KiB]                                                
+[2018-06-28 20:54:51,178] {base_task_runner.py:98} INFO - Subtask: Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/cloud_tag.template.json...
+[2018-06-28 20:54:51,272] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:51,272] {bash_operator.py:101} INFO - / [2 files][  1.7 KiB/  2.3 KiB]                                                
+[2018-06-28 20:54:51,273] {base_task_runner.py:98} INFO - Subtask: / [3 files][  2.3 KiB/  2.3 KiB]
+[2018-06-28 20:54:51,273] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:51,272] {bash_operator.py:101} INFO - Operation completed over 3 objects/2.3 KiB.
+[2018-06-28 20:54:53,470] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:53,469] {bash_operator.py:101} INFO - Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/cloud_builder.sh...
+[2018-06-28 20:54:53,575] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:53,575] {bash_operator.py:101} INFO - / [0 files][    0.0 B/  3.8 KiB]                                                
+[2018-06-28 20:54:53,577] {base_task_runner.py:98} INFO - Subtask: / [1 files][  3.8 KiB/  3.8 KiB]                                                
+[2018-06-28 20:54:53,577] {base_task_runner.py:98} INFO - Subtask: Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/create_github_release.sh...
+[2018-06-28 20:54:53,671] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:53,670] {bash_operator.py:101} INFO - / [1 files][  3.8 KiB/ 10.0 KiB]                                                
+[2018-06-28 20:54:53,671] {base_task_runner.py:98} INFO - Subtask: / [2 files][ 10.0 KiB/ 10.0 KiB]                                                
+[2018-06-28 20:54:53,672] {base_task_runner.py:98} INFO - Subtask: Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/create_release_archives.sh...
+[2018-06-28 20:54:53,754] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:53,753] {bash_operator.py:101} INFO - / [2 files][ 10.0 KiB/ 14.4 KiB]                                                
+[2018-06-28 20:54:53,756] {base_task_runner.py:98} INFO - Subtask: / [3 files][ 14.4 KiB/ 14.4 KiB]                                                
+[2018-06-28 20:54:53,756] {base_task_runner.py:98} INFO - Subtask: Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/create_tag_reference.sh...
+[2018-06-28 20:54:53,870] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:53,870] {bash_operator.py:101} INFO - / [3 files][ 14.4 KiB/ 19.9 KiB]                                                
+[2018-06-28 20:54:53,871] {base_task_runner.py:98} INFO - Subtask: / [4 files][ 19.9 KiB/ 19.9 KiB]
+[2018-06-28 20:54:53,872] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:53,870] {bash_operator.py:101} INFO - ==> NOTE: You are performing a sequence of gsutil operations that may
+[2018-06-28 20:54:53,872] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:53,870] {bash_operator.py:101} INFO - run significantly faster if you instead use gsutil -m -o ... Please
+[2018-06-28 20:54:53,872] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:53,870] {bash_operator.py:101} INFO - see the -m section under "gsutil help options" for further information
+[2018-06-28 20:54:53,873] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:53,870] {bash_operator.py:101} INFO - about when gsutil -m can be advantageous.
+[2018-06-28 20:54:53,873] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:53,870] {bash_operator.py:101} INFO - 
+[2018-06-28 20:54:53,874] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:53,874] {bash_operator.py:101} INFO - Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/downloadIstioCandidate.sh...
+[2018-06-28 20:54:54,021] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:54,020] {bash_operator.py:101} INFO - / [4 files][ 19.9 KiB/ 21.3 KiB]                                                
+[2018-06-28 20:54:54,021] {base_task_runner.py:98} INFO - Subtask: / [5 files][ 21.3 KiB/ 21.3 KiB]                                                
+[2018-06-28 20:54:54,022] {base_task_runner.py:98} INFO - Subtask: Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/gcb_build_lib.sh...
+[2018-06-28 20:54:54,165] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:54,165] {bash_operator.py:101} INFO - / [5 files][ 21.3 KiB/ 25.8 KiB]                                                
+[2018-06-28 20:54:54,167] {base_task_runner.py:98} INFO - Subtask: -
+[2018-06-28 20:54:54,167] {base_task_runner.py:98} INFO - Subtask: - [6 files][ 25.8 KiB/ 25.8 KiB]                                                
+[2018-06-28 20:54:54,168] {base_task_runner.py:98} INFO - Subtask: Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/json_parse_shared.sh...
+[2018-06-28 20:54:54,290] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:54,289] {bash_operator.py:101} INFO - - [6 files][ 25.8 KiB/ 29.6 KiB]                                                
+[2018-06-28 20:54:54,290] {base_task_runner.py:98} INFO - Subtask: - [7 files][ 29.6 KiB/ 29.6 KiB]                                                
+[2018-06-28 20:54:54,291] {base_task_runner.py:98} INFO - Subtask: Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/publish_release.sh...
+[2018-06-28 20:54:54,425] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:54,425] {bash_operator.py:101} INFO - - [7 files][ 29.6 KiB/ 39.0 KiB]                                                
+[2018-06-28 20:54:54,427] {base_task_runner.py:98} INFO - Subtask: - [8 files][ 39.0 KiB/ 39.0 KiB]                                                
+[2018-06-28 20:54:54,427] {base_task_runner.py:98} INFO - Subtask: Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/start_gcb_build.sh...
+[2018-06-28 20:54:54,507] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:54,506] {bash_operator.py:101} INFO - - [8 files][ 39.0 KiB/ 42.3 KiB]                                                
+[2018-06-28 20:54:54,507] {base_task_runner.py:98} INFO - Subtask: - [9 files][ 42.3 KiB/ 42.3 KiB]                                                
+[2018-06-28 20:54:54,509] {base_task_runner.py:98} INFO - Subtask: Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/start_gcb_publish.sh...
+[2018-06-28 20:54:54,594] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:54,594] {bash_operator.py:101} INFO - - [9 files][ 42.3 KiB/ 47.1 KiB]                                                
+[2018-06-28 20:54:54,596] {base_task_runner.py:98} INFO - Subtask: - [10 files][ 47.1 KiB/ 47.1 KiB]                                               
+[2018-06-28 20:54:54,596] {base_task_runner.py:98} INFO - Subtask: Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/start_gcb_tag.sh...
+[2018-06-28 20:54:54,712] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:54,711] {bash_operator.py:101} INFO - - [10 files][ 47.1 KiB/ 51.5 KiB]                                               
+[2018-06-28 20:54:54,712] {base_task_runner.py:98} INFO - Subtask: - [11 files][ 51.5 KiB/ 51.5 KiB]                                               
+[2018-06-28 20:54:54,713] {base_task_runner.py:98} INFO - Subtask: Copying gs://istio-release-pipeline-data/release-tools/prerelease/1.0.0-snapshot.0/data/release/store_artifacts.sh...
+[2018-06-28 20:54:54,817] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:54,817] {bash_operator.py:101} INFO - - [11 files][ 51.5 KiB/ 54.6 KiB]                                               
+[2018-06-28 20:54:54,818] {base_task_runner.py:98} INFO - Subtask: \
+[2018-06-28 20:54:54,818] {base_task_runner.py:98} INFO - Subtask: \ [12 files][ 54.6 KiB/ 54.6 KiB]
+[2018-06-28 20:54:54,819] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:54,817] {bash_operator.py:101} INFO - Operation completed over 12 objects/54.6 KiB.
+[2018-06-28 20:54:55,482] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:55,481] {bash_operator.py:101} INFO - +++ dirname ./start_gcb_publish.sh
+[2018-06-28 20:54:55,971] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:55,970] {bash_operator.py:101} INFO - ++ cd .
+[2018-06-28 20:54:55,971] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:55,970] {bash_operator.py:101} INFO - ++ pwd -P
+[2018-06-28 20:54:55,973] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:55,973] {bash_operator.py:101} INFO - + SCRIPTPATH=/tmp/airflowtmpo0IUSA
+[2018-06-28 20:54:55,974] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:55,973] {bash_operator.py:101} INFO - + source /tmp/airflowtmpo0IUSA/gcb_build_lib.sh
+[2018-06-28 20:54:55,974] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:55,973] {bash_operator.py:101} INFO - ++ set -o errexit
+[2018-06-28 20:54:55,975] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:55,973] {bash_operator.py:101} INFO - ++ set -o nounset
+[2018-06-28 20:54:55,975] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:55,974] {bash_operator.py:101} INFO - ++ set -o pipefail
+[2018-06-28 20:54:55,976] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:55,974] {bash_operator.py:101} INFO - ++ set -x
+[2018-06-28 20:54:55,978] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:55,978] {bash_operator.py:101} INFO - ++++ dirname ./start_gcb_publish.sh
+[2018-06-28 20:54:56,450] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,449] {bash_operator.py:101} INFO - +++ cd .
+[2018-06-28 20:54:56,451] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,450] {bash_operator.py:101} INFO - +++ pwd -P
+[2018-06-28 20:54:56,455] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,453] {bash_operator.py:101} INFO - ++ SCRIPTPATH=/tmp/airflowtmpo0IUSA
+[2018-06-28 20:54:56,456] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,454] {bash_operator.py:101} INFO - ++ source /tmp/airflowtmpo0IUSA/json_parse_shared.sh
+[2018-06-28 20:54:56,456] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,454] {bash_operator.py:101} INFO - +++ set -o errexit
+[2018-06-28 20:54:56,457] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,454] {bash_operator.py:101} INFO - +++ set -o nounset
+[2018-06-28 20:54:56,457] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,454] {bash_operator.py:101} INFO - +++ set -o pipefail
+[2018-06-28 20:54:56,457] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,454] {bash_operator.py:101} INFO - +++ set -x
+[2018-06-28 20:54:56,458] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,454] {bash_operator.py:101} INFO - ++ BUILD_FAILED=0
+[2018-06-28 20:54:56,458] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,455] {bash_operator.py:101} INFO - + PROJECT_ID=
+[2018-06-28 20:54:56,458] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,455] {bash_operator.py:101} INFO - + KEY_FILE_PATH=
+[2018-06-28 20:54:56,459] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,455] {bash_operator.py:101} INFO - + SVC_ACCT=
+[2018-06-28 20:54:56,460] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,460] {bash_operator.py:101} INFO - ++ mktemp /tmp/build.subs.XXXX
+[2018-06-28 20:54:56,968] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,966] {bash_operator.py:101} INFO - + SUBS_FILE=/tmp/build.subs.RXhA
+[2018-06-28 20:54:56,971] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,967] {bash_operator.py:101} INFO - + VER_STRING=0.0.0
+[2018-06-28 20:54:56,974] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,967] {bash_operator.py:101} INFO - + REPO=
+[2018-06-28 20:54:56,976] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,967] {bash_operator.py:101} INFO - + REPO_FILE=default.xml
+[2018-06-28 20:54:56,977] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,967] {bash_operator.py:101} INFO - + REPO_FILE_VER=master
+[2018-06-28 20:54:56,981] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,967] {bash_operator.py:101} INFO - + WAIT_FOR_RESULT=false
+[2018-06-28 20:54:56,982] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,967] {bash_operator.py:101} INFO - + GCS_SRC=
+[2018-06-28 20:54:56,982] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,967] {bash_operator.py:101} INFO - + GCS_GITHUB_SECRET=istio-secrets/github.txt.enc
+[2018-06-28 20:54:56,984] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,967] {bash_operator.py:101} INFO - + REL_ORG=istio
+[2018-06-28 20:54:56,985] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,975] {bash_operator.py:101} INFO - + GCR_DST=
+[2018-06-28 20:54:56,987] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,975] {bash_operator.py:101} INFO - + GCS_DST=
+[2018-06-28 20:54:56,989] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,975] {bash_operator.py:101} INFO - + DOCKER_DST=istio
+[2018-06-28 20:54:56,991] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,978] {bash_operator.py:101} INFO - + REL_REPO=istio
+[2018-06-28 20:54:56,993] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,978] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:56,995] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,979] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,227] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,979] {bash_operator.py:101} INFO - + PROJECT_ID=istio-io
+[2018-06-28 20:54:57,229] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,979] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,229] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,979] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,232] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,979] {bash_operator.py:101} INFO - + SVC_ACCT=202987436673-compute@developer.gserviceaccount.com
+[2018-06-28 20:54:57,233] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,979] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,234] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,979] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,234] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,979] {bash_operator.py:101} INFO - + VER_STRING=1.0.0-snapshot.0
+[2018-06-28 20:54:57,235] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,982] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,236] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,983] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,237] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,983] {bash_operator.py:101} INFO - + GCS_SRC=istio-prerelease/prerelease/1.0.0-snapshot.0
+[2018-06-28 20:54:57,237] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,983] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,237] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,983] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,238] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,983] {bash_operator.py:101} INFO - + GCS_DST=istio-release/releases/1.0.0-snapshot.0
+[2018-06-28 20:54:57,240] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,983] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,240] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,983] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,241] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,983] {bash_operator.py:101} INFO - + GCR_DST=istio-io
+[2018-06-28 20:54:57,241] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,988] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,242] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,990] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,244] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,990] {bash_operator.py:101} INFO - + GCS_GITHUB_SECRET=istio-secrets/github.txt.enc
+[2018-06-28 20:54:57,244] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,990] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,244] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,990] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,245] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,994] {bash_operator.py:101} INFO - + REPO=https://github.com/istio/green-builds
+[2018-06-28 20:54:57,247] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,994] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,247] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,994] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,247] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,996] {bash_operator.py:101} INFO - + REPO_FILE_VER=d5dd7fc9c7ef8eab94c167583e89748a9d9e2f5c
+[2018-06-28 20:54:57,248] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,996] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,249] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,997] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,250] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,997] {bash_operator.py:101} INFO - + REPO_FILE=build.xml
+[2018-06-28 20:54:57,251] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,997] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,252] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,997] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,252] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,997] {bash_operator.py:101} INFO - + REL_ORG=istio
+[2018-06-28 20:54:57,252] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,997] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,253] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,997] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,254] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,997] {bash_operator.py:101} INFO - + REL_REPO=istio
+[2018-06-28 20:54:57,255] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,997] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,255] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,998] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,255] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,999] {bash_operator.py:101} INFO - + DOCKER_DST=istio
+[2018-06-28 20:54:57,256] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,999] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,257] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,999] {bash_operator.py:101} INFO - + case "${arg}" in
+[2018-06-28 20:54:57,258] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,999] {bash_operator.py:101} INFO - + WAIT_FOR_RESULT=true
+[2018-06-28 20:54:57,258] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,999] {bash_operator.py:101} INFO - + getopts a:b:d:g:h:i:k:m:p:r:s:t:u:v:w arg
+[2018-06-28 20:54:57,258] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,999] {bash_operator.py:101} INFO - + [[ -z istio-io ]]
+[2018-06-28 20:54:57,259] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:56,999] {bash_operator.py:101} INFO - + [[ -z https://github.com/istio/green-builds ]]
+[2018-06-28 20:54:57,260] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,000] {bash_operator.py:101} INFO - + [[ -z build.xml ]]
+[2018-06-28 20:54:57,261] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,001] {bash_operator.py:101} INFO - + [[ -z d5dd7fc9c7ef8eab94c167583e89748a9d9e2f5c ]]
+[2018-06-28 20:54:57,261] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,001] {bash_operator.py:101} INFO - + [[ -z 1.0.0-snapshot.0 ]]
+[2018-06-28 20:54:57,262] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,001] {bash_operator.py:101} INFO - + [[ -z istio-io ]]
+[2018-06-28 20:54:57,263] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,001] {bash_operator.py:101} INFO - + [[ -z istio-release/releases/1.0.0-snapshot.0 ]]
+[2018-06-28 20:54:57,268] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,001] {bash_operator.py:101} INFO - + [[ -z istio-prerelease/prerelease/1.0.0-snapshot.0 ]]
+[2018-06-28 20:54:57,269] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,001] {bash_operator.py:101} INFO - + [[ -z istio ]]
+[2018-06-28 20:54:57,270] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,001] {bash_operator.py:101} INFO - + [[ -z istio ]]
+[2018-06-28 20:54:57,270] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,003] {bash_operator.py:101} INFO - + [[ -z istio-secrets/github.txt.enc ]]
+[2018-06-28 20:54:57,271] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,003] {bash_operator.py:101} INFO - + DEFAULT_SVC_ACCT=cloudbuild@istio-io.iam.gserviceaccount.com
+[2018-06-28 20:54:57,272] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,004] {bash_operator.py:101} INFO - + [[ -z 202987436673-compute@developer.gserviceaccount.com ]]
+[2018-06-28 20:54:57,273] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,004] {bash_operator.py:101} INFO - + cat
+[2018-06-28 20:54:57,628] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,626] {bash_operator.py:101} INFO - + run_build https://github.com/istio/green-builds build.xml d5dd7fc9c7ef8eab94c167583e89748a9d9e2f5c cloud_publish.template.json /tmp/build.subs.RXhA istio-io 202987436673-compute@developer.gserviceaccount.com '' true
+[2018-06-28 20:54:57,631] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,626] {bash_operator.py:101} INFO - + local MFEST_URL=https://github.com/istio/green-builds
+[2018-06-28 20:54:57,632] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,630] {bash_operator.py:101} INFO - + local MFEST_FILE=build.xml
+[2018-06-28 20:54:57,633] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,630] {bash_operator.py:101} INFO - + local MFEST_VER=d5dd7fc9c7ef8eab94c167583e89748a9d9e2f5c
+[2018-06-28 20:54:57,634] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,630] {bash_operator.py:101} INFO - + local TEMPLATE_NAME=cloud_publish.template.json
+[2018-06-28 20:54:57,634] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,630] {bash_operator.py:101} INFO - + local SUBS_FILE=/tmp/build.subs.RXhA
+[2018-06-28 20:54:57,636] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,630] {bash_operator.py:101} INFO - + local PROJ_ID=istio-io
+[2018-06-28 20:54:57,637] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,630] {bash_operator.py:101} INFO - + local SERVICE_ACCT=202987436673-compute@developer.gserviceaccount.com
+[2018-06-28 20:54:57,638] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,630] {bash_operator.py:101} INFO - + local SERVICE_KEY_FILE=
+[2018-06-28 20:54:57,638] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,634] {bash_operator.py:101} INFO - + local WAIT=true
+[2018-06-28 20:54:57,639] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:57,639] {bash_operator.py:101} INFO - ++ mktemp /tmp/build.request.XXXX
+[2018-06-28 20:54:58,105] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:58,104] {bash_operator.py:101} INFO - + local REQUEST_FILE=/tmp/build.request.umub
+[2018-06-28 20:54:58,108] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:58,108] {bash_operator.py:101} INFO - ++ mktemp /tmp/build.response.XXXX
+[2018-06-28 20:54:58,587] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:58,584] {bash_operator.py:101} INFO - + local RESULT_FILE=/tmp/build.response.UkiM
+[2018-06-28 20:54:58,589] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:58,586] {bash_operator.py:101} INFO - + head --lines=-1 /tmp/airflowtmpo0IUSA/cloud_publish.template.json
+[2018-06-28 20:54:59,266] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:59,260] {bash_operator.py:101} INFO - + cat /tmp/build.subs.RXhA
+[2018-06-28 20:54:59,747] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:59,746] {bash_operator.py:101} INFO - + echo '}'
+[2018-06-28 20:54:59,749] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:59,747] {bash_operator.py:101} INFO - + [[ -n '' ]]
+[2018-06-28 20:54:59,751] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:54:59,750] {bash_operator.py:101} INFO - ++ gcloud auth --account 202987436673-compute@developer.gserviceaccount.com print-access-token
+[2018-06-28 20:55:02,108] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:02,106] {bash_operator.py:101} INFO - + curl -X POST -H 'Authorization: Bearer ya29.c.ElroBXoywtNPE26a4ix-jGc0BbvjFPfnfkj0HTY-dljqzYLYZn3-xSwGOwYHZOr1JJypXXez8vsogscXEagTptNu0mbly84gGpGIkVtBqUCgpSBL2hJUy7F_H6s' -T /tmp/build.request.umub -s -o /tmp/build.response.UkiM https://cloudbuild.googleapis.com/v1/projects/istio-io/builds
+[2018-06-28 20:55:04,458] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:04,457] {bash_operator.py:101} INFO - + rm -f /tmp/build.request.umub
+[2018-06-28 20:55:04,751] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:04,750] {bash_operator.py:101} INFO - ++ parse_json_for_string /tmp/build.response.UkiM id
+[2018-06-28 20:55:04,757] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:04,753] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 20:55:04,763] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:04,763] {bash_operator.py:101} INFO - ++ local KEY=id
+[2018-06-28 20:55:04,764] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:04,764] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 20:55:04,768] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:04,767] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"id":.*?[^\\]",?' /tmp/build.response.UkiM
+[2018-06-28 20:55:05,242] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:05,242] {bash_operator.py:101} INFO - ++ local LINE_COUNT=1
+[2018-06-28 20:55:05,246] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:05,242] {bash_operator.py:101} INFO - ++ '[' 1 '!=' 1 ']'
+[2018-06-28 20:55:05,250] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:05,250] {bash_operator.py:101} INFO - +++ sed 's/ *"id": *"\(.*\)",*/\1/'
+[2018-06-28 20:55:05,254] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:05,253] {bash_operator.py:101} INFO - +++ grep -Eo ' *"id": *".*",?' /tmp/build.response.UkiM
+[2018-06-28 20:55:06,025] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,025] {bash_operator.py:101} INFO - ++ RESULT=35550cc7-90e1-421e-a196-dbf92da64565
+[2018-06-28 20:55:06,027] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,026] {bash_operator.py:101} INFO - ++ echo 35550cc7-90e1-421e-a196-dbf92da64565
+[2018-06-28 20:55:06,030] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,026] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 20:55:06,031] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,027] {bash_operator.py:101} INFO - + local BUILD_ID=35550cc7-90e1-421e-a196-dbf92da64565
+[2018-06-28 20:55:06,031] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,028] {bash_operator.py:101} INFO - + [[ -z 35550cc7-90e1-421e-a196-dbf92da64565 ]]
+[2018-06-28 20:55:06,032] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,028] {bash_operator.py:101} INFO - + echo 'BUILD_ID is 35550cc7-90e1-421e-a196-dbf92da64565'
+[2018-06-28 20:55:06,032] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,028] {bash_operator.py:101} INFO - BUILD_ID is 35550cc7-90e1-421e-a196-dbf92da64565
+[2018-06-28 20:55:06,033] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,028] {bash_operator.py:101} INFO - + [[ true == \t\r\u\e ]]
+[2018-06-28 20:55:06,033] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,028] {bash_operator.py:101} INFO - + echo 'waiting for build to complete'
+[2018-06-28 20:55:06,033] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,028] {bash_operator.py:101} INFO - waiting for build to complete
+[2018-06-28 20:55:06,034] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,028] {bash_operator.py:101} INFO - + parse_result_file /tmp/build.response.UkiM
+[2018-06-28 20:55:06,034] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,028] {bash_operator.py:101} INFO - + local INPUT_FILE=/tmp/build.response.UkiM
+[2018-06-28 20:55:06,035] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,031] {bash_operator.py:101} INFO - + [[ -z /tmp/build.response.UkiM ]]
+[2018-06-28 20:55:06,035] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,035] {bash_operator.py:101} INFO - ++ parse_json_for_first_string /tmp/build.response.UkiM status
+[2018-06-28 20:55:06,037] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,036] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 20:55:06,037] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,036] {bash_operator.py:101} INFO - ++ local KEY=status
+[2018-06-28 20:55:06,038] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,036] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 20:55:06,038] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,038] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"status":.*?[^\\]",?' /tmp/build.response.UkiM
+[2018-06-28 20:55:06,831] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,830] {bash_operator.py:101} INFO - ++ local LINE_COUNT=1
+[2018-06-28 20:55:06,832] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,832] {bash_operator.py:101} INFO - ++ '[' 1 == 0 ']'
+[2018-06-28 20:55:06,834] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,834] {bash_operator.py:101} INFO - +++ sed 's/ *"status": *"\(.*\)",*/\1/'
+[2018-06-28 20:55:06,836] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,835] {bash_operator.py:101} INFO - +++ head --lines=1
+[2018-06-28 20:55:06,838] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:06,837] {bash_operator.py:101} INFO - +++ grep -Eo ' *"status": *".*",?' /tmp/build.response.UkiM
+[2018-06-28 20:55:07,400] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,400] {bash_operator.py:101} INFO - ++ RESULT=QUEUED
+[2018-06-28 20:55:07,401] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,401] {bash_operator.py:101} INFO - ++ echo QUEUED
+[2018-06-28 20:55:07,403] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,401] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 20:55:07,404] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,403] {bash_operator.py:101} INFO - + local STATUS_VALUE=QUEUED
+[2018-06-28 20:55:07,404] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,404] {bash_operator.py:101} INFO - + local ERROR_VALUE=
+[2018-06-28 20:55:07,405] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,404] {bash_operator.py:101} INFO - + local ERROR_CODE=
+[2018-06-28 20:55:07,406] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,404] {bash_operator.py:101} INFO - + local ERROR_STATUS=
+[2018-06-28 20:55:07,407] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,406] {bash_operator.py:101} INFO - ++ parse_json_for_int /tmp/build.response.UkiM code
+[2018-06-28 20:55:07,407] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,407] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 20:55:07,408] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,408] {bash_operator.py:101} INFO - ++ local KEY=code
+[2018-06-28 20:55:07,409] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,409] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 20:55:07,410] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,410] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"code": *[0-9]*,?' /tmp/build.response.UkiM
+[2018-06-28 20:55:07,898] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,896] {bash_operator.py:101} INFO - ++ local LINE_COUNT=0
+[2018-06-28 20:55:07,899] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,897] {bash_operator.py:101} INFO - ++ '[' 0 '!=' 1 ']'
+[2018-06-28 20:55:07,901] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,898] {bash_operator.py:101} INFO - ++ echo 'Missing or ambiguous lines for code: 0'
+[2018-06-28 20:55:07,903] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,898] {bash_operator.py:101} INFO - Missing or ambiguous lines for code: 0
+[2018-06-28 20:55:07,904] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,898] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 20:55:07,904] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,902] {bash_operator.py:101} INFO - + local ERROR_LINE=
+[2018-06-28 20:55:07,906] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,902] {bash_operator.py:101} INFO - + [[ -n '' ]]
+[2018-06-28 20:55:07,907] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,902] {bash_operator.py:101} INFO - + case "${STATUS_VALUE}" in
+[2018-06-28 20:55:07,910] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,902] {bash_operator.py:101} INFO - + echo 'build is queued'
+[2018-06-28 20:55:07,911] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,902] {bash_operator.py:101} INFO - build is queued
+[2018-06-28 20:55:07,912] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,902] {bash_operator.py:101} INFO - + return 0
+[2018-06-28 20:55:07,912] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:55:07,904] {bash_operator.py:101} INFO - + sleep 60
+[2018-06-28 20:56:08,353] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:08,353] {bash_operator.py:101} INFO - ++ gcloud auth --account 202987436673-compute@developer.gserviceaccount.com print-access-token
+[2018-06-28 20:56:09,657] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:09,657] {bash_operator.py:101} INFO - + curl -H 'Authorization: Bearer ya29.c.ElroBXoywtNPE26a4ix-jGc0BbvjFPfnfkj0HTY-dljqzYLYZn3-xSwGOwYHZOr1JJypXXez8vsogscXEagTptNu0mbly84gGpGIkVtBqUCgpSBL2hJUy7F_H6s' -s --retry 3 -o /tmp/build.response.UkiM 'https://cloudbuild.googleapis.com/v1/projects/istio-io/builds/{35550cc7-90e1-421e-a196-dbf92da64565}'
+[2018-06-28 20:56:10,358] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:10,357] {bash_operator.py:101} INFO - + parse_result_file /tmp/build.response.UkiM
+[2018-06-28 20:56:10,360] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:10,357] {bash_operator.py:101} INFO - + local INPUT_FILE=/tmp/build.response.UkiM
+[2018-06-28 20:56:10,360] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:10,358] {bash_operator.py:101} INFO - + [[ -z /tmp/build.response.UkiM ]]
+[2018-06-28 20:56:10,362] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:10,361] {bash_operator.py:101} INFO - ++ parse_json_for_first_string /tmp/build.response.UkiM status
+[2018-06-28 20:56:10,362] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:10,362] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 20:56:10,363] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:10,363] {bash_operator.py:101} INFO - ++ local KEY=status
+[2018-06-28 20:56:10,364] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:10,364] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 20:56:10,365] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:10,365] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"status":.*?[^\\]",?' /tmp/build.response.UkiM
+[2018-06-28 20:56:11,004] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:11,004] {bash_operator.py:101} INFO - ++ local LINE_COUNT=1
+[2018-06-28 20:56:11,006] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:11,004] {bash_operator.py:101} INFO - ++ '[' 1 == 0 ']'
+[2018-06-28 20:56:11,008] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:11,007] {bash_operator.py:101} INFO - +++ sed 's/ *"status": *"\(.*\)",*/\1/'
+[2018-06-28 20:56:11,009] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:11,008] {bash_operator.py:101} INFO - +++ head --lines=1
+[2018-06-28 20:56:11,011] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:11,011] {bash_operator.py:101} INFO - +++ grep -Eo ' *"status": *".*",?' /tmp/build.response.UkiM
+[2018-06-28 20:56:11,579] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:11,578] {bash_operator.py:101} INFO - ++ RESULT=WORKING
+[2018-06-28 20:56:11,582] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:11,578] {bash_operator.py:101} INFO - ++ echo WORKING
+[2018-06-28 20:56:11,800] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:11,578] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 20:56:12,114] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,113] {bash_operator.py:101} INFO - + local STATUS_VALUE=WORKING
+[2018-06-28 20:56:12,115] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,114] {bash_operator.py:101} INFO - + local ERROR_VALUE=
+[2018-06-28 20:56:12,115] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,114] {bash_operator.py:101} INFO - + local ERROR_CODE=
+[2018-06-28 20:56:12,115] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,114] {bash_operator.py:101} INFO - + local ERROR_STATUS=
+[2018-06-28 20:56:12,118] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,117] {bash_operator.py:101} INFO - ++ parse_json_for_int /tmp/build.response.UkiM code
+[2018-06-28 20:56:12,118] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,118] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 20:56:12,119] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,119] {bash_operator.py:101} INFO - ++ local KEY=code
+[2018-06-28 20:56:12,120] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,120] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 20:56:12,121] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,121] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"code": *[0-9]*,?' /tmp/build.response.UkiM
+[2018-06-28 20:56:12,672] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,672] {bash_operator.py:101} INFO - ++ local LINE_COUNT=0
+[2018-06-28 20:56:12,673] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,672] {bash_operator.py:101} INFO - ++ '[' 0 '!=' 1 ']'
+[2018-06-28 20:56:12,675] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,672] {bash_operator.py:101} INFO - ++ echo 'Missing or ambiguous lines for code: 0'
+[2018-06-28 20:56:12,676] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,673] {bash_operator.py:101} INFO - Missing or ambiguous lines for code: 0
+[2018-06-28 20:56:12,677] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,673] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 20:56:12,677] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,675] {bash_operator.py:101} INFO - + local ERROR_LINE=
+[2018-06-28 20:56:12,678] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,675] {bash_operator.py:101} INFO - + [[ -n '' ]]
+[2018-06-28 20:56:12,678] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,675] {bash_operator.py:101} INFO - + case "${STATUS_VALUE}" in
+[2018-06-28 20:56:12,679] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:12,679] {bash_operator.py:101} INFO - ++ date
+[2018-06-28 20:56:13,267] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:13,266] {bash_operator.py:101} INFO - + echo 'build is running at Thu Jun 28 20:56:12 UTC 2018'
+[2018-06-28 20:56:13,269] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:13,267] {bash_operator.py:101} INFO - build is running at Thu Jun 28 20:56:12 UTC 2018
+[2018-06-28 20:56:13,269] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:13,267] {bash_operator.py:101} INFO - + return 0
+[2018-06-28 20:56:13,270] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:56:13,267] {bash_operator.py:101} INFO - + sleep 60
+[2018-06-28 20:57:13,526] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:13,525] {bash_operator.py:101} INFO - ++ gcloud auth --account 202987436673-compute@developer.gserviceaccount.com print-access-token
+[2018-06-28 20:57:14,848] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:14,848] {bash_operator.py:101} INFO - + curl -H 'Authorization: Bearer ya29.c.ElroBXoywtNPE26a4ix-jGc0BbvjFPfnfkj0HTY-dljqzYLYZn3-xSwGOwYHZOr1JJypXXez8vsogscXEagTptNu0mbly84gGpGIkVtBqUCgpSBL2hJUy7F_H6s' -s --retry 3 -o /tmp/build.response.UkiM 'https://cloudbuild.googleapis.com/v1/projects/istio-io/builds/{35550cc7-90e1-421e-a196-dbf92da64565}'
+[2018-06-28 20:57:15,452] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,452] {bash_operator.py:101} INFO - + parse_result_file /tmp/build.response.UkiM
+[2018-06-28 20:57:15,453] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,452] {bash_operator.py:101} INFO - + local INPUT_FILE=/tmp/build.response.UkiM
+[2018-06-28 20:57:15,453] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,452] {bash_operator.py:101} INFO - + [[ -z /tmp/build.response.UkiM ]]
+[2018-06-28 20:57:15,457] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,457] {bash_operator.py:101} INFO - ++ parse_json_for_first_string /tmp/build.response.UkiM status
+[2018-06-28 20:57:15,459] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,459] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 20:57:15,460] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,459] {bash_operator.py:101} INFO - ++ local KEY=status
+[2018-06-28 20:57:15,460] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,460] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 20:57:15,464] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,464] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"status":.*?[^\\]",?' /tmp/build.response.UkiM
+[2018-06-28 20:57:15,978] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,977] {bash_operator.py:101} INFO - ++ local LINE_COUNT=1
+[2018-06-28 20:57:15,979] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,978] {bash_operator.py:101} INFO - ++ '[' 1 == 0 ']'
+[2018-06-28 20:57:15,982] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,982] {bash_operator.py:101} INFO - +++ sed 's/ *"status": *"\(.*\)",*/\1/'
+[2018-06-28 20:57:15,983] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,983] {bash_operator.py:101} INFO - +++ head --lines=1
+[2018-06-28 20:57:15,985] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:15,985] {bash_operator.py:101} INFO - +++ grep -Eo ' *"status": *".*",?' /tmp/build.response.UkiM
+[2018-06-28 20:57:16,563] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:16,563] {bash_operator.py:101} INFO - ++ RESULT=WORKING
+[2018-06-28 20:57:16,564] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:16,563] {bash_operator.py:101} INFO - ++ echo WORKING
+[2018-06-28 20:57:16,566] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:16,563] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 20:57:16,566] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:16,565] {bash_operator.py:101} INFO - + local STATUS_VALUE=WORKING
+[2018-06-28 20:57:16,567] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:16,565] {bash_operator.py:101} INFO - + local ERROR_VALUE=
+[2018-06-28 20:57:16,567] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:16,565] {bash_operator.py:101} INFO - + local ERROR_CODE=
+[2018-06-28 20:57:16,568] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:16,565] {bash_operator.py:101} INFO - + local ERROR_STATUS=
+[2018-06-28 20:57:16,568] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:16,568] {bash_operator.py:101} INFO - ++ parse_json_for_int /tmp/build.response.UkiM code
+[2018-06-28 20:57:16,569] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:16,569] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 20:57:16,570] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:16,569] {bash_operator.py:101} INFO - ++ local KEY=code
+[2018-06-28 20:57:16,570] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:16,570] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 20:57:16,572] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:16,571] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"code": *[0-9]*,?' /tmp/build.response.UkiM
+[2018-06-28 20:57:17,096] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,096] {bash_operator.py:101} INFO - ++ local LINE_COUNT=0
+[2018-06-28 20:57:17,097] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,096] {bash_operator.py:101} INFO - ++ '[' 0 '!=' 1 ']'
+[2018-06-28 20:57:17,100] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,096] {bash_operator.py:101} INFO - ++ echo 'Missing or ambiguous lines for code: 0'
+[2018-06-28 20:57:17,101] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,096] {bash_operator.py:101} INFO - Missing or ambiguous lines for code: 0
+[2018-06-28 20:57:17,101] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,097] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 20:57:17,101] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,098] {bash_operator.py:101} INFO - + local ERROR_LINE=
+[2018-06-28 20:57:17,102] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,099] {bash_operator.py:101} INFO - + [[ -n '' ]]
+[2018-06-28 20:57:17,102] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,099] {bash_operator.py:101} INFO - + case "${STATUS_VALUE}" in
+[2018-06-28 20:57:17,103] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,103] {bash_operator.py:101} INFO - ++ date
+[2018-06-28 20:57:17,674] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,674] {bash_operator.py:101} INFO - + echo 'build is running at Thu Jun 28 20:57:17 UTC 2018'
+[2018-06-28 20:57:17,675] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,674] {bash_operator.py:101} INFO - build is running at Thu Jun 28 20:57:17 UTC 2018
+[2018-06-28 20:57:17,677] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,675] {bash_operator.py:101} INFO - + return 0
+[2018-06-28 20:57:17,678] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:57:17,676] {bash_operator.py:101} INFO - + sleep 60
+[2018-06-28 20:58:17,957] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:17,956] {bash_operator.py:101} INFO - ++ gcloud auth --account 202987436673-compute@developer.gserviceaccount.com print-access-token
+[2018-06-28 20:58:19,095] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:19,095] {bash_operator.py:101} INFO - + curl -H 'Authorization: Bearer ya29.c.ElroBXoywtNPE26a4ix-jGc0BbvjFPfnfkj0HTY-dljqzYLYZn3-xSwGOwYHZOr1JJypXXez8vsogscXEagTptNu0mbly84gGpGIkVtBqUCgpSBL2hJUy7F_H6s' -s --retry 3 -o /tmp/build.response.UkiM 'https://cloudbuild.googleapis.com/v1/projects/istio-io/builds/{35550cc7-90e1-421e-a196-dbf92da64565}'
+[2018-06-28 20:58:19,645] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:19,645] {bash_operator.py:101} INFO - + parse_result_file /tmp/build.response.UkiM
+[2018-06-28 20:58:19,646] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:19,645] {bash_operator.py:101} INFO - + local INPUT_FILE=/tmp/build.response.UkiM
+[2018-06-28 20:58:19,648] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:19,646] {bash_operator.py:101} INFO - + [[ -z /tmp/build.response.UkiM ]]
+[2018-06-28 20:58:19,649] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:19,649] {bash_operator.py:101} INFO - ++ parse_json_for_first_string /tmp/build.response.UkiM status
+[2018-06-28 20:58:19,649] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:19,649] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 20:58:19,650] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:19,650] {bash_operator.py:101} INFO - ++ local KEY=status
+[2018-06-28 20:58:19,651] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:19,650] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 20:58:19,652] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:19,651] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"status":.*?[^\\]",?' /tmp/build.response.UkiM
+[2018-06-28 20:58:20,147] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,147] {bash_operator.py:101} INFO - ++ local LINE_COUNT=1
+[2018-06-28 20:58:20,148] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,148] {bash_operator.py:101} INFO - ++ '[' 1 == 0 ']'
+[2018-06-28 20:58:20,151] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,151] {bash_operator.py:101} INFO - +++ head --lines=1
+[2018-06-28 20:58:20,153] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,152] {bash_operator.py:101} INFO - +++ sed 's/ *"status": *"\(.*\)",*/\1/'
+[2018-06-28 20:58:20,153] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,153] {bash_operator.py:101} INFO - +++ grep -Eo ' *"status": *".*",?' /tmp/build.response.UkiM
+[2018-06-28 20:58:20,627] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,627] {bash_operator.py:101} INFO - ++ RESULT=WORKING
+[2018-06-28 20:58:20,628] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,627] {bash_operator.py:101} INFO - ++ echo WORKING
+[2018-06-28 20:58:20,628] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,627] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 20:58:20,629] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,629] {bash_operator.py:101} INFO - + local STATUS_VALUE=WORKING
+[2018-06-28 20:58:20,630] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,629] {bash_operator.py:101} INFO - + local ERROR_VALUE=
+[2018-06-28 20:58:20,630] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,629] {bash_operator.py:101} INFO - + local ERROR_CODE=
+[2018-06-28 20:58:20,631] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,629] {bash_operator.py:101} INFO - + local ERROR_STATUS=
+[2018-06-28 20:58:20,632] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,631] {bash_operator.py:101} INFO - ++ parse_json_for_int /tmp/build.response.UkiM code
+[2018-06-28 20:58:20,632] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,632] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 20:58:20,633] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,633] {bash_operator.py:101} INFO - ++ local KEY=code
+[2018-06-28 20:58:20,634] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,633] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 20:58:20,635] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:20,634] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"code": *[0-9]*,?' /tmp/build.response.UkiM
+[2018-06-28 20:58:21,118] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,117] {bash_operator.py:101} INFO - ++ local LINE_COUNT=0
+[2018-06-28 20:58:21,119] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,118] {bash_operator.py:101} INFO - ++ '[' 0 '!=' 1 ']'
+[2018-06-28 20:58:21,121] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,118] {bash_operator.py:101} INFO - ++ echo 'Missing or ambiguous lines for code: 0'
+[2018-06-28 20:58:21,121] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,118] {bash_operator.py:101} INFO - Missing or ambiguous lines for code: 0
+[2018-06-28 20:58:21,122] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,118] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 20:58:21,122] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,120] {bash_operator.py:101} INFO - + local ERROR_LINE=
+[2018-06-28 20:58:21,123] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,120] {bash_operator.py:101} INFO - + [[ -n '' ]]
+[2018-06-28 20:58:21,123] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,120] {bash_operator.py:101} INFO - + case "${STATUS_VALUE}" in
+[2018-06-28 20:58:21,124] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,124] {bash_operator.py:101} INFO - ++ date
+[2018-06-28 20:58:21,624] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,624] {bash_operator.py:101} INFO - + echo 'build is running at Thu Jun 28 20:58:21 UTC 2018'
+[2018-06-28 20:58:21,626] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,624] {bash_operator.py:101} INFO - build is running at Thu Jun 28 20:58:21 UTC 2018
+[2018-06-28 20:58:21,626] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,624] {bash_operator.py:101} INFO - + return 0
+[2018-06-28 20:58:21,628] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:58:21,624] {bash_operator.py:101} INFO - + sleep 60
+[2018-06-28 20:59:21,878] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:21,878] {bash_operator.py:101} INFO - ++ gcloud auth --account 202987436673-compute@developer.gserviceaccount.com print-access-token
+[2018-06-28 20:59:23,023] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:23,022] {bash_operator.py:101} INFO - + curl -H 'Authorization: Bearer ya29.c.ElroBXoywtNPE26a4ix-jGc0BbvjFPfnfkj0HTY-dljqzYLYZn3-xSwGOwYHZOr1JJypXXez8vsogscXEagTptNu0mbly84gGpGIkVtBqUCgpSBL2hJUy7F_H6s' -s --retry 3 -o /tmp/build.response.UkiM 'https://cloudbuild.googleapis.com/v1/projects/istio-io/builds/{35550cc7-90e1-421e-a196-dbf92da64565}'
+[2018-06-28 20:59:23,594] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:23,593] {bash_operator.py:101} INFO - + parse_result_file /tmp/build.response.UkiM
+[2018-06-28 20:59:23,596] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:23,594] {bash_operator.py:101} INFO - + local INPUT_FILE=/tmp/build.response.UkiM
+[2018-06-28 20:59:23,596] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:23,594] {bash_operator.py:101} INFO - + [[ -z /tmp/build.response.UkiM ]]
+[2018-06-28 20:59:23,598] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:23,598] {bash_operator.py:101} INFO - ++ parse_json_for_first_string /tmp/build.response.UkiM status
+[2018-06-28 20:59:23,598] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:23,598] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 20:59:23,599] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:23,599] {bash_operator.py:101} INFO - ++ local KEY=status
+[2018-06-28 20:59:23,600] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:23,600] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 20:59:23,601] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:23,601] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"status":.*?[^\\]",?' /tmp/build.response.UkiM
+[2018-06-28 20:59:24,086] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,086] {bash_operator.py:101} INFO - ++ local LINE_COUNT=1
+[2018-06-28 20:59:24,087] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,087] {bash_operator.py:101} INFO - ++ '[' 1 == 0 ']'
+[2018-06-28 20:59:24,090] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,090] {bash_operator.py:101} INFO - +++ sed 's/ *"status": *"\(.*\)",*/\1/'
+[2018-06-28 20:59:24,092] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,091] {bash_operator.py:101} INFO - +++ head --lines=1
+[2018-06-28 20:59:24,093] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,092] {bash_operator.py:101} INFO - +++ grep -Eo ' *"status": *".*",?' /tmp/build.response.UkiM
+[2018-06-28 20:59:24,743] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,742] {bash_operator.py:101} INFO - ++ RESULT=WORKING
+[2018-06-28 20:59:24,743] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,743] {bash_operator.py:101} INFO - ++ echo WORKING
+[2018-06-28 20:59:24,744] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,743] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 20:59:24,746] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,746] {bash_operator.py:101} INFO - + local STATUS_VALUE=WORKING
+[2018-06-28 20:59:24,747] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,746] {bash_operator.py:101} INFO - + local ERROR_VALUE=
+[2018-06-28 20:59:24,747] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,746] {bash_operator.py:101} INFO - + local ERROR_CODE=
+[2018-06-28 20:59:24,747] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,746] {bash_operator.py:101} INFO - + local ERROR_STATUS=
+[2018-06-28 20:59:24,749] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,748] {bash_operator.py:101} INFO - ++ parse_json_for_int /tmp/build.response.UkiM code
+[2018-06-28 20:59:24,753] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,752] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 20:59:24,753] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,753] {bash_operator.py:101} INFO - ++ local KEY=code
+[2018-06-28 20:59:24,754] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,753] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 20:59:24,756] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:24,756] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"code": *[0-9]*,?' /tmp/build.response.UkiM
+[2018-06-28 20:59:25,395] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,395] {bash_operator.py:101} INFO - ++ local LINE_COUNT=0
+[2018-06-28 20:59:25,396] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,395] {bash_operator.py:101} INFO - ++ '[' 0 '!=' 1 ']'
+[2018-06-28 20:59:25,399] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,396] {bash_operator.py:101} INFO - ++ echo 'Missing or ambiguous lines for code: 0'
+[2018-06-28 20:59:25,400] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,397] {bash_operator.py:101} INFO - Missing or ambiguous lines for code: 0
+[2018-06-28 20:59:25,400] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,397] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 20:59:25,400] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,397] {bash_operator.py:101} INFO - + local ERROR_LINE=
+[2018-06-28 20:59:25,401] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,398] {bash_operator.py:101} INFO - + [[ -n '' ]]
+[2018-06-28 20:59:25,401] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,399] {bash_operator.py:101} INFO - + case "${STATUS_VALUE}" in
+[2018-06-28 20:59:25,402] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,402] {bash_operator.py:101} INFO - ++ date
+[2018-06-28 20:59:25,873] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,872] {bash_operator.py:101} INFO - + echo 'build is running at Thu Jun 28 20:59:25 UTC 2018'
+[2018-06-28 20:59:25,874] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,873] {bash_operator.py:101} INFO - build is running at Thu Jun 28 20:59:25 UTC 2018
+[2018-06-28 20:59:25,877] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,873] {bash_operator.py:101} INFO - + return 0
+[2018-06-28 20:59:25,877] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 20:59:25,876] {bash_operator.py:101} INFO - + sleep 60
+[2018-06-28 21:00:26,169] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:26,169] {bash_operator.py:101} INFO - ++ gcloud auth --account 202987436673-compute@developer.gserviceaccount.com print-access-token
+[2018-06-28 21:00:28,084] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:28,083] {bash_operator.py:101} INFO - + curl -H 'Authorization: Bearer ya29.c.ElroBXoywtNPE26a4ix-jGc0BbvjFPfnfkj0HTY-dljqzYLYZn3-xSwGOwYHZOr1JJypXXez8vsogscXEagTptNu0mbly84gGpGIkVtBqUCgpSBL2hJUy7F_H6s' -s --retry 3 -o /tmp/build.response.UkiM 'https://cloudbuild.googleapis.com/v1/projects/istio-io/builds/{35550cc7-90e1-421e-a196-dbf92da64565}'
+[2018-06-28 21:00:28,738] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:28,738] {bash_operator.py:101} INFO - + parse_result_file /tmp/build.response.UkiM
+[2018-06-28 21:00:28,741] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:28,738] {bash_operator.py:101} INFO - + local INPUT_FILE=/tmp/build.response.UkiM
+[2018-06-28 21:00:28,743] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:28,738] {bash_operator.py:101} INFO - + [[ -z /tmp/build.response.UkiM ]]
+[2018-06-28 21:00:28,744] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:28,744] {bash_operator.py:101} INFO - ++ parse_json_for_first_string /tmp/build.response.UkiM status
+[2018-06-28 21:00:28,746] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:28,745] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 21:00:28,748] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:28,747] {bash_operator.py:101} INFO - ++ local KEY=status
+[2018-06-28 21:00:28,748] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:28,748] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 21:00:28,751] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:28,751] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"status":.*?[^\\]",?' /tmp/build.response.UkiM
+[2018-06-28 21:00:29,260] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,260] {bash_operator.py:101} INFO - ++ local LINE_COUNT=1
+[2018-06-28 21:00:29,261] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,260] {bash_operator.py:101} INFO - ++ '[' 1 == 0 ']'
+[2018-06-28 21:00:29,268] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,267] {bash_operator.py:101} INFO - +++ sed 's/ *"status": *"\(.*\)",*/\1/'
+[2018-06-28 21:00:29,270] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,269] {bash_operator.py:101} INFO - +++ head --lines=1
+[2018-06-28 21:00:29,273] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,272] {bash_operator.py:101} INFO - +++ grep -Eo ' *"status": *".*",?' /tmp/build.response.UkiM
+[2018-06-28 21:00:29,740] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,739] {bash_operator.py:101} INFO - ++ RESULT=WORKING
+[2018-06-28 21:00:29,740] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,739] {bash_operator.py:101} INFO - ++ echo WORKING
+[2018-06-28 21:00:29,742] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,740] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 21:00:29,743] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,741] {bash_operator.py:101} INFO - + local STATUS_VALUE=WORKING
+[2018-06-28 21:00:29,743] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,741] {bash_operator.py:101} INFO - + local ERROR_VALUE=
+[2018-06-28 21:00:29,744] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,743] {bash_operator.py:101} INFO - + local ERROR_CODE=
+[2018-06-28 21:00:29,744] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,743] {bash_operator.py:101} INFO - + local ERROR_STATUS=
+[2018-06-28 21:00:29,745] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,745] {bash_operator.py:101} INFO - ++ parse_json_for_int /tmp/build.response.UkiM code
+[2018-06-28 21:00:29,746] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,746] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 21:00:29,746] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,746] {bash_operator.py:101} INFO - ++ local KEY=code
+[2018-06-28 21:00:29,747] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,747] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 21:00:29,748] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:29,748] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"code": *[0-9]*,?' /tmp/build.response.UkiM
+[2018-06-28 21:00:30,198] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,197] {bash_operator.py:101} INFO - ++ local LINE_COUNT=0
+[2018-06-28 21:00:30,199] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,197] {bash_operator.py:101} INFO - ++ '[' 0 '!=' 1 ']'
+[2018-06-28 21:00:30,199] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,198] {bash_operator.py:101} INFO - ++ echo 'Missing or ambiguous lines for code: 0'
+[2018-06-28 21:00:30,199] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,198] {bash_operator.py:101} INFO - Missing or ambiguous lines for code: 0
+[2018-06-28 21:00:30,200] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,198] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 21:00:30,201] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,200] {bash_operator.py:101} INFO - + local ERROR_LINE=
+[2018-06-28 21:00:30,201] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,200] {bash_operator.py:101} INFO - + [[ -n '' ]]
+[2018-06-28 21:00:30,201] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,200] {bash_operator.py:101} INFO - + case "${STATUS_VALUE}" in
+[2018-06-28 21:00:30,202] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,202] {bash_operator.py:101} INFO - ++ date
+[2018-06-28 21:00:30,658] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,657] {bash_operator.py:101} INFO - + echo 'build is running at Thu Jun 28 21:00:30 UTC 2018'
+[2018-06-28 21:00:30,659] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,658] {bash_operator.py:101} INFO - build is running at Thu Jun 28 21:00:30 UTC 2018
+[2018-06-28 21:00:30,660] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,658] {bash_operator.py:101} INFO - + return 0
+[2018-06-28 21:00:30,660] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:00:30,659] {bash_operator.py:101} INFO - + sleep 60
+[2018-06-28 21:01:30,963] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:30,963] {bash_operator.py:101} INFO - ++ gcloud auth --account 202987436673-compute@developer.gserviceaccount.com print-access-token
+[2018-06-28 21:01:32,125] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:32,125] {bash_operator.py:101} INFO - + curl -H 'Authorization: Bearer ya29.c.ElroBZY3G70M9un4smamwbdx9c8KmOmTvVYhKWKHxK6o6AhFY7vGqbbnETl6FBZ7Fm8-kc7TJBZC7OrJQLyqwGow6aIUjyPMc4Zm-elB-ywbhyDnskrFwlaIOB0' -s --retry 3 -o /tmp/build.response.UkiM 'https://cloudbuild.googleapis.com/v1/projects/istio-io/builds/{35550cc7-90e1-421e-a196-dbf92da64565}'
+[2018-06-28 21:01:32,727] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:32,726] {bash_operator.py:101} INFO - + parse_result_file /tmp/build.response.UkiM
+[2018-06-28 21:01:32,728] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:32,728] {bash_operator.py:101} INFO - + local INPUT_FILE=/tmp/build.response.UkiM
+[2018-06-28 21:01:32,730] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:32,728] {bash_operator.py:101} INFO - + [[ -z /tmp/build.response.UkiM ]]
+[2018-06-28 21:01:32,730] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:32,730] {bash_operator.py:101} INFO - ++ parse_json_for_first_string /tmp/build.response.UkiM status
+[2018-06-28 21:01:32,731] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:32,731] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 21:01:32,732] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:32,732] {bash_operator.py:101} INFO - ++ local KEY=status
+[2018-06-28 21:01:32,733] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:32,732] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 21:01:32,734] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:32,733] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"status":.*?[^\\]",?' /tmp/build.response.UkiM
+[2018-06-28 21:01:33,246] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,245] {bash_operator.py:101} INFO - ++ local LINE_COUNT=1
+[2018-06-28 21:01:33,246] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,246] {bash_operator.py:101} INFO - ++ '[' 1 == 0 ']'
+[2018-06-28 21:01:33,249] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,249] {bash_operator.py:101} INFO - +++ sed 's/ *"status": *"\(.*\)",*/\1/'
+[2018-06-28 21:01:33,251] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,250] {bash_operator.py:101} INFO - +++ head --lines=1
+[2018-06-28 21:01:33,252] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,252] {bash_operator.py:101} INFO - +++ grep -Eo ' *"status": *".*",?' /tmp/build.response.UkiM
+[2018-06-28 21:01:33,765] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,764] {bash_operator.py:101} INFO - ++ RESULT=WORKING
+[2018-06-28 21:01:33,766] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,765] {bash_operator.py:101} INFO - ++ echo WORKING
+[2018-06-28 21:01:33,766] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,765] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 21:01:33,768] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,766] {bash_operator.py:101} INFO - + local STATUS_VALUE=WORKING
+[2018-06-28 21:01:33,768] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,766] {bash_operator.py:101} INFO - + local ERROR_VALUE=
+[2018-06-28 21:01:33,769] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,767] {bash_operator.py:101} INFO - + local ERROR_CODE=
+[2018-06-28 21:01:33,769] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,767] {bash_operator.py:101} INFO - + local ERROR_STATUS=
+[2018-06-28 21:01:33,770] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,770] {bash_operator.py:101} INFO - ++ parse_json_for_int /tmp/build.response.UkiM code
+[2018-06-28 21:01:33,771] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,771] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 21:01:33,771] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,771] {bash_operator.py:101} INFO - ++ local KEY=code
+[2018-06-28 21:01:33,772] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,772] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 21:01:33,773] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:33,773] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"code": *[0-9]*,?' /tmp/build.response.UkiM
+[2018-06-28 21:01:34,311] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,311] {bash_operator.py:101} INFO - ++ local LINE_COUNT=0
+[2018-06-28 21:01:34,312] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,311] {bash_operator.py:101} INFO - ++ '[' 0 '!=' 1 ']'
+[2018-06-28 21:01:34,314] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,311] {bash_operator.py:101} INFO - ++ echo 'Missing or ambiguous lines for code: 0'
+[2018-06-28 21:01:34,315] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,311] {bash_operator.py:101} INFO - Missing or ambiguous lines for code: 0
+[2018-06-28 21:01:34,316] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,311] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 21:01:34,316] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,313] {bash_operator.py:101} INFO - + local ERROR_LINE=
+[2018-06-28 21:01:34,317] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,313] {bash_operator.py:101} INFO - + [[ -n '' ]]
+[2018-06-28 21:01:34,317] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,313] {bash_operator.py:101} INFO - + case "${STATUS_VALUE}" in
+[2018-06-28 21:01:34,318] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,317] {bash_operator.py:101} INFO - ++ date
+[2018-06-28 21:01:34,814] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,813] {bash_operator.py:101} INFO - + echo 'build is running at Thu Jun 28 21:01:34 UTC 2018'
+[2018-06-28 21:01:34,815] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,814] {bash_operator.py:101} INFO - build is running at Thu Jun 28 21:01:34 UTC 2018
+[2018-06-28 21:01:34,817] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,814] {bash_operator.py:101} INFO - + return 0
+[2018-06-28 21:01:34,817] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:01:34,814] {bash_operator.py:101} INFO - + sleep 60
+[2018-06-28 21:02:35,110] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:35,110] {bash_operator.py:101} INFO - ++ gcloud auth --account 202987436673-compute@developer.gserviceaccount.com print-access-token
+[2018-06-28 21:02:36,801] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:36,799] {bash_operator.py:101} INFO - + curl -H 'Authorization: Bearer ya29.c.ElroBZY3G70M9un4smamwbdx9c8KmOmTvVYhKWKHxK6o6AhFY7vGqbbnETl6FBZ7Fm8-kc7TJBZC7OrJQLyqwGow6aIUjyPMc4Zm-elB-ywbhyDnskrFwlaIOB0' -s --retry 3 -o /tmp/build.response.UkiM 'https://cloudbuild.googleapis.com/v1/projects/istio-io/builds/{35550cc7-90e1-421e-a196-dbf92da64565}'
+[2018-06-28 21:02:37,441] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:37,440] {bash_operator.py:101} INFO - + parse_result_file /tmp/build.response.UkiM
+[2018-06-28 21:02:37,445] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:37,441] {bash_operator.py:101} INFO - + local INPUT_FILE=/tmp/build.response.UkiM
+[2018-06-28 21:02:37,445] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:37,441] {bash_operator.py:101} INFO - + [[ -z /tmp/build.response.UkiM ]]
+[2018-06-28 21:02:37,457] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:37,453] {bash_operator.py:101} INFO - ++ parse_json_for_first_string /tmp/build.response.UkiM status
+[2018-06-28 21:02:37,458] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:37,458] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 21:02:37,462] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:37,461] {bash_operator.py:101} INFO - ++ local KEY=status
+[2018-06-28 21:02:37,462] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:37,462] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 21:02:37,474] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:37,470] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"status":.*?[^\\]",?' /tmp/build.response.UkiM
+[2018-06-28 21:02:38,083] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,082] {bash_operator.py:101} INFO - ++ local LINE_COUNT=1
+[2018-06-28 21:02:38,086] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,083] {bash_operator.py:101} INFO - ++ '[' 1 == 0 ']'
+[2018-06-28 21:02:38,091] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,089] {bash_operator.py:101} INFO - +++ sed 's/ *"status": *"\(.*\)",*/\1/'
+[2018-06-28 21:02:38,093] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,092] {bash_operator.py:101} INFO - +++ head --lines=1
+[2018-06-28 21:02:38,096] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,095] {bash_operator.py:101} INFO - +++ grep -Eo ' *"status": *".*",?' /tmp/build.response.UkiM
+[2018-06-28 21:02:38,565] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,565] {bash_operator.py:101} INFO - ++ RESULT=WORKING
+[2018-06-28 21:02:38,566] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,565] {bash_operator.py:101} INFO - ++ echo WORKING
+[2018-06-28 21:02:38,571] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,565] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 21:02:38,572] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,569] {bash_operator.py:101} INFO - + local STATUS_VALUE=WORKING
+[2018-06-28 21:02:38,573] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,569] {bash_operator.py:101} INFO - + local ERROR_VALUE=
+[2018-06-28 21:02:38,573] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,569] {bash_operator.py:101} INFO - + local ERROR_CODE=
+[2018-06-28 21:02:38,575] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,569] {bash_operator.py:101} INFO - + local ERROR_STATUS=
+[2018-06-28 21:02:38,576] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,576] {bash_operator.py:101} INFO - ++ parse_json_for_int /tmp/build.response.UkiM code
+[2018-06-28 21:02:38,578] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,578] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 21:02:38,579] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,578] {bash_operator.py:101} INFO - ++ local KEY=code
+[2018-06-28 21:02:38,580] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,579] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 21:02:38,582] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:38,582] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"code": *[0-9]*,?' /tmp/build.response.UkiM
+[2018-06-28 21:02:39,144] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,143] {bash_operator.py:101} INFO - ++ local LINE_COUNT=0
+[2018-06-28 21:02:39,145] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,143] {bash_operator.py:101} INFO - ++ '[' 0 '!=' 1 ']'
+[2018-06-28 21:02:39,146] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,143] {bash_operator.py:101} INFO - ++ echo 'Missing or ambiguous lines for code: 0'
+[2018-06-28 21:02:39,150] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,143] {bash_operator.py:101} INFO - Missing or ambiguous lines for code: 0
+[2018-06-28 21:02:39,155] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,147] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 21:02:39,156] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,153] {bash_operator.py:101} INFO - + local ERROR_LINE=
+[2018-06-28 21:02:39,156] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,154] {bash_operator.py:101} INFO - + [[ -n '' ]]
+[2018-06-28 21:02:39,157] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,154] {bash_operator.py:101} INFO - + case "${STATUS_VALUE}" in
+[2018-06-28 21:02:39,158] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,157] {bash_operator.py:101} INFO - ++ date
+[2018-06-28 21:02:39,641] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,640] {bash_operator.py:101} INFO - + echo 'build is running at Thu Jun 28 21:02:39 UTC 2018'
+[2018-06-28 21:02:39,642] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,640] {bash_operator.py:101} INFO - build is running at Thu Jun 28 21:02:39 UTC 2018
+[2018-06-28 21:02:39,644] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,640] {bash_operator.py:101} INFO - + return 0
+[2018-06-28 21:02:39,644] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:02:39,643] {bash_operator.py:101} INFO - + sleep 60
+[2018-06-28 21:03:39,956] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:39,956] {bash_operator.py:101} INFO - ++ gcloud auth --account 202987436673-compute@developer.gserviceaccount.com print-access-token
+[2018-06-28 21:03:41,874] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:41,873] {bash_operator.py:101} INFO - + curl -H 'Authorization: Bearer ya29.c.ElroBZY3G70M9un4smamwbdx9c8KmOmTvVYhKWKHxK6o6AhFY7vGqbbnETl6FBZ7Fm8-kc7TJBZC7OrJQLyqwGow6aIUjyPMc4Zm-elB-ywbhyDnskrFwlaIOB0' -s --retry 3 -o /tmp/build.response.UkiM 'https://cloudbuild.googleapis.com/v1/projects/istio-io/builds/{35550cc7-90e1-421e-a196-dbf92da64565}'
+[2018-06-28 21:03:42,558] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:42,557] {bash_operator.py:101} INFO - + parse_result_file /tmp/build.response.UkiM
+[2018-06-28 21:03:42,561] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:42,558] {bash_operator.py:101} INFO - + local INPUT_FILE=/tmp/build.response.UkiM
+[2018-06-28 21:03:42,562] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:42,558] {bash_operator.py:101} INFO - + [[ -z /tmp/build.response.UkiM ]]
+[2018-06-28 21:03:42,563] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:42,563] {bash_operator.py:101} INFO - ++ parse_json_for_first_string /tmp/build.response.UkiM status
+[2018-06-28 21:03:42,565] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:42,564] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 21:03:42,566] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:42,565] {bash_operator.py:101} INFO - ++ local KEY=status
+[2018-06-28 21:03:42,567] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:42,566] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 21:03:42,568] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:42,568] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"status":.*?[^\\]",?' /tmp/build.response.UkiM
+[2018-06-28 21:03:43,179] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,179] {bash_operator.py:101} INFO - ++ local LINE_COUNT=1
+[2018-06-28 21:03:43,182] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,179] {bash_operator.py:101} INFO - ++ '[' 1 == 0 ']'
+[2018-06-28 21:03:43,187] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,186] {bash_operator.py:101} INFO - +++ grep -Eo ' *"status": *".*",?' /tmp/build.response.UkiM
+[2018-06-28 21:03:43,188] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,187] {bash_operator.py:101} INFO - +++ sed 's/ *"status": *"\(.*\)",*/\1/'
+[2018-06-28 21:03:43,189] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,189] {bash_operator.py:101} INFO - +++ head --lines=1
+[2018-06-28 21:03:43,700] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,699] {bash_operator.py:101} INFO - ++ RESULT=WORKING
+[2018-06-28 21:03:43,700] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,700] {bash_operator.py:101} INFO - ++ echo WORKING
+[2018-06-28 21:03:43,703] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,700] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 21:03:43,703] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,702] {bash_operator.py:101} INFO - + local STATUS_VALUE=WORKING
+[2018-06-28 21:03:43,704] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,702] {bash_operator.py:101} INFO - + local ERROR_VALUE=
+[2018-06-28 21:03:43,704] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,702] {bash_operator.py:101} INFO - + local ERROR_CODE=
+[2018-06-28 21:03:43,705] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,702] {bash_operator.py:101} INFO - + local ERROR_STATUS=
+[2018-06-28 21:03:43,706] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,705] {bash_operator.py:101} INFO - ++ parse_json_for_int /tmp/build.response.UkiM code
+[2018-06-28 21:03:43,706] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,706] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 21:03:43,707] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,707] {bash_operator.py:101} INFO - ++ local KEY=code
+[2018-06-28 21:03:43,708] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,708] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 21:03:43,709] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:43,709] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"code": *[0-9]*,?' /tmp/build.response.UkiM
+[2018-06-28 21:03:44,290] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,289] {bash_operator.py:101} INFO - ++ local LINE_COUNT=0
+[2018-06-28 21:03:44,291] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,290] {bash_operator.py:101} INFO - ++ '[' 0 '!=' 1 ']'
+[2018-06-28 21:03:44,292] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,290] {bash_operator.py:101} INFO - ++ echo 'Missing or ambiguous lines for code: 0'
+[2018-06-28 21:03:44,293] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,290] {bash_operator.py:101} INFO - Missing or ambiguous lines for code: 0
+[2018-06-28 21:03:44,294] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,290] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 21:03:44,295] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,293] {bash_operator.py:101} INFO - + local ERROR_LINE=
+[2018-06-28 21:03:44,295] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,294] {bash_operator.py:101} INFO - + [[ -n '' ]]
+[2018-06-28 21:03:44,295] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,294] {bash_operator.py:101} INFO - + case "${STATUS_VALUE}" in
+[2018-06-28 21:03:44,296] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,296] {bash_operator.py:101} INFO - ++ date
+[2018-06-28 21:03:44,850] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,850] {bash_operator.py:101} INFO - + echo 'build is running at Thu Jun 28 21:03:44 UTC 2018'
+[2018-06-28 21:03:44,851] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,851] {bash_operator.py:101} INFO - build is running at Thu Jun 28 21:03:44 UTC 2018
+[2018-06-28 21:03:44,852] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,851] {bash_operator.py:101} INFO - + return 0
+[2018-06-28 21:03:44,852] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:03:44,851] {bash_operator.py:101} INFO - + sleep 60
+[2018-06-28 21:04:45,122] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:45,121] {bash_operator.py:101} INFO - ++ gcloud auth --account 202987436673-compute@developer.gserviceaccount.com print-access-token
+[2018-06-28 21:04:46,342] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:46,341] {bash_operator.py:101} INFO - + curl -H 'Authorization: Bearer ya29.c.ElroBZY3G70M9un4smamwbdx9c8KmOmTvVYhKWKHxK6o6AhFY7vGqbbnETl6FBZ7Fm8-kc7TJBZC7OrJQLyqwGow6aIUjyPMc4Zm-elB-ywbhyDnskrFwlaIOB0' -s --retry 3 -o /tmp/build.response.UkiM 'https://cloudbuild.googleapis.com/v1/projects/istio-io/builds/{35550cc7-90e1-421e-a196-dbf92da64565}'
+[2018-06-28 21:04:46,946] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:46,946] {bash_operator.py:101} INFO - + parse_result_file /tmp/build.response.UkiM
+[2018-06-28 21:04:46,948] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:46,946] {bash_operator.py:101} INFO - + local INPUT_FILE=/tmp/build.response.UkiM
+[2018-06-28 21:04:46,949] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:46,947] {bash_operator.py:101} INFO - + [[ -z /tmp/build.response.UkiM ]]
+[2018-06-28 21:04:46,950] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:46,950] {bash_operator.py:101} INFO - ++ parse_json_for_first_string /tmp/build.response.UkiM status
+[2018-06-28 21:04:46,951] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:46,951] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 21:04:46,951] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:46,951] {bash_operator.py:101} INFO - ++ local KEY=status
+[2018-06-28 21:04:46,952] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:46,952] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 21:04:46,953] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:46,953] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"status":.*?[^\\]",?' /tmp/build.response.UkiM
+[2018-06-28 21:04:47,400] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:47,399] {bash_operator.py:101} INFO - ++ local LINE_COUNT=1
+[2018-06-28 21:04:47,401] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:47,400] {bash_operator.py:101} INFO - ++ '[' 1 == 0 ']'
+[2018-06-28 21:04:47,404] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:47,404] {bash_operator.py:101} INFO - +++ sed 's/ *"status": *"\(.*\)",*/\1/'
+[2018-06-28 21:04:47,405] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:47,405] {bash_operator.py:101} INFO - +++ head --lines=1
+[2018-06-28 21:04:47,408] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:47,407] {bash_operator.py:101} INFO - +++ grep -Eo ' *"status": *".*",?' /tmp/build.response.UkiM
+[2018-06-28 21:04:47,935] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:47,934] {bash_operator.py:101} INFO - ++ RESULT=WORKING
+[2018-06-28 21:04:47,936] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:47,935] {bash_operator.py:101} INFO - ++ echo WORKING
+[2018-06-28 21:04:48,155] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:47,935] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 21:04:48,499] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:48,498] {bash_operator.py:101} INFO - + local STATUS_VALUE=WORKING
+[2018-06-28 21:04:48,501] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:48,499] {bash_operator.py:101} INFO - + local ERROR_VALUE=
+[2018-06-28 21:04:48,502] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:48,499] {bash_operator.py:101} INFO - + local ERROR_CODE=
+[2018-06-28 21:04:48,503] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:48,499] {bash_operator.py:101} INFO - + local ERROR_STATUS=
+[2018-06-28 21:04:48,504] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:48,504] {bash_operator.py:101} INFO - ++ parse_json_for_int /tmp/build.response.UkiM code
+[2018-06-28 21:04:48,505] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:48,505] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 21:04:48,505] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:48,505] {bash_operator.py:101} INFO - ++ local KEY=code
+[2018-06-28 21:04:48,506] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:48,506] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 21:04:48,507] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:48,507] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"code": *[0-9]*,?' /tmp/build.response.UkiM
+[2018-06-28 21:04:49,167] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,166] {bash_operator.py:101} INFO - ++ local LINE_COUNT=0
+[2018-06-28 21:04:49,168] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,166] {bash_operator.py:101} INFO - ++ '[' 0 '!=' 1 ']'
+[2018-06-28 21:04:49,169] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,167] {bash_operator.py:101} INFO - ++ echo 'Missing or ambiguous lines for code: 0'
+[2018-06-28 21:04:49,170] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,167] {bash_operator.py:101} INFO - Missing or ambiguous lines for code: 0
+[2018-06-28 21:04:49,170] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,167] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 21:04:49,347] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,347] {bash_operator.py:101} INFO - + local ERROR_LINE=
+[2018-06-28 21:04:49,348] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,347] {bash_operator.py:101} INFO - + [[ -n '' ]]
+[2018-06-28 21:04:49,348] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,347] {bash_operator.py:101} INFO - + case "${STATUS_VALUE}" in
+[2018-06-28 21:04:49,350] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,349] {bash_operator.py:101} INFO - ++ date
+[2018-06-28 21:04:49,581] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,580] {bash_operator.py:101} INFO - + echo 'build is running at Thu Jun 28 21:04:49 UTC 2018'
+[2018-06-28 21:04:49,582] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,581] {bash_operator.py:101} INFO - build is running at Thu Jun 28 21:04:49 UTC 2018
+[2018-06-28 21:04:49,583] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,582] {bash_operator.py:101} INFO - + return 0
+[2018-06-28 21:04:49,583] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:04:49,582] {bash_operator.py:101} INFO - + sleep 60
+[2018-06-28 21:05:49,893] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:49,892] {bash_operator.py:101} INFO - ++ gcloud auth --account 202987436673-compute@developer.gserviceaccount.com print-access-token
+[2018-06-28 21:05:51,128] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:51,128] {bash_operator.py:101} INFO - + curl -H 'Authorization: Bearer ya29.c.ElroBZY3G70M9un4smamwbdx9c8KmOmTvVYhKWKHxK6o6AhFY7vGqbbnETl6FBZ7Fm8-kc7TJBZC7OrJQLyqwGow6aIUjyPMc4Zm-elB-ywbhyDnskrFwlaIOB0' -s --retry 3 -o /tmp/build.response.UkiM 'https://cloudbuild.googleapis.com/v1/projects/istio-io/builds/{35550cc7-90e1-421e-a196-dbf92da64565}'
+[2018-06-28 21:05:51,790] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:51,789] {bash_operator.py:101} INFO - + parse_result_file /tmp/build.response.UkiM
+[2018-06-28 21:05:51,792] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:51,790] {bash_operator.py:101} INFO - + local INPUT_FILE=/tmp/build.response.UkiM
+[2018-06-28 21:05:51,793] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:51,790] {bash_operator.py:101} INFO - + [[ -z /tmp/build.response.UkiM ]]
+[2018-06-28 21:05:51,794] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:51,794] {bash_operator.py:101} INFO - ++ parse_json_for_first_string /tmp/build.response.UkiM status
+[2018-06-28 21:05:51,795] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:51,795] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 21:05:51,796] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:51,796] {bash_operator.py:101} INFO - ++ local KEY=status
+[2018-06-28 21:05:51,797] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:51,797] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 21:05:51,799] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:51,798] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"status":.*?[^\\]",?' /tmp/build.response.UkiM
+[2018-06-28 21:05:52,324] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,324] {bash_operator.py:101} INFO - ++ local LINE_COUNT=3
+[2018-06-28 21:05:52,325] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,324] {bash_operator.py:101} INFO - ++ '[' 3 == 0 ']'
+[2018-06-28 21:05:52,328] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,328] {bash_operator.py:101} INFO - +++ sed 's/ *"status": *"\(.*\)",*/\1/'
+[2018-06-28 21:05:52,330] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,329] {bash_operator.py:101} INFO - +++ head --lines=1
+[2018-06-28 21:05:52,331] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,331] {bash_operator.py:101} INFO - +++ grep -Eo ' *"status": *".*",?' /tmp/build.response.UkiM
+[2018-06-28 21:05:52,858] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,857] {bash_operator.py:101} INFO - ++ RESULT=SUCCESS
+[2018-06-28 21:05:52,861] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,857] {bash_operator.py:101} INFO - ++ echo SUCCESS
+[2018-06-28 21:05:52,861] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,858] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 21:05:52,862] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,860] {bash_operator.py:101} INFO - + local STATUS_VALUE=SUCCESS
+[2018-06-28 21:05:52,862] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,860] {bash_operator.py:101} INFO - + local ERROR_VALUE=
+[2018-06-28 21:05:52,862] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,860] {bash_operator.py:101} INFO - + local ERROR_CODE=
+[2018-06-28 21:05:52,863] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,860] {bash_operator.py:101} INFO - + local ERROR_STATUS=
+[2018-06-28 21:05:52,864] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,864] {bash_operator.py:101} INFO - ++ parse_json_for_int /tmp/build.response.UkiM code
+[2018-06-28 21:05:52,865] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,865] {bash_operator.py:101} INFO - ++ local FILENAME=/tmp/build.response.UkiM
+[2018-06-28 21:05:52,866] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,866] {bash_operator.py:101} INFO - ++ local KEY=code
+[2018-06-28 21:05:52,867] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,866] {bash_operator.py:101} INFO - ++ local RESULT=
+[2018-06-28 21:05:52,868] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:52,868] {bash_operator.py:101} INFO - +++ grep -c -Eo ' *"code": *[0-9]*,?' /tmp/build.response.UkiM
+[2018-06-28 21:05:53,419] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:53,418] {bash_operator.py:101} INFO - ++ local LINE_COUNT=0
+[2018-06-28 21:05:53,419] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:53,418] {bash_operator.py:101} INFO - ++ '[' 0 '!=' 1 ']'
+[2018-06-28 21:05:53,420] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:53,419] {bash_operator.py:101} INFO - ++ echo 'Missing or ambiguous lines for code: 0'
+[2018-06-28 21:05:53,420] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:53,419] {bash_operator.py:101} INFO - Missing or ambiguous lines for code: 0
+[2018-06-28 21:05:53,420] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:53,419] {bash_operator.py:101} INFO - ++ return 0
+[2018-06-28 21:05:53,424] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:53,422] {bash_operator.py:101} INFO - + local ERROR_LINE=
+[2018-06-28 21:05:53,424] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:53,422] {bash_operator.py:101} INFO - + [[ -n '' ]]
+[2018-06-28 21:05:53,425] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:53,422] {bash_operator.py:101} INFO - + case "${STATUS_VALUE}" in
+[2018-06-28 21:05:53,425] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:53,422] {bash_operator.py:101} INFO - + echo 'build is successful'
+[2018-06-28 21:05:53,426] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:53,422] {bash_operator.py:101} INFO - build is successful
+[2018-06-28 21:05:53,426] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:53,422] {bash_operator.py:101} INFO - + return 1
+[2018-06-28 21:05:53,426] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:53,423] {bash_operator.py:101} INFO - + rm -f /tmp/build.response.UkiM
+[2018-06-28 21:05:54,379] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:54,378] {bash_operator.py:101} INFO - + rm -f /tmp/build.subs.RXhA
+[2018-06-28 21:05:54,433] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:54,432] {bash_operator.py:101} INFO - + exit 0
+[2018-06-28 21:05:55,078] {base_task_runner.py:98} INFO - Subtask: [2018-06-28 21:05:55,075] {bash_operator.py:105} INFO - Command exited with return code 0

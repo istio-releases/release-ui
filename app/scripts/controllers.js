@@ -27,10 +27,12 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
 
     // Manually set status dropdown
     $scope.stateValues = [
-      {"id":2, "status": "Finished"},
-      {"id":3, "status": "Failed"},
-      {"id":1, "status": "Pending"},
-      {"id":4, "status": "Abandoned"},
+      {"id":1, "status": "No Status"},
+      {"id":2, "status": "Abandoned"},
+      {"id":3, "status": "Finished"},
+      {"id":4, "status": "Pending"},
+      {"id":5, "status": "Running"},
+      {"id":6, "status": "Failed"}
     ];
 
     // Set default values for storage
@@ -165,6 +167,8 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
           '&sort_method='+ sortMethodNum + '&limit=' + $scope.numRequested +
           '&offset=' + offset + '&descending=' + sortMethodDescending;
 
+      var mybody = angular.element(document).find('body');
+      mybody.addClass('waiting');
       $http({
            method: 'GET',
            url: url_string,
@@ -177,10 +181,13 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
           else {
             $scope.$storage.releases = data;
           }
+          console.log($scope.$storage.releases);
            $scope.totalPages = Math.ceil($scope.$storage.releases.length / $scope.numPerPage);
            console.log('request successful');
+           mybody.removeClass('waiting');
        }, function errorCallback(response) {
            console.log(response);
+           mybody.removeClass('waiting');
        });
     };
 
@@ -392,13 +399,14 @@ app.controller('DetailsController', ['$scope', '$location', '$http', '$routePara
       $location.path('/dashboard');
     };
 
-    // get requested release from URL
-    var release_name = $routeParams.release_id;
+    var release_id = $routeParams.release_id;
 
+    var mybody = angular.element(document).find('body');
+    mybody.addClass('waiting');
     // Request release details
     $http({
          method: 'GET',
-         url: site + '/release?release=' + release_name,
+         url: site + '/release?release=' + release_id,
          cache: true
      }).then(function successCallback(response) {
          $scope.release = angular.fromJson(response.data);
@@ -409,16 +417,47 @@ app.controller('DetailsController', ['$scope', '$location', '$http', '$routePara
     // Request task details
     $http({
          method: 'GET',
-         url: site + '/tasks?release=' + release_name,
+         url: site + '/tasks?release=' + release_id,
          cache: true
      }).then(function successCallback(response) {
           $scope.tasks = transform(response.data);
+          mybody.removeClass('waiting');
+     }, function errorCallback(response) {
+         console.log(response);
+         mybody.removeClass('waiting');
+     });
+
+     $scope.redirect = function () {
+       $location.path('/dashboard');
+     };
+
+     $scope.getLogs = function (task) {
+       var newRoute = '/' + release_id + '/' + task.task_name + '/logs'
+       $location.path(newRoute);
+     };
+}]);
+
+app.controller('LogsController', ['$scope', '$http', '$routeParams', '$sce',
+  function($scope, $http, $routeParams, $sce){
+
+    var release = $routeParams.release_id;
+    var task = $routeParams.task_name;
+
+    $http({
+         method: 'GET',
+         url: site + '/logs?release_id=' + release + '&task_name=' + task,
+         cache: true
+     }).then(function successCallback(response) {
+         var text = angular.fromJson(response.data);
+         text = '<p align="left">' + text.replace(/\n/gm, '<br>') + '</p>';
+         $scope.html = $sce.trustAsHtml(text);
      }, function errorCallback(response) {
          console.log(response);
      });
+
 }]);
 
-app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStorage',
+app.controller('LoginController', ['$scope', '$location', '$http',
   function($scope, $location, $http){
     var loggingIn;
 
@@ -440,23 +479,29 @@ app.controller('LoginController', ['$scope', '$location', '$http', '$sessionStor
             headers: {'Authorization': 'token ' + token}
         }).then(function successCallback(response) {
              var teams = response.data;
+             localStorage.setItem('loggedIn', true);
+             localStorage.setItem('user', result.user.displayName);
+             $location.path('/dashboard');
 
             // Code for more stringent authentication (specific org and team)
-            for (var key in teams) {
-             if (teams.hasOwnProperty(key)){
-               var name = teams[key].name;
-               var org = teams[key].organization.login;
-
-               if (name == auth_team && org == auth_org){
-                 console.log('authenticated for create release');
-                 localStorage.setItem('auth', true)
-               }
-             }
-            }
-            console.log('loggedin');
-            localStorage.setItem('loggedIn', true);
-            localStorage.setItem('user', result.user.displayName);
-            $location.path('/dashboard');
+            // var auth = false;
+            // for (var key in teams) {
+            //  if (teams.hasOwnProperty(key)){
+            //    var name = teams[key].name;
+            //    var org = teams[key].organization.login;
+            //
+            //    if (name == auth_team && org == auth_org){
+            //      auth = true;
+            //      console.log('loggedin');
+            //      localStorage.setItem('loggedIn', true);
+            //      localStorage.setItem('user', result.user.displayName);
+            //      $location.path('/dashboard');
+            //    }
+            //  }
+            // }
+            // if(!auth){
+            //   alert("You are not authorized to view this page.");
+            // }
             $scope.isLoading = false;
         }, function errorCallback(response) {
           $scope.isLoading = false;
