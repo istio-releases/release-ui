@@ -62,7 +62,6 @@ def read_releases(release_data, airflow_db):
       except KeyError:
         # old releases don't have release types, so this is a fallback
         release.release_type, _ = parse_dag_id(item.dag_id)
-        print release.release_type
     if most_recent_task:
       # allows for continuation even if tasks have not begun/been generated yet
       last_modified = most_recent_task.last_modified
