@@ -177,6 +177,11 @@ md-progress-circular path {
   color: #007bff;
 }
 
+#download {
+  float: right;
+  margin-right: 105px;
+}
+
 /* -------------------------- */
 /* create-release.html styling */
 

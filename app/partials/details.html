@@ -25,7 +25,7 @@
       src="/app/assets/images/check.png">
     <img ng-if="release.state == 4" title="Pending"
       src="/app/assets/images/pending.png">
-    <img ng-if="release.state == 5" title="Running"
+    <img ng-if="release.state == 5" height="30" width="30" title="Running"
       src="/app/assets/images/running.gif">
     <img ng-if="release.state == 6" title="Failed"
       src="/app/assets/images/error.png">
@@ -57,6 +57,9 @@
   </td>
 </table>
 
+<button id="download" href="{{release.download_link}}"
+  type="button" class="btn btn-lg btn-primary">Download</button>
+
 <div id="detail-table">
   <table class="table">
     <thead class="thead-light">
@@ -79,7 +82,7 @@
               src="/app/assets/images/pending.png">
             <img ng-if="task.status == 2" title="Abandoned"
               src="/app/assets/images/suspended.png">
-            <img ng-if="task.status == 5" title="Running" height="35" width="35"
+            <img ng-if="task.status == 5" title="Running" height="30" width="30"
               src="/app/assets/images/running.gif">
           </td>
           <td>
