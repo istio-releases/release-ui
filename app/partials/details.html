@@ -42,10 +42,10 @@
 </div>
 
 <div class="row info dates">
-  <p>Created on: {{release.started * 1000 | date:'medium'}}</p>
+  <p>Created on: {{release.started * 1000 | date:'medium':'+0000'}}</p>
 </div>
 <div class="row info dates">
-  <p>Last Modified: {{release.last_modified * 1000 | date:'medium'}}</p>
+  <p>Last Modified: {{release.last_modified * 1000 | date:'medium':'+0000'}}</p>
 </div>
 
 <div id='external-links'>

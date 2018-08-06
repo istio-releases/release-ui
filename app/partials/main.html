@@ -126,10 +126,10 @@
         {{release.name}}
       </td>
       <td>
-        {{release.started * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
+        {{release.started * 1000 | date:"MM/dd/yyyy 'at' h:mma":'+0000'}}
       </td>
       <td>
-        {{release.last_modified * 1000 | date:"MM/dd/yyyy 'at' h:mma"}}
+        {{release.last_modified * 1000 | date:"MM/dd/yyyy 'at' h:mma":'+0000'}}
       </td>
       <td>
         {{release.last_active_task}}
