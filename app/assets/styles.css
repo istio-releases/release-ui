@@ -55,10 +55,6 @@ h1 {
   margin-right: 60px;
 }
 
-.waiting {
-  cursor: wait;
-}
-
 .greeting {
   color: white;
 }
@@ -101,10 +97,11 @@ md-progress-circular path {
 /* main.html styling */
 
 #filters {
-  float: right;
-  margin: 20px;
   width: 90%;
+  margin: auto;
   margin-top: 40px;
+  margin-bottom: 40px;
+  max-width: 900px;
 }
 
 .table-header {
@@ -161,29 +158,18 @@ md-progress-circular path {
   font-style: italic;
 }
 
+#links {
+  float: left;
+  width: 50%;
+  margin-left: 35px;
+}
+
 #detail-table {
   width:90%;
   margin-top: 20px;
   margin-left: 35px;
 }
 
-#repos {
-  float: left;
-  width: 50%;
-  margin-left: 35px;
-}
-
-.link {
-  color: #007bff;
-}
-
-#external-links {
-  width:90%;
-}
-
-#download {
-  float: right;
-}
 
 /* -------------------------- */
 /* create-release.html styling */
@@ -207,12 +193,4 @@ md-progress-circular path {
 .remove-img {
   margin-top: 5px;
   margin-right: 5px;
-}
-
-/* -------------------------- */
-/* logs.html styling */
-
-#log_page
-{
-    font-family: "Courier New";
 }
