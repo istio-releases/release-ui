@@ -31,9 +31,6 @@ class FilterOptions(object):
       error += ', instead got a ' + str(type(value))
       raise ValueError(error)
 
-  def _is_valid_state(self, state):
-    return 0 <= state <= 4
-
   @property
   def start_date(self):
     return self._filter_options['start_date']
@@ -67,7 +64,8 @@ class FilterOptions(object):
 
   @state.setter
   def state(self, value):
-    if self._is_valid_state(value):
+    # allow a valid state value or the default 0 (no state selected)
+    if State.is_valid(value) or value == 0:
       self._filter_options['state'] = value
     else:
       raise ValueError('Invalid input for status: ' + str(value))

@@ -83,7 +83,7 @@ class Release(object):
 
   @tasks.setter
   def tasks(self, value):
-    """Sets tasks as list of string unique identifiers, when combined with execution_date."""
+    """Sets tasks as string unique ids list, if combined with execution_date."""
     self._validate_array(basestring, value, 'tasks')
 
   @property
@@ -120,20 +120,11 @@ class Release(object):
   @state.setter
   def state(self, value):
     """Sets state as State."""
-    if self._validate_type(int, value, 'state'):
-      if value == 0:
-        state = State.UNUSED_STATUS
-      elif value == 1:
-        state = State.PENDING
-      elif value == 2:
-        state = State.FINISHED
-      elif value == 3:
-        state = State.FAILED
-      elif value == 4:
-        state = State.ABANDONED
-      else:
-        raise ValueError('Invalid input for status')
-      self._release['state'] = state
+    if State.is_valid(value):
+      state = value
+    else:
+      raise ValueError('Invalid input for status')
+    self._release['state'] = state
 
   @property
   def last_modified(self):

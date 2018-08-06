@@ -111,14 +111,16 @@
     <tr class="clickable" ng-repeat="release in $storage.releases | limitTo:numPerPage:numPerPage*($storage.currentPage-1)"
         ng-click="redirectToDetails(release)">
       <td>
-        <img ng-if="release.state == 2" title="Finished"
-          src="/app/assets/images/check.png">
-        <img ng-if="release.state == 3" title="Failed"
-          src="/app/assets/images/error.png">
-        <img ng-if="release.state == 1" title="Pending"
-          src="/app/assets/images/pending.png">
-        <img ng-if="release.state == 4" title="Abandoned"
+        <img ng-if="release.state == 2" title="Abandoned"
           src="/app/assets/images/suspended.png">
+        <img ng-if="release.state == 3" title="Finished"
+          src="/app/assets/images/check.png">
+        <img ng-if="release.state == 4" title="Pending"
+          src="/app/assets/images/pending.png">
+        <img ng-if="release.state == 5" title="Running"
+          src="/app/assets/images/running.gif">
+        <img ng-if="release.state == 6" title="Failed"
+          src="/app/assets/images/error.png">
       </td>
       <td>
         {{release.name}}
