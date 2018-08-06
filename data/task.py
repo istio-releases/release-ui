@@ -17,8 +17,6 @@ class Task(object):
     if data:
       self.task_name = data['task_name']
       self._task['dependent_on'] = []
-      for depend in data['dependent_on']:
-        self.add_dependency(depend)
       self.started = data['started']
       self.status = data['status']
       self.last_modified = data['last_modified']
@@ -83,20 +81,11 @@ class Task(object):
   @status.setter
   def status(self, value):
     """Sets status as State."""
-    if self._validate_type(int, value, 'status'):
-      if value == 0:
-        status = State.UNUSED_STATUS
-      elif value == 1:
-        status = State.PENDING
-      elif value == 2:
-        status = State.FINISHED
-      elif value == 3:
-        status = State.FAILED
-      elif value == 4:
-        status = State.ABANDONED
-      else:
-        raise ValueError('Invalid input for status')
-      self._task['status'] = status
+    if State.is_valid(value):
+      status = value
+    else:
+      raise ValueError('Invalid input for status')
+    self._task['status'] = status
 
   @property
   def last_modified(self):

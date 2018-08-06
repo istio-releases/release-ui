@@ -21,7 +21,7 @@ def filter_releases(releases, filter_options):
 
   # convert and validate inputs
   state = int(filter_options.state)
-  if state < 0 or state > 4:
+  if state < 0 or state > 6:
     state = 0
 
   now = datetime.now()

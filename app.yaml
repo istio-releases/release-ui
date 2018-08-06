@@ -3,12 +3,22 @@ threadsafe: true
 api_version: 1
 
 env_variables:
-  CLOUDSQL_CONNECTION_NAME: 't35db24833ba76815-tp:us-central1:us-central1-istio-release-e-79a693d8-sql'
-  CLOUDSQL_HOST: '35.193.234.53'
-  CLOUDSQL_USER: 'root'
-  CLOUDSQL_PASSWORD: ''
-  CLOUDSQL_DB: 'airflow-db'
-  GCS_LOGS_BUCKET: 'us-central1-istio-release-e-79a693d8-bucket'
+  DB_NUM: 2
+
+  CLOUDSQL_CONNECTION_NAME_1: 't35db24833ba76815-tp:us-central1:us-central1-istio-release-e-79a693d8-sql'
+  CLOUDSQL_HOST_1: '35.193.234.53'
+  CLOUDSQL_USER_1: 'root'
+  CLOUDSQL_PASSWORD_1: ''
+  CLOUDSQL_DB_1: 'airflow-db'
+  GCS_LOGS_BUCKET_1: 'us-central1-istio-release-e-79a693d8-bucket'
+
+  CLOUDSQL_CONNECTION_NAME_2: 'h045bf087e4c1ba1d-tp:us-central1:us-central1-istio-release-c-68777229-sql'
+  CLOUDSQL_HOST_2: '35.193.234.53'
+  CLOUDSQL_USER_2: 'root'
+  CLOUDSQL_PASSWORD_2: ''
+  CLOUDSQL_DB_2: 'airflow-db'
+  GCS_LOGS_BUCKET_2: 'us-central1-istio-release-c-68777229-bucket'
+
 
 handlers:
 - url: /app
