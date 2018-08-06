@@ -25,7 +25,7 @@
       src="/app/assets/images/check.png">
     <img ng-if="release.state == 4" title="Pending"
       src="/app/assets/images/pending.png">
-    <img ng-if="release.state == 5" title="Running"
+    <img ng-if="release.state == 5" height="30" width="30" title="Running"
       src="/app/assets/images/running.gif">
     <img ng-if="release.state == 6" title="Failed"
       src="/app/assets/images/error.png">
@@ -48,14 +48,19 @@
   <p>Last Modified: {{release.last_modified * 1000 | date:'medium'}}</p>
 </div>
 
-<table id="repos" class="table table-bordered">
-  <th>
-    Repos:
-  </th>
-  <td ng-repeat="link in release.links">
-    <a class="link" href="{{link.url}}" target="_blank">{{link.name}}</a>
-  </td>
-</table>
+<div id='external-links'>
+  <table id="repos" class="table table-bordered">
+    <th>
+      Repos:
+    </th>
+    <td ng-repeat="link in release.links">
+      <a class="link" href="{{link.url}}" target="_blank">{{link.name}}</a>
+    </td>
+  </table>
+
+  <a id="download" href="{{release.download_link}}"
+    role="button" class="btn btn-lg btn-primary">Download</a>
+</div>
 
 <div id="detail-table">
   <table class="table">
@@ -79,7 +84,7 @@
               src="/app/assets/images/pending.png">
             <img ng-if="task.status == 2" title="Abandoned"
               src="/app/assets/images/suspended.png">
-            <img ng-if="task.status == 5" title="Running" height="35" width="35"
+            <img ng-if="task.status == 5" title="Running" height="30" width="30"
               src="/app/assets/images/running.gif">
           </td>
           <td>

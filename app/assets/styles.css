@@ -8,7 +8,6 @@
 
 html {
   height: 100%;
-  background-color: white;
   font-size: 0.9rem;
   min-width: 883px;
 }
@@ -101,10 +100,13 @@ md-progress-circular path {
 /* main.html styling */
 
 #filters {
-  float: right;
-  margin: 20px;
   width: 90%;
+  margin: auto;
   margin-top: 40px;
+  margin-bottom: 40px;
+  max-width: 900px;
+  padding: 15px;
+  outline: 2px solid #f4f4f4;
 }
 
 .table-header {
@@ -161,10 +163,24 @@ md-progress-circular path {
   font-style: italic;
 }
 
+#links {
+  float: left;
+  width: 50%;
+  margin-left: 35px;
+}
+
 #detail-table {
   width:90%;
   margin-top: 20px;
   margin-left: 35px;
+}
+
+#external-links {
+  width: 90%;
+}
+
+#download {
+  float: right;
 }
 
 #repos {
@@ -204,7 +220,6 @@ md-progress-circular path {
 /* -------------------------- */
 /* logs.html styling */
 
-#log_page
-{
-    font-family: "Courier New";
+#log_page {
+  font-family: "Courier New";
 }
