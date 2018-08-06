@@ -8,7 +8,6 @@
 
 html {
   height: 100%;
-  background-color: white;
   font-size: 0.9rem;
   min-width: 883px;
 }
@@ -53,6 +52,10 @@ h1 {
   bottom: 0;
   margin: 40px;
   margin-right: 60px;
+}
+
+.waiting {
+  cursor: wait;
 }
 
 .greeting {
@@ -172,6 +175,15 @@ md-progress-circular path {
   margin-left: 35px;
 }
 
+#repos {
+  float: left;
+  width: 50%;
+  margin-left: 35px;
+}
+
+.link {
+  color: #007bff;
+}
 
 /* -------------------------- */
 /* create-release.html styling */
@@ -195,4 +207,11 @@ md-progress-circular path {
 .remove-img {
   margin-top: 5px;
   margin-right: 5px;
+}
+
+/* -------------------------- */
+/* logs.html styling */
+
+#log_page {
+  font-family: "Courier New";
 }
