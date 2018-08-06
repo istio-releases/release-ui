@@ -53,6 +53,7 @@ def read_releases(release_data, airflow_db):
       release.name = xcom_dict[xcomKeys.VERSION]
       try:
         release.branch = xcom_dict[xcomKeys.BRANCH]
+        release.download_link = construct_download_link(xcom_dict[xcomKeys.GCS_BUILD_PATH])
       except KeyError:
         _, release.branch = parse_dag_id(item.dag_id)
       try:
@@ -240,6 +241,12 @@ def construct_log_link(dag_id, execution_date, task_id):
   url += '?release_id=' + str(dag_id) + '@' + str(execution_date)
   url += '&task_name=' + str(task_id)
   return url
+
+
+def construct_download_link(gcs_build_path):
+  link = 'https://gcsweb.istio.io/gcs/'
+  link += gcs_build_path
+  return link
 
 
 def parse_dag_id(dag_id):

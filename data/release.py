@@ -25,6 +25,7 @@ class Release(object):
       self.last_modified = data['last_modified']
       self.branch = data['branch']
       self.release_type = data['release_type']
+      self.download_link = data['download_link']
 
   def _validate_type(self, check, value, attribute):
     """Helper function to validate setter values and set attributes."""
@@ -164,6 +165,16 @@ class Release(object):
     """Sets release_type as a string release_type name."""
     if self._validate_type(basestring, value, 'release_type'):
       self._release['release_type'] = value.lower()
+
+  @property
+  def download_link(self):
+    return str(self._release['download_link'])
+
+  @download_link.setter
+  def download_link(self, value):
+    """Sets release_type as a string release_type name."""
+    if self._validate_type(basestring, value, 'download_link'):
+      self._release['download_link'] = value.lower()
 
   def to_json(self):
     returner = self._release.copy()
