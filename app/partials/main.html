@@ -50,25 +50,6 @@
   </div>
 </div>
 
-<div id="task-summary">
-  <div id="success-summary" class="clickable" ng-click="filterChange(0, 3)"
-    style="width:{{success / total}}%" title="{{success}} successful jobs">
-      {{success}}
-  </div>
-  <div id="failed-summary" class="clickable" ng-click="filterChange(0, 6)"
-    style="width:{{failed / total}}%" title="{{failed}} failed jobs">
-      {{failed}}
-  </div>
-  <div id="pending-summary" class="clickable" ng-click="filterChange(0, 4)"
-    style="width:{{pending / total}}%" title="{{pending}} pending jobs">
-      {{pending}}
-  </div>
-  <div id="running-summary" class="clickable" ng-click="filterChange(0, 5)"
-    style="width:{{running_sum / total}}%" title="{{running_sum}} running jobs">
-      {{running_sum}}
-  </div>
-</div>
-
 <!-- Table of Releases -->
 <table class="table table-hover">
   <thead class="thead-light">
@@ -132,7 +113,7 @@
       <td>
         <img ng-if="release.state == 2" title="Abandoned"
           src="/app/assets/images/suspended.png">
-        <img ng-if="release.state == 3" title="Succeeded"
+        <img ng-if="release.state == 3" title="Finished"
           src="/app/assets/images/check.png">
         <img ng-if="release.state == 4" title="Pending"
           src="/app/assets/images/pending.png">
