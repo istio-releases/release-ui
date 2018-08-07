@@ -29,7 +29,7 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
     $scope.stateValues = [
       {"id":1, "status": "No Status"},
       {"id":2, "status": "Abandoned"},
-      {"id":3, "status": "Finished"},
+      {"id":3, "status": "Success"},
       {"id":4, "status": "Pending"},
       {"id":5, "status": "Running"},
       {"id":6, "status": "Failed"}
