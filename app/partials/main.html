@@ -52,19 +52,19 @@
 
 <div id="task-summary">
   <div id="success-summary" class="clickable" ng-click="filterChange(0, 3)"
-    style="width:{{success / total}}%" title="{{success}} successful jobs">
+    style="width:{{success / total}}%" title="{{success}} releases succeeded">
       {{success}}
   </div>
   <div id="failed-summary" class="clickable" ng-click="filterChange(0, 6)"
-    style="width:{{failed / total}}%" title="{{failed}} failed jobs">
+    style="width:{{failed / total}}%" title="{{failed}} releases failed">
       {{failed}}
   </div>
   <div id="pending-summary" class="clickable" ng-click="filterChange(0, 4)"
-    style="width:{{pending / total}}%" title="{{pending}} pending jobs">
+    style="width:{{pending / total}}%" title="{{pending}} releases are pending">
       {{pending}}
   </div>
   <div id="running-summary" class="clickable" ng-click="filterChange(0, 5)"
-    style="width:{{running_sum / total}}%" title="{{running_sum}} running jobs">
+    style="width:{{running_sum / total}}%" title="{{running_sum}} releases are running">
       {{running_sum}}
   </div>
 </div>
