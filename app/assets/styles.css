@@ -131,6 +131,33 @@ md-progress-circular path {
   color: white;
 }
 
+#task-summary {
+  align-items: center;
+  color: #ffffff;
+  display: flex;
+  height: 20px;
+  font-weight: bold;
+  text-align: center;
+  width:100%;
+}
+
+#success-summary {
+  background-color: #0F9D58;
+}
+
+#failed-summary {
+  background-color: #E51C23;
+}
+
+#pending-summary {
+  background-color: #B2B2B2;
+}
+
+#running-summary {
+  background-color: #236BB8;
+}
+
+
 #footer {
   position: relative;
   bottom: 0px;

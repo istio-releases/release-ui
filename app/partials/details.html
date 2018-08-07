@@ -21,7 +21,7 @@
   <div id ="release-image">
     <img ng-if="release.state == 2" title="Abandoned"
       src="/app/assets/images/suspended.png">
-    <img ng-if="release.state == 3" title="Finished"
+    <img ng-if="release.state == 3" title="Succeeded"
       src="/app/assets/images/check.png">
     <img ng-if="release.state == 4" title="Pending"
       src="/app/assets/images/pending.png">
@@ -76,7 +76,7 @@
     <tbody>
         <tr ng-repeat="task in tasks">
           <td>
-            <img ng-if="task.status == 3" title="Finished"
+            <img ng-if="task.status == 3" title="Succeeded"
               src="/app/assets/images/check.png">
             <img ng-if="task.status == 6" title="Failed"
               src="/app/assets/images/error.png">
