@@ -15,7 +15,10 @@
     class="btn btn-lg btn-danger make-release">
       Create Release
   </button>
+  <md-progress-linear ng-show="isLoading" class="progress" md-mode="indeterminate"></md-progress-linear>
+  <div ng-hide="isLoading" style="height: 5px;"></div>
 </nav>
+
 
 <!-- Filter Options -->
 <div class="row" id="filters">
