@@ -5,7 +5,7 @@
       <span>Istio Releases</span>
     </a>
     <div class="logout">
-      <span class="greeting">Welcome, {{user}}</span>
+      <span class="greeting">Welcome, {{firebaseUser.displayName}} </span>
       <button type="button" class="btn btn-outline-light" ng-click="logout()">Log Out</button>
     </div>
     <button ng-if="auth" type="button" class="btn btn-lg btn-danger make-release">Create Release</button>

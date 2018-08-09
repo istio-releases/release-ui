@@ -176,8 +176,8 @@ md-progress-circular path {
 }
 
 .info {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   margin-left: 45px;
 }
 
@@ -187,7 +187,11 @@ md-progress-circular path {
 
 .dates {
   color: #858585;
-  font-style: italic;
+  text-align: left;
+}
+
+.label {
+  padding-right: 15px;
 }
 
 #links {

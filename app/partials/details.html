@@ -5,7 +5,7 @@
     <span>Istio Releases</span>
   </a>
   <div class="logout">
-    <span class="greeting">Welcome, {{user}} </span>
+    <span class="greeting">Welcome, {{firebaseUser.displayName}} </span>
     <button type="button" class="btn btn-outline-light" ng-click="logout()">
       Log Out
     </button>
@@ -40,13 +40,24 @@
     {{release.release_type}}
   </button>
 </div>
-
-<div class="row info dates">
-  <p>Created on: {{release.started * 1000 | date:'medium':'+0000'}}</p>
-</div>
-<div class="row info dates">
-  <p>Last Modified: {{release.last_modified * 1000 | date:'medium':'+0000'}}</p>
-</div>
+<table class="info">
+  <tr class="dates">
+    <td class="label">
+      Created:
+    </td>
+    <td>
+      {{release.started * 1000 | date:'medium':'+0000'}}
+    </td>
+  </tr>
+  <tr class="dates">
+    <td class="label">
+      Last Modified:
+    </td>
+    <td>
+      {{release.last_modified * 1000 | date:'medium':'+0000'}}
+    </td>
+  </tr>
+</table>
 
 <div id='external-links'>
   <table id="repos" class="table table-bordered">
