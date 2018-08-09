@@ -10,18 +10,23 @@ var refresh_time = 900000;
 var app = angular.module('ReleaseUI.controllers', ['ngStorage', 'ReleaseUI.filters']);
 
 
-app.controller('MainController', ['$scope','$http','$location', '$sessionStorage', '$interval',
-  function($scope, $http, $location, $sessionStorage, $interval) {
+app.controller('MainController', ['$scope','$http','$location', '$sessionStorage', '$interval', 'Auth', 'ReleaseData', 'currentAuth',
+  function($scope, $http, $location, $sessionStorage, $interval, Auth, ReleaseData, currentAuth) {
 
-    $scope.auth = localStorage.getItem('auth');
-
+    // Authentication
+    Auth.$onAuthStateChanged(function(firebaseUser) {
+      if (firebaseUser) {
+        $scope.firebaseUser = firebaseUser;
+      }
+      else {
+        $location.path('/login');
+      }
+    });
     $scope.logout = function () {
-      localStorage.removeItem('loggedIn');
-      $location.path('/login');
+      Auth.$signOut();
     };
 
     // Set static variables
-    $scope.user = localStorage.getItem('user');
     $scope.numPerPage = 10;
     $scope.numRequested = 30;
 
@@ -335,6 +340,7 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
 
     // Redirect to Details function onclick of table row
     $scope.redirectToDetails = function (input) {
+      ReleaseData.setRelease(input);
       var newRoute = '/' + input.release_id;
       $location.path(newRoute);
     };
@@ -344,18 +350,25 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
     };
 }]);
 
-app.controller('FormController', ['$scope', '$location', '$http', '$compile',
-  function ($scope, $location, $http, $compile) {
+app.controller('FormController', ['$scope', '$location', '$http', '$compile', 'Auth',
+  function ($scope, $location, $http, $compile, Auth) {
+
+    // Authentication
+    Auth.$onAuthStateChanged(function(firebaseUser) {
+      console.log(firebaseUser);
+      if (firebaseUser) {
+        $scope.firebaseUser = firebaseUser;
+      }
+      else {
+        $location.path('/login');
+      }
+    });
+    $scope.logout = function () {
+      Auth.$signOut();
+    };
 
     $scope.release = {};
     $scope.inputs = 1;
-
-    $scope.logout = function () {
-      localStorage.removeItem('loggedIn');
-      $location.path('/login');
-    };
-
-    $scope.user = localStorage.getItem('user');
 
     $scope.redirect = function () {
       $location.path('/dashboard');
@@ -397,46 +410,38 @@ app.controller('FormController', ['$scope', '$location', '$http', '$compile',
     };
 }]);
 
-app.controller('DetailsController', ['$scope', '$location', '$http', '$routeParams', '$sessionStorage',
-  function ($scope, $location, $http, $routeParams, $sessionStorage) {
+app.controller('DetailsController', ['$scope', '$location', '$http', '$routeParams', '$sessionStorage', 'Auth', 'ReleaseData',
+  function ($scope, $location, $http, $routeParams, $sessionStorage, Auth, ReleaseData) {
 
-    $scope.auth = localStorage.getItem('auth');
-    $scope.user = localStorage.getItem('user');
-
-    $scope.createRelease = function () {
-      $location.path('/create-release');
-    };
-
+    // Authentication
+    Auth.$onAuthStateChanged(function(firebaseUser) {
+      console.log(firebaseUser);
+      if (firebaseUser) {
+        $scope.firebaseUser = firebaseUser;
+      }
+      else {
+        $location.path('/login');
+      }
+    });
     $scope.logout = function () {
-      localStorage.removeItem('loggedIn');
-      $location.path('/login');
+      Auth.$signOut();
     };
-
 
     // on click of nav bar returns user to main dashboard
     $scope.redirect = function () {
       $location.path('/dashboard');
     };
 
-    var release_id = $routeParams.release_id;
+    $scope.release = ReleaseData.getRelease();
+
 
     var mybody = angular.element(document).find('body');
     mybody.addClass('waiting');
-    // Request release details
-    $http({
-         method: 'GET',
-         url: site + '/release?release=' + release_id,
-         cache: true
-     }).then(function successCallback(response) {
-         $scope.release = angular.fromJson(response.data);
-     }, function errorCallback(response) {
-         console.log(response);
-     });
 
     // Request task details
     $http({
          method: 'GET',
-         url: site + '/tasks?release=' + release_id,
+         url: site + '/tasks?release=' + $scope.release.release_id,
          cache: true
      }).then(function successCallback(response) {
           $scope.tasks = transform(response.data);
@@ -476,81 +481,37 @@ app.controller('LogsController', ['$scope', '$http', '$routeParams', '$sce',
 
 }]);
 
-app.controller('LoginController', ['$scope', '$location', '$http',
-  function($scope, $location, $http){
-    var loggingIn;
-
+app.controller('LoginController', ['$scope', 'Auth', '$location',
+  function($scope, Auth, $location){
     var provider = new firebase.auth.GithubAuthProvider();
     provider.addScope('repo');
 
-    if (localStorage.getItem('loggedIn')) {
-      $scope.login_message = 'Go to Dashboard';
-    }
-    else if (localStorage.getItem('loggingIn')) {
-      $scope.login_message = 'Log In with GitHub';
-      localStorage.removeItem('loggingIn');
+    if(localStorage.getItem('loggingIn')){
       $scope.isLoading = true;
-      firebase.auth().getRedirectResult().then(function(result) {
+    }
+    firebase.auth().getRedirectResult().then(function(result) {
+      if (result.credential) {
         var token = result.credential.accessToken;
-        $http({
-            method: 'GET',
-            url: 'https://api.github.com/user/teams',
-            headers: {'Authorization': 'token ' + token}
-        }).then(function successCallback(response) {
-             var teams = response.data;
-             localStorage.setItem('loggedIn', true);
-             localStorage.setItem('user', result.user.displayName);
-             $location.path('/dashboard');
-
-            // Code for more stringent authentication (specific org and team)
-            // var auth = false;
-            // for (var key in teams) {
-            //  if (teams.hasOwnProperty(key)){
-            //    var name = teams[key].name;
-            //    var org = teams[key].organization.login;
-            //
-            //    if (name == auth_team && org == auth_org){
-            //      auth = true;
-            //      console.log('loggedin');
-            //      localStorage.setItem('loggedIn', true);
-            //      localStorage.setItem('user', result.user.displayName);
-            //      $location.path('/dashboard');
-            //    }
-            //  }
-            // }
-            // if(!auth){
-            //   alert("You are not authorized to view this page.");
-            // }
-            $scope.isLoading = false;
-        }, function errorCallback(response) {
-          $scope.isLoading = false;
-          console.log(response);
-        });
-      }).catch(function(error) {
+      }
+      localStorage.removeItem('logginIn');
+      $scope.isLoading = false;
+    }).catch(function(error) {
+        console.log(error);
+        localStorage.removeItem('logginIn');
         $scope.isLoading = false;
-        console.log(error);
-      });
-    }
-    else {
-      $scope.login_message = 'Log In with GitHub';
-      localStorage.removeItem('user');
-      localStorage.removeItem('auth');
-      firebase.auth().signOut().then(function() {
-        console.log('Sign out successful');
-      }).catch(function(error) {
-        console.log(error);
-      });
-    }
+    });
 
-    $scope.login = function () {
-      if (localStorage.getItem('loggedIn')){
+    Auth.$onAuthStateChanged(function(firebaseUser) {
+      if(firebaseUser){
         $location.path('/dashboard');
       }
-      else {
-        localStorage.setItem('loggingIn', true);
-        firebase.auth().signInWithRedirect(provider);
-      }
+    });
+
+    $scope.login = function () {
+      localStorage.setItem('loggingIn', true);
+      firebase.auth().signInWithRedirect(provider);
     };
+
 }]);
 
 var transform =
