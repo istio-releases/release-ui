@@ -43,9 +43,7 @@ def read_releases(release_data, airflow_db):
     release.started = int(started)
     release.labels = [item.dag_id]
     release.state = state
-    if green_sha is None:
-      release.links = [{'name': 'no links available', 'url': None}]
-    else:
+    if green_sha:
       release.links = construct_repo_links(green_sha)  # TODO(dommarques) these need to be implemented into airflow first, or we make our own way to get the links pylint: disable=line-too-long
     if xcom_dict is None:
       continue
