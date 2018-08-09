@@ -60,4 +60,18 @@ app.config(['$routeProvider', function($routeProvider) {
     .otherwise({
       redirectTo: '/login'
     });
-}]);
+}]).run(function($rootScope, $location, Token) {
+  // Extra Authentication requirements for create-release
+  $rootScope.$on("$routeChangeStart", function(event, next, current) {
+    if (next.templateUrl === "app/partials/create-release.html") {
+      Token.isAuth().then((result) => {
+        if (result) {
+        }
+        else {
+          event.preventDefault();
+          $location.path('/dashboard');
+        }
+      });
+    }
+  });
+});

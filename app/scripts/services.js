@@ -1,9 +1,11 @@
 'use strict';
 
 /* Services */
-var auth_org = 'istio-releases';
-var auth_team = 'release-ui';
-var app = angular.module('ReleaseUI.services', ['firebase']);
+var auth_org = 'wrong';
+var auth_team = 'wrong';
+var app = angular.module('ReleaseUI.services', ['firebase'])
+                 .constant('auth_org', 'istio-releases')
+                 .constant('auth_team', 'release-ui');
 
 app.factory('Auth', ['$firebaseAuth',
   function($firebaseAuth) {
@@ -11,56 +13,45 @@ app.factory('Auth', ['$firebaseAuth',
   }
 ]);
 
-app.factory('Token',function(){
-  var token;
+app.service('Token', ['$http', 'auth_org', 'auth_team',
+  function($http, auth_org, auth_team) {
 
-  return {
-    setToken: setToken,
-    isAuth: isAuth
-  };
+    var setToken = function(t) {
+      localStorage.setItem('token', t);
+    };
 
-  var setToken = function(t) {
-    token = t;
-  };
-  
-  var isAuth = function () {
-    return $http({
-          method: 'GET',
-          url: 'https://api.github.com/user/teams',
-          headers: {'Authorization': 'token ' + token}
-      }).then(function successCallback(response) {
-          var teams = response.data;
-          for (var key in teams) {
-           if (teams.hasOwnProperty(key)){
-             var name = teams[key].name;
-             var org = teams[key].organization.login;
+    var removeToken = function () {
+      localStorage.removeItem('token');
+    }
 
-             if (name == auth_team && org == auth_org){
-               console.log('Authenticated');
-               return true;
+    var isAuth = function () {
+      console.log(localStorage.getItem('token'));
+      return $http({
+            method: 'GET',
+            url: 'https://api.github.com/user/teams',
+            headers: {'Authorization': 'token ' + localStorage.getItem('token')}
+          }).then(function successCallback(response) {
+            var teams = response.data;
+            for (var key in teams) {
+             if (teams.hasOwnProperty(key)){
+               var name = teams[key].name;
+               var org = teams[key].organization.login;
+
+               if (name == auth_team && org == auth_org){
+                 console.log('Authenticated');
+                 return true;
+               }
              }
-           }
-          }
-          return false;
-      }, function errorCallback(response) {
-          console.log(response);
-      });
-  };
-})
+            }
+            return false;
+        }, function errorCallback(response) {
+            console.log(response);
+        });
+    };
 
-app.service('ReleaseData', function() {
-  var release = {};
-
-  var setRelease = function(value) {
-      release = value;
-  };
-
-  var getRelease = function() {
-      return release;
-  };
-
-  return {
-    setRelease: setRelease,
-    getRelease: getRelease
-  };
-});
+    return {
+      setToken: setToken,
+      removeToken: removeToken,
+      isAuth: isAuth
+    };
+}]);
