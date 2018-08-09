@@ -64,8 +64,11 @@
     <th>
       Repos:
     </th>
-    <td ng-repeat="link in release.links">
+    <td ng-if="release.links" ng-repeat="link in release.links">
       <a class="link" href="{{link.url}}" target="_blank">{{link.name}}</a>
+    </td>
+    <td ng-if="!release.links">
+      no repos available
     </td>
   </table>
 
