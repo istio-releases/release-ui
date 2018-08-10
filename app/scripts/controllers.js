@@ -479,8 +479,8 @@ app.controller('DetailsController', ['$scope', '$location', '$http', '$routePara
      };
 }]);
 
-app.controller('LogsController', ['$scope', '$http', '$routeParams', '$sce',
-  function($scope, $http, $routeParams, $sce){
+app.controller('LogsController', ['$scope', '$http', '$routeParams', '$sce', '$location',
+  function($scope, $http, $routeParams, $sce, $location){
 
     var release = $routeParams.release_id;
     var task = $routeParams.task_name;
@@ -494,7 +494,9 @@ app.controller('LogsController', ['$scope', '$http', '$routeParams', '$sce',
          text = '<p align="left">' + text.replace(/\n/gm, '<br>') + '</p>';
          $scope.html = $sce.trustAsHtml(text);
      }, function errorCallback(response) {
-         console.log(response);
+          alert('There are no logs for this task.');
+          $location.path('/' + release);
+          console.log(response);
      });
 
 }]);
