@@ -195,6 +195,8 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
           '&sort_method='+ sortMethodNum + '&limit=' + $scope.numRequested +
           '&offset=' + offset + '&descending=' + sortMethodDescending;
 
+      var mybody = angular.element(document).find('body');
+      mybody.addClass('waiting');
       $scope.isLoading = true;
       $http({
            method: 'GET',
@@ -210,9 +212,11 @@ app.controller('MainController', ['$scope','$http','$location', '$sessionStorage
            }
            $scope.totalPages = Math.ceil($scope.$storage.releases.length / $scope.numPerPage);
            $scope.isLoading = false;
+           mybody.removeClass('waiting');
        }, function errorCallback(response) {
            console.log(response);
            $scope.isLoading = false;
+           mybody.removeClass('waiting');
        });
     };
 
@@ -389,7 +393,6 @@ app.controller('FormController', ['$scope', '$location', '$http', '$compile', 'A
     };
 
     $scope.removeKey = function (e) {
-      console.log('removed attribute');
       $(e.target).parent().parent().remove();
     };
 
@@ -437,7 +440,8 @@ app.controller('DetailsController', ['$scope', '$location', '$http', '$routePara
 
     var release_id = $routeParams.release_id;
 
-
+    var mybody = angular.element(document).find('body');
+    mybody.addClass('waiting');
     $scope.isLoading = true;
     // Request release details
     $http({
@@ -458,9 +462,11 @@ app.controller('DetailsController', ['$scope', '$location', '$http', '$routePara
      }).then(function successCallback(response) {
           $scope.tasks = transform(response.data);
           $scope.isLoading = false;
+          mybody.removeClass('waiting');
      }, function errorCallback(response) {
          console.log(response);
          $scope.isLoading = false;
+         mybody.removeClass('waiting');
      });
 
      $scope.redirect = function () {
