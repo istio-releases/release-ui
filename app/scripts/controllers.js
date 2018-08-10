@@ -485,17 +485,26 @@ app.controller('LogsController', ['$scope', '$http', '$routeParams', '$sce', '$l
     var release = $routeParams.release_id;
     var task = $routeParams.task_name;
 
+    var noLogs = function () {
+      alert('There are no logs for this task.');
+      $location.path('/' + release);
+    };
+
     $http({
          method: 'GET',
          url: site + '/logs?release_id=' + release + '&task_name=' + task,
          cache: true
      }).then(function successCallback(response) {
-         var text = angular.fromJson(response.data);
+       var text = angular.fromJson(response.data);
+       if(text){
          text = '<p align="left">' + text.replace(/\n/gm, '<br>') + '</p>';
          $scope.html = $sce.trustAsHtml(text);
+       }
+       else {
+         noLogs();
+       }
      }, function errorCallback(response) {
-          alert('There are no logs for this task.');
-          $location.path('/' + release);
+          noLogs();
           console.log(response);
      });
 
