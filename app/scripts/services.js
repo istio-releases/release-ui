@@ -25,7 +25,6 @@ app.service('Token', ['$http', 'auth_org', 'auth_team',
     }
 
     var isAuth = function () {
-      console.log(localStorage.getItem('token'));
       return $http({
             method: 'GET',
             url: 'https://api.github.com/user/teams',
@@ -38,7 +37,6 @@ app.service('Token', ['$http', 'auth_org', 'auth_team',
                var org = teams[key].organization.login;
 
                if (name == auth_team && org == auth_org){
-                 console.log('Authenticated');
                  return true;
                }
              }
